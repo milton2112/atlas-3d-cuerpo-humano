@@ -1,0 +1,16 @@
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Descargas y fuentes pesadas que no usa la app en runtime
+assets/downloads/
+assets/fbx/
+assets/archive/
+assets/models/_source-originals/
+assets/models/_unused/
+
+# Temporales de Blender o conversion
+*.blend1
+*.tmp
+*.log

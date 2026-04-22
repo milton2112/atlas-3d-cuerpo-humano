@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atlas 3D del Cuerpo Humano</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="atlas-page">
+      <header class="hero-card" id="top">
+        <p class="eyebrow">Atlas educativo interactivo</p>
+        <h1>Atlas 3D del Cuerpo Humano</h1>
+        <p class="hero-copy">
+          Un atlas preparado para clase: cada sistema se explora por separado, con modelo visual, organos clave y una lectura rapida para alumnos.
+        </p>
+        <div class="quick-guide" aria-label="Como usar el atlas">
+          <span>1. Elegi una tarjeta</span>
+          <span>2. Mira el visor</span>
+          <span>3. Toca puntos u organos</span>
+          <span>4. Avanza con modo clase</span>
+        </div>
+        <div class="hero-actions" aria-label="Acciones principales">
+          <button id="start-tour" class="primary-button" type="button">Empezar modo clase</button>
+          <button id="fullscreen-button" class="ghost-button" type="button">Pantalla completa</button>
+        </div>
+      </header>
+
+      <section class="atlas-tools" aria-label="Herramientas del atlas">
+        <label class="search-box" for="organ-search">
+          <span>Buscar organo</span>
+          <input id="organ-search" type="search" placeholder="Corazon, pulmones, rinones..." autocomplete="off" />
+        </label>
+        <div id="search-results" class="search-results" role="listbox" aria-label="Resultados de busqueda"></div>
+      </section>
+
+      <nav id="quick-index" class="quick-index" aria-label="Indice rapido de sistemas"></nav>
+
+      <section id="tour-banner" class="tour-banner hidden" aria-live="polite">
+        <div>
+          <p class="eyebrow">Modo clase</p>
+          <h2 id="tour-title">Recorrido guiado</h2>
+          <p id="tour-copy">Avanza sistema por sistema como una presentacion interactiva.</p>
+          <div class="tour-progress" aria-hidden="true"><span id="tour-progress-bar"></span></div>
+        </div>
+        <div class="tour-actions">
+          <button id="tour-prev" class="ghost-button" type="button">Anterior</button>
+          <button id="tour-next" class="primary-button" type="button">Siguiente sistema</button>
+          <button id="tour-exit" class="ghost-button" type="button">Volver al menu</button>
+        </div>
+      </section>
+
+      <section id="systems-gallery" class="systems-gallery" aria-label="Laminas por sistema"></section>
+
+      <section id="system-detail" class="system-detail hidden" aria-label="Detalle del sistema">
+        <div class="detail-shell">
+          <button id="back-to-gallery" class="back-button" type="button">&larr; Volver al menu principal</button>
+
+          <div class="detail-toolbar" aria-label="Modos de vista del sistema">
+            <button id="view-full" class="view-mode-button is-active" type="button">Vista completa</button>
+            <button id="view-model" class="view-mode-button" type="button">Solo modelo</button>
+            <button id="view-sheet" class="view-mode-button" type="button">Solo ficha</button>
+          </div>
+
+          <div class="detail-layout">
+            <div class="detail-stage-card">
+              <p class="stage-help">Arrastra para rotar. Usa los puntos para abrir organos.</p>
+              <p id="model-status" class="model-status is-loading" aria-live="polite">Cargando modelo...</p>
+              <div id="detail-stage" class="detail-stage"></div>
+            </div>
+
+            <aside class="detail-info-card">
+              <p class="detail-eyebrow">Vista completa</p>
+              <h2 id="detail-title">Sistema</h2>
+              <p id="detail-summary" class="detail-summary"></p>
+              <p id="detail-description" class="detail-description"></p>
+
+              <div class="detail-section">
+                <h3>Funcion principal</h3>
+                <p id="detail-function" class="detail-description"></p>
+              </div>
+
+              <div class="detail-section">
+                <h3>Organos y estructuras</h3>
+                <div id="detail-organs" class="organ-grid"></div>
+              </div>
+
+              <div id="organ-panel" class="organ-panel hidden" aria-live="polite">
+                <p class="detail-eyebrow">Organo seleccionado</p>
+                <h3 id="organ-title"></h3>
+                <p id="organ-description"></p>
+              </div>
+
+              <div class="learning-cards">
+                <article>
+                  <h3>Dato clave</h3>
+                  <p id="detail-key-fact"></p>
+                </article>
+                <article>
+                  <h3>Pregunta rapida</h3>
+                  <p id="detail-question"></p>
+                </article>
+                <article>
+                  <h3>Mini resumen</h3>
+                  <p id="detail-mini-summary"></p>
+                </article>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="tour-complete" class="tour-complete hidden" aria-live="polite">
+        <p class="eyebrow">Recorrido completo</p>
+        <h2>Listo para debatir en clase</h2>
+        <p>Ya recorriste todos los sistemas. Podes volver al menu o repetir el recorrido cuando quieras.</p>
+        <div class="hero-actions">
+          <button id="complete-menu" class="primary-button" type="button">Volver al menu</button>
+          <button id="complete-restart" class="ghost-button" type="button">Repetir recorrido</button>
+        </div>
+      </section>
+
+      <section class="credits-card" aria-label="Creditos y estado del proyecto">
+        <p>
+          Version para compartir: modelos 3D usados como base educativa. Fuente principal:
+          <a href="https://github.com/LluisV/Z-Anatomy" target="_blank" rel="noreferrer">Z-Anatomy</a>,
+          licencia CC BY 4.0. Las vistas temporales pueden reemplazarse sin rehacer la app.
+        </p>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js?v=20260421-final-polish-2"></script>
+  </body>
+</html>
