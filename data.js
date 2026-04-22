@@ -28,6 +28,69 @@ export const systemOrder = [
   "reproductiveFemale",
 ];
 
+export const modelAudit = {
+  integumentary: {
+    status: "usable",
+    label: "Modelo base usable",
+    note: "Representa superficie corporal de forma general. Puede reemplazarse por un modelo tegumentario mas pedagogico.",
+  },
+  skeletal: {
+    status: "usable",
+    label: "Modelo real optimizado",
+    note: "Modelo Z-Anatomy optimizado. Revisar visualmente si alguna linea fina persiste.",
+  },
+  muscular: {
+    status: "usable",
+    label: "Modelo real optimizado",
+    note: "Modelo Z-Anatomy optimizado. Es una de las vistas mas utiles para clase.",
+  },
+  nervous: {
+    status: "review",
+    label: "Modelo real optimizado, revisar detalle",
+    note: "Modelo pesado reducido. Conviene revisar lineas muy finas y legibilidad al rotar.",
+  },
+  circulatory: {
+    status: "review",
+    label: "Modelo real optimizado, revisar detalle",
+    note: "Modelo pesado reducido. Puede mostrar vasos muy finos; usar modo solo modelo si se ve cargado.",
+  },
+  respiratory: {
+    status: "usable",
+    label: "Modelo real simplificado",
+    note: "Subset visceral compatible para explicar pulmones, traquea y bronquios.",
+  },
+  digestive: {
+    status: "usable",
+    label: "Modelo real simplificado",
+    note: "Subset visceral compatible para una lectura general del aparato digestivo.",
+  },
+  urinary: {
+    status: "usable",
+    label: "Modelo real simplificado",
+    note: "Subset visceral liviano. Adecuado para rinones, ureteres y vejiga.",
+  },
+  endocrine: {
+    status: "usable",
+    label: "Modelo real simplificado",
+    note: "Subset liviano. Sirve como referencia general de glandulas principales.",
+  },
+  lymphatic: {
+    status: "review",
+    label: "Modelo real liviano, revisar cobertura",
+    note: "Modelo de organos linfoides. No cubre todo el sistema linfatico como red completa.",
+  },
+  reproductiveMale: {
+    status: "usable",
+    label: "Modelo real simplificado",
+    note: "Subset liviano del sistema reproductor masculino.",
+  },
+  reproductiveFemale: {
+    status: "placeholder",
+    label: "Modelo temporal",
+    note: "Falta un GLB real compatible. Se mantiene una vista temporal para no cortar el flujo de clase.",
+  },
+};
+
 export const systemDetails = {
   integumentary: {
     title: "Sistema tegumentario",
@@ -176,6 +239,45 @@ export const organInfo = {
   ovaries: { title: "Ovarios", systemKey: "reproductiveFemale", description: "Producen ovulos y hormonas." },
   uterus: { title: "Utero", systemKey: "reproductiveFemale", description: "Organo donde puede desarrollarse el embrion." },
   uterineTubes: { title: "Trompas uterinas", systemKey: "reproductiveFemale", description: "Comunican ovarios y utero, y pueden ser sitio de fecundacion." },
+};
+
+export const organStudyInfo = {
+  hair: { location: "Superficie de la piel.", function: "Protege y ayuda a percibir contacto.", keyFact: "No esta vivo en su parte visible." },
+  skin: { location: "Cubre todo el cuerpo.", function: "Actua como barrera y regula temperatura.", keyFact: "Es el organo mas extenso." },
+  glands: { location: "Dentro de la piel.", function: "Producen sudor o sebo.", keyFact: "Ayudan a enfriar y proteger la piel." },
+  skull: { location: "Cabeza.", function: "Protege el encefalo.", keyFact: "Esta formado por varios huesos unidos." },
+  ribs: { location: "Torax.", function: "Protegen corazon y pulmones.", keyFact: "Se mueven al respirar." },
+  spine: { location: "Eje posterior del tronco.", function: "Sostiene y protege la medula espinal.", keyFact: "Esta formada por vertebras." },
+  muscles: { location: "Distribuidos por todo el cuerpo.", function: "Generan movimiento y postura.", keyFact: "Trabajan junto a huesos y tendones." },
+  tendons: { location: "Entre musculo y hueso.", function: "Transmiten fuerza al esqueleto.", keyFact: "Son muy resistentes." },
+  diaphragm: { location: "Debajo de los pulmones.", function: "Permite la inspiracion.", keyFact: "Es clave para respirar." },
+  brain: { location: "Dentro del craneo.", function: "Procesa informacion y coordina respuestas.", keyFact: "Consume mucha energia." },
+  spinalCord: { location: "Dentro de la columna vertebral.", function: "Conecta encefalo y cuerpo.", keyFact: "Participa en reflejos." },
+  nerves: { location: "Desde la medula hacia organos y extremidades.", function: "Transportan senales.", keyFact: "Permiten sensibilidad y movimiento." },
+  heart: { location: "Centro del torax, levemente hacia la izquierda.", function: "Bombea sangre.", keyFact: "Late sin que tengamos que pensarlo." },
+  arteries: { location: "Salen del corazon hacia tejidos.", function: "Distribuyen sangre.", keyFact: "Suelen soportar mas presion." },
+  veins: { location: "Regresan desde tejidos al corazon.", function: "Devuelven sangre.", keyFact: "Muchas tienen valvulas." },
+  trachea: { location: "Cuello y torax superior.", function: "Conduce aire.", keyFact: "Tiene anillos cartilaginosos." },
+  lungs: { location: "Caja toracica.", function: "Intercambian gases.", keyFact: "Trabajan con el diafragma." },
+  bronchi: { location: "Dentro de los pulmones.", function: "Reparten el aire.", keyFact: "Se ramifican como un arbol." },
+  liver: { location: "Abdomen superior derecho.", function: "Procesa nutrientes y produce bilis.", keyFact: "Es un organo muy metabolico." },
+  stomach: { location: "Abdomen superior izquierdo.", function: "Mezcla alimento con jugos gastricos.", keyFact: "No absorbe la mayoria de nutrientes." },
+  intestines: { location: "Abdomen.", function: "Absorben nutrientes y agua.", keyFact: "El intestino delgado es muy largo." },
+  kidneys: { location: "Parte posterior del abdomen.", function: "Filtran sangre.", keyFact: "Producen orina constantemente." },
+  bladder: { location: "Pelvis.", function: "Almacena orina.", keyFact: "Se expande cuando se llena." },
+  ureters: { location: "Entre rinones y vejiga.", function: "Conducen orina.", keyFact: "Usan movimientos musculares." },
+  pituitary: { location: "Base del encefalo.", function: "Coordina glandulas.", keyFact: "Se la llama glandula maestra." },
+  thyroid: { location: "Cuello anterior.", function: "Regula metabolismo.", keyFact: "Usa yodo para producir hormonas." },
+  adrenals: { location: "Sobre los rinones.", function: "Participan en respuesta al estres.", keyFact: "Liberan adrenalina y otras hormonas." },
+  spleen: { location: "Abdomen superior izquierdo.", function: "Filtra sangre y participa en defensas.", keyFact: "Ayuda a reciclar celulas sanguineas." },
+  lymphNodes: { location: "Cuello, axilas, ingle y otras zonas.", function: "Filtran linfa.", keyFact: "Pueden inflamarse en infecciones." },
+  thymus: { location: "Torax superior.", function: "Madura celulas defensivas.", keyFact: "Es mas activo en la infancia." },
+  prostate: { location: "Debajo de la vejiga.", function: "Aporta liquido seminal.", keyFact: "Rodea parte de la uretra." },
+  testes: { location: "Escroto.", function: "Producen espermatozoides y testosterona.", keyFact: "Funcionan mejor a menor temperatura corporal." },
+  ductus: { location: "Desde testiculos hacia pelvis.", function: "Transportan espermatozoides.", keyFact: "Forman parte del recorrido del semen." },
+  ovaries: { location: "Pelvis, a ambos lados del utero.", function: "Producen ovulos y hormonas.", keyFact: "Tienen ciclos de maduracion." },
+  uterus: { location: "Pelvis.", function: "Puede alojar el desarrollo embrionario.", keyFact: "Es muscular y cambia de tamano." },
+  uterineTubes: { location: "Entre ovarios y utero.", function: "Comunican y transportan el ovulo.", keyFact: "Alli puede ocurrir fecundacion." },
 };
 
 export const organHotspots = {

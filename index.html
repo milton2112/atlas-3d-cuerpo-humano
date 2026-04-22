@@ -51,6 +51,21 @@
 
       <nav id="quick-index" class="quick-index" aria-label="Indice rapido de sistemas"></nav>
 
+      <section class="teacher-guide-card" aria-label="Guia rapida de uso">
+        <article>
+          <h2>Como usarlo en clase</h2>
+          <p>Abri un sistema, elegi modo solo modelo para explicar visualmente y cambia a solo ficha para leer lo esencial.</p>
+        </article>
+        <article>
+          <h2>Recorrido recomendado</h2>
+          <p>Usa modo clase para avanzar sistema por sistema. El cierre muestra un resumen para repasar.</p>
+        </article>
+        <article>
+          <h2>Si un modelo falla</h2>
+          <p>La app muestra una vista temporal para que la clase continue sin quedarse en blanco.</p>
+        </article>
+      </section>
+
       <section id="tour-banner" class="tour-banner hidden" aria-live="polite">
         <div>
           <p class="eyebrow">Modo clase</p>
@@ -89,6 +104,7 @@
               <h2 id="detail-title">Sistema</h2>
               <p id="detail-summary" class="detail-summary"></p>
               <p id="detail-description" class="detail-description"></p>
+              <p id="detail-model-note" class="model-note"></p>
 
               <div class="detail-section">
                 <h3>Funcion principal</h3>
@@ -104,6 +120,20 @@
                 <p class="detail-eyebrow">Organo seleccionado</p>
                 <h3 id="organ-title"></h3>
                 <p id="organ-description"></p>
+                <dl class="organ-facts">
+                  <div>
+                    <dt>Ubicacion</dt>
+                    <dd id="organ-location"></dd>
+                  </div>
+                  <div>
+                    <dt>Funcion</dt>
+                    <dd id="organ-function"></dd>
+                  </div>
+                  <div>
+                    <dt>Dato clave</dt>
+                    <dd id="organ-key-fact"></dd>
+                  </div>
+                </dl>
               </div>
 
               <div class="learning-cards">
@@ -119,6 +149,10 @@
                   <h3>Mini resumen</h3>
                   <p id="detail-mini-summary"></p>
                 </article>
+                <article>
+                  <h3>Para pensar</h3>
+                  <p id="detail-thinking"></p>
+                </article>
               </div>
             </aside>
           </div>
@@ -129,6 +163,7 @@
         <p class="eyebrow">Recorrido completo</p>
         <h2>Listo para debatir en clase</h2>
         <p>Ya recorriste todos los sistemas. Podes volver al menu o repetir el recorrido cuando quieras.</p>
+        <ul id="tour-summary-list" class="tour-summary-list"></ul>
         <div class="hero-actions">
           <button id="complete-menu" class="primary-button" type="button">Volver al menu</button>
           <button id="complete-restart" class="ghost-button" type="button">Repetir recorrido</button>

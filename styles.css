@@ -265,6 +265,37 @@ input {
   cursor: pointer;
 }
 
+.teacher-guide-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  max-width: 1520px;
+  margin: 0 auto 20px;
+}
+
+.teacher-guide-card article {
+  padding: 16px;
+  border: 1px solid rgba(201, 233, 255, 0.16);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.teacher-guide-card h2,
+.teacher-guide-card p {
+  margin: 0;
+}
+
+.teacher-guide-card h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1rem;
+}
+
+.teacher-guide-card p {
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
 .tour-banner {
   display: flex;
   align-items: center;
@@ -691,6 +722,50 @@ input {
   line-height: 1.55;
 }
 
+.model-note {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(201, 233, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(232, 245, 255, 0.78);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.model-note[data-status="placeholder"] {
+  border-color: rgba(255, 196, 184, 0.34);
+  color: #ffd6cc;
+}
+
+.model-note[data-status="review"] {
+  border-color: rgba(255, 232, 163, 0.34);
+  color: #ffe8a3;
+}
+
+.organ-facts {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.organ-facts div {
+  padding-top: 10px;
+  border-top: 1px solid rgba(201, 233, 255, 0.12);
+}
+
+.organ-facts dt {
+  color: #ccf1ff;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 800;
+}
+
+.organ-facts dd {
+  margin: 4px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
 .detail-section {
   margin-top: 22px;
 }
@@ -796,6 +871,35 @@ input {
   margin: 10px 0 0;
   color: rgba(232, 245, 255, 0.72);
   line-height: 1.55;
+}
+
+.tour-summary-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.tour-summary-list li {
+  padding: 12px;
+  border: 1px solid rgba(201, 233, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.tour-summary-list strong,
+.tour-summary-list span {
+  display: block;
+}
+
+.tour-summary-list span {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
 }
 
 .credits-card {

@@ -2,8 +2,10 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
+  modelAudit,
   organHotspots,
   organInfo,
+  organStudyInfo,
   systemConfig,
   systemDetails,
   systemOrder,
@@ -28,6 +30,20 @@ const MODEL_FILES = {
   reproductiveFemale: null,
 };
 const REAL_MODEL_KEYS = new Set(Object.entries(MODEL_FILES).filter(([, file]) => Boolean(file)).map(([key]) => key));
+const CAMERA_CONFIG = {
+  integumentary: { zoom: 0.76, y: 0.03 },
+  skeletal: { zoom: 0.8, y: 0.04 },
+  muscular: { zoom: 0.76, y: 0.03 },
+  nervous: { zoom: 0.82, y: 0.03 },
+  circulatory: { zoom: 0.82, y: 0.03 },
+  respiratory: { zoom: 0.62, y: 0.02 },
+  digestive: { zoom: 0.62, y: 0.02 },
+  urinary: { zoom: 0.58, y: 0.02 },
+  endocrine: { zoom: 0.56, y: 0.02 },
+  lymphatic: { zoom: 0.64, y: 0.02 },
+  reproductiveMale: { zoom: 0.56, y: 0.02 },
+  reproductiveFemale: { zoom: 0.56, y: 0.02 },
+};
 
 const gallery = document.querySelector("#systems-gallery");
 const heroCard = document.querySelector(".hero-card");
@@ -41,14 +57,19 @@ const modelStatus = document.querySelector("#model-status");
 const detailTitle = document.querySelector("#detail-title");
 const detailSummary = document.querySelector("#detail-summary");
 const detailDescription = document.querySelector("#detail-description");
+const detailModelNote = document.querySelector("#detail-model-note");
 const detailFunction = document.querySelector("#detail-function");
 const detailOrgans = document.querySelector("#detail-organs");
 const detailKeyFact = document.querySelector("#detail-key-fact");
 const detailQuestion = document.querySelector("#detail-question");
 const detailMiniSummary = document.querySelector("#detail-mini-summary");
+const detailThinking = document.querySelector("#detail-thinking");
 const organPanel = document.querySelector("#organ-panel");
 const organTitle = document.querySelector("#organ-title");
 const organDescription = document.querySelector("#organ-description");
+const organLocation = document.querySelector("#organ-location");
+const organFunction = document.querySelector("#organ-function");
+const organKeyFact = document.querySelector("#organ-key-fact");
 const backButton = document.querySelector("#back-to-gallery");
 const startTourButton = document.querySelector("#start-tour");
 const fullscreenButton = document.querySelector("#fullscreen-button");
@@ -62,6 +83,7 @@ const tourExit = document.querySelector("#tour-exit");
 const tourComplete = document.querySelector("#tour-complete");
 const completeMenu = document.querySelector("#complete-menu");
 const completeRestart = document.querySelector("#complete-restart");
+const tourSummaryList = document.querySelector("#tour-summary-list");
 const viewFullButton = document.querySelector("#view-full");
 const viewModelButton = document.querySelector("#view-model");
 const viewSheetButton = document.querySelector("#view-sheet");
@@ -173,10 +195,14 @@ function openSystemDetail(systemKey) {
   detailTitle.textContent = detail.title;
   detailSummary.textContent = detail.summary;
   detailDescription.textContent = detail.description ?? detail.summary;
+  const audit = modelAudit[systemKey];
+  detailModelNote.textContent = audit ? `${audit.label}: ${audit.note}` : "Modelo en revision.";
+  detailModelNote.dataset.status = audit?.status ?? "review";
   detailFunction.textContent = detail.function ?? detail.description ?? detail.summary;
   detailKeyFact.textContent = detail.keyFact ?? "Relaciona este sistema con otros para entender su funcion.";
   detailQuestion.textContent = detail.question ?? "Que organos reconoces en esta vista?";
   detailMiniSummary.textContent = detail.miniSummary ?? detail.summary;
+  detailThinking.textContent = buildThinkingPrompt(systemKey, detail);
   organPanel.classList.add("hidden");
 
   renderOrganList(systemKey);
@@ -211,7 +237,8 @@ function renderOrganList(systemKey) {
     item.type = "button";
     item.className = "organ-chip";
     item.dataset.organId = organId;
-    item.innerHTML = `<strong>${organ.title}</strong><span>${organ.description}</span>`;
+      const study = organStudyInfo[organId];
+      item.innerHTML = `<strong>${organ.title}</strong><span>${study?.function ?? organ.description}</span>`;
     item.addEventListener("click", () => showOrganInfo(organ, organId));
     detailOrgans.appendChild(item);
   });
@@ -239,8 +266,12 @@ function closeSystemDetail() {
 }
 
 function showOrganInfo(organ, organId) {
+  const study = organStudyInfo[organId] ?? {};
   organTitle.textContent = organ.title;
   organDescription.textContent = organ.description;
+  organLocation.textContent = study.location ?? "Ubicacion general dentro del sistema.";
+  organFunction.textContent = study.function ?? organ.description;
+  organKeyFact.textContent = study.keyFact ?? "Relacionar con otros sistemas ayuda a entender su funcion.";
   organPanel.classList.remove("hidden");
   document.querySelectorAll(".organ-chip, .hotspot-button").forEach((element) => {
     element.classList.toggle("is-active", element.dataset.organId === organId);
@@ -279,7 +310,19 @@ function finishGuidedTour() {
   atlasTools?.classList.remove("hidden");
   gallery.classList.remove("hidden");
   tourComplete.classList.remove("hidden");
+  renderTourSummary();
   tourComplete.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function renderTourSummary() {
+  if (!tourSummaryList) return;
+  tourSummaryList.innerHTML = "";
+  systemOrder.forEach((systemKey) => {
+    const item = document.createElement("li");
+    const detail = systemDetails[systemKey];
+    item.innerHTML = `<strong>${systemConfig[systemKey].label}</strong><span>${detail.miniSummary}</span>`;
+    tourSummaryList.appendChild(item);
+  });
 }
 
 function updateTourBanner() {
@@ -294,6 +337,24 @@ function updateTourBanner() {
   tourNext.textContent = currentIndex === systemOrder.length - 1 ? "Finalizar recorrido" : "Siguiente sistema";
   tourProgressBar.style.width = `${((currentIndex + 1) / systemOrder.length) * 100}%`;
   tourBanner.classList.remove("hidden");
+}
+
+function buildThinkingPrompt(systemKey, detail) {
+  const linkedSystems = {
+    respiratory: "circulatorio",
+    circulatory: "respiratorio",
+    skeletal: "muscular",
+    muscular: "oseo",
+    nervous: "muscular",
+    digestive: "circulatorio",
+    urinary: "circulatorio",
+    endocrine: "circulatorio",
+    lymphatic: "circulatorio e inmunologico",
+    integumentary: "nervioso",
+    reproductiveMale: "endocrino",
+    reproductiveFemale: "endocrino",
+  };
+  return `Como se relaciona este sistema con el sistema ${linkedSystems[systemKey] ?? "del cuerpo"}? ${detail.question}`;
 }
 
 function setDetailViewMode(mode) {
@@ -440,7 +501,7 @@ function createSystemViewer(container, systemKey, options = {}) {
 
   const fallback = createFallbackModel(systemKey);
   root.add(fallback);
-  fitCameraToObject(camera, controls, fallback);
+  fitCameraToObject(camera, controls, fallback, systemKey);
   renderScene();
 
   loadSystemModel(systemKey)
@@ -451,7 +512,7 @@ function createSystemViewer(container, systemKey, options = {}) {
       normalizeModel(model);
       applySystemMaterial(model, systemKey);
       root.add(model);
-      fitCameraToObject(camera, controls, model);
+      fitCameraToObject(camera, controls, model, systemKey);
       renderScene();
       options.onLoad?.();
     })
@@ -459,7 +520,7 @@ function createSystemViewer(container, systemKey, options = {}) {
       if (state.disposed) return;
       root.clear();
       root.add(createFallbackModel(systemKey));
-      fitCameraToObject(camera, controls, root);
+      fitCameraToObject(camera, controls, root, systemKey);
       renderScene();
       if (REAL_MODEL_KEYS.has(systemKey)) options.onError?.();
       else options.onFallback?.();
@@ -586,13 +647,14 @@ function looksLikeGuideMesh(object) {
   return (shortest / longest < 0.004 && middle / longest < 0.018) || (longest > 1.8 && shortest < 0.012);
 }
 
-function fitCameraToObject(camera, controls, object) {
+function fitCameraToObject(camera, controls, object, systemKey) {
   const box = new THREE.Box3().setFromObject(object);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
-  const radius = Math.max(size.x, size.y, size.z) * 0.72;
+  const config = CAMERA_CONFIG[systemKey] ?? { zoom: 0.72, y: 0.03 };
+  const radius = Math.max(size.x, size.y, size.z) * config.zoom;
   const distance = Math.max(2.2, radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)));
-  camera.position.set(center.x, center.y + size.y * 0.03, center.z + distance * 0.9);
+  camera.position.set(center.x, center.y + size.y * config.y, center.z + distance * 0.9);
   camera.lookAt(center);
   controls.target.copy(center);
   controls.update();
