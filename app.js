@@ -93,6 +93,7 @@ const viewers = new Set();
 let detailViewer = null;
 let tourActive = false;
 let currentSystemKey = systemOrder[0];
+let detailOpenToken = 0;
 
 buildSystemGallery();
 buildQuickIndex();
@@ -183,6 +184,7 @@ function buildQuickIndex() {
 }
 
 function openSystemDetail(systemKey) {
+  const openToken = ++detailOpenToken;
   currentSystemKey = systemKey;
   const detail = systemDetails[systemKey] ?? {
     title: systemConfig[systemKey].label,
@@ -207,14 +209,9 @@ function openSystemDetail(systemKey) {
 
   renderOrganList(systemKey);
   detailViewer?.dispose();
+  detailViewer = null;
   detailStage.innerHTML = "";
   detailStage.style.setProperty("--system-color", systemConfig[systemKey].color);
-  detailViewer = createSystemViewer(detailStage, systemKey, {
-    onLoad: () => setModelStatus("Modelo 3D cargado.", "ready"),
-    onFallback: () => setModelStatus("Modelo temporal disponible.", "fallback"),
-    onError: () => setModelStatus("No se pudo cargar el modelo 3D. Vista temporal disponible.", "error"),
-  });
-  renderOrganHotspots(systemKey);
 
   gallery.classList.add("hidden");
   heroCard.classList.add("hidden");
@@ -224,6 +221,16 @@ function openSystemDetail(systemKey) {
   updateTourBanner();
   backButton.focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: "smooth" });
+
+  requestAnimationFrame(() => {
+    if (openToken !== detailOpenToken || detailView.classList.contains("hidden")) return;
+    detailViewer = createSystemViewer(detailStage, systemKey, {
+      onLoad: () => setModelStatus("Modelo 3D cargado.", "ready"),
+      onFallback: () => setModelStatus("Modelo temporal disponible.", "fallback"),
+      onError: () => setModelStatus("No se pudo cargar el modelo 3D. Vista temporal disponible.", "error"),
+    });
+    renderOrganHotspots(systemKey);
+  });
 }
 
 function renderOrganList(systemKey) {
@@ -253,6 +260,7 @@ function renderOrganList(systemKey) {
 
 function closeSystemDetail() {
   tourActive = false;
+  detailOpenToken += 1;
   detailViewer?.dispose();
   detailViewer = null;
   detailView.classList.add("hidden");
@@ -302,6 +310,7 @@ function exitGuidedTour() {
 
 function finishGuidedTour() {
   tourActive = false;
+  detailOpenToken += 1;
   detailViewer?.dispose();
   detailViewer = null;
   detailView.classList.add("hidden");
@@ -367,6 +376,7 @@ function setDetailViewMode(mode) {
     button?.classList.toggle("is-active", value === mode);
     button?.setAttribute("aria-pressed", String(value === mode));
   });
+  requestAnimationFrame(() => detailViewer?.resize());
 }
 
 function setModelStatus(message, state) {
