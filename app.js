@@ -9,9 +9,9 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260421-final-polish-2";
+} from "./data.js?v=20260422-restored-models-1";
 
-const MODEL_VERSION = "20260421-final-polish-2";
+const MODEL_VERSION = "20260422-restored-models-1";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
