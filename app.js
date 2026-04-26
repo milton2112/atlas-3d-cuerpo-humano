@@ -2,16 +2,19 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
+  digestiveRecapPoints,
+  digestiveReferenceLinks,
   modelAudit,
+  systemLessonSections,
   organHotspots,
   organInfo,
   organStudyInfo,
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260422-restored-models-1";
+} from "./data.js?v=20260424-digestive-prezi-1";
 
-const MODEL_VERSION = "20260422-restored-models-1";
+const MODEL_VERSION = "20260424-digestive-prezi-1";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
@@ -25,24 +28,43 @@ const MODEL_FILES = {
   digestive: "digestive.glb",
   urinary: "urinary.glb",
   endocrine: "endocrine.glb",
-  lymphatic: "lymphatic.glb",
+  lymphatic: null,
   reproductiveMale: "reproductive-male.glb",
-  reproductiveFemale: null,
+  reproductiveFemale: "reproductive-female.glb",
 };
 const REAL_MODEL_KEYS = new Set(Object.entries(MODEL_FILES).filter(([, file]) => Boolean(file)).map(([key]) => key));
 const CAMERA_CONFIG = {
-  integumentary: { zoom: 0.76, y: 0.03 },
-  skeletal: { zoom: 0.8, y: 0.04 },
-  muscular: { zoom: 0.76, y: 0.03 },
-  nervous: { zoom: 0.82, y: 0.03 },
-  circulatory: { zoom: 0.82, y: 0.03 },
-  respiratory: { zoom: 0.62, y: 0.02 },
-  digestive: { zoom: 0.62, y: 0.02 },
-  urinary: { zoom: 0.58, y: 0.02 },
-  endocrine: { zoom: 0.56, y: 0.02 },
-  lymphatic: { zoom: 0.64, y: 0.02 },
-  reproductiveMale: { zoom: 0.56, y: 0.02 },
-  reproductiveFemale: { zoom: 0.56, y: 0.02 },
+  integumentary: { zoom: 0.72, y: 0.04, maxDistance: 8.5 },
+  skeletal: { zoom: 0.74, y: 0.05, maxDistance: 8.5 },
+  muscular: { zoom: 0.7, y: 0.05, maxDistance: 8.5 },
+  nervous: { zoom: 0.78, y: 0.05, maxDistance: 8.8 },
+  circulatory: { zoom: 0.78, y: 0.04, maxDistance: 8.8 },
+  respiratory: { zoom: 0.6, y: 0.02, maxDistance: 7 },
+  digestive: { zoom: 1.08, previewZoom: 1.38, y: 0.02, maxDistance: 12 },
+  urinary: { zoom: 1.02, previewZoom: 1.34, y: 0.02, maxDistance: 12 },
+  endocrine: { zoom: 0.54, y: 0.02, maxDistance: 6.5 },
+  lymphatic: { zoom: 0.62, y: 0.02, maxDistance: 7 },
+  reproductiveMale: { zoom: 0.54, y: 0.02, maxDistance: 6.5 },
+  reproductiveFemale: { zoom: 0.54, y: 0.02, maxDistance: 6.5 },
+};
+const MODEL_ROTATION_CONFIG = {
+  reproductiveFemale: { y: -Math.PI / 2 },
+};
+const PRESERVE_SOURCE_MATERIAL_KEYS = new Set(["digestive", "urinary", "reproductiveFemale"]);
+const DEFERRED_MENU_PREVIEW_KEYS = new Set(["nervous", "circulatory", "urinary"]);
+const MATERIAL_NAME_COLORS = {
+  urinary: [
+    { match: "kidney", color: "#8d250f" },
+    { match: "ureter", color: "#f0c890" },
+    { match: "gland", color: "#caa16b" },
+    { match: "bladder", color: "#d58c91" },
+  ],
+  reproductiveFemale: [
+    { match: "uterus", color: "#b94c5e" },
+    { match: "womb", color: "#b94c5e" },
+    { match: "ovaries", color: "#f08a6c" },
+    { match: "tube", color: "#f08a6c" },
+  ],
 };
 
 const gallery = document.querySelector("#systems-gallery");
@@ -58,12 +80,36 @@ const detailTitle = document.querySelector("#detail-title");
 const detailSummary = document.querySelector("#detail-summary");
 const detailDescription = document.querySelector("#detail-description");
 const detailModelNote = document.querySelector("#detail-model-note");
+const detailLookSection = document.querySelector("#detail-look-section");
+const detailFunctionSection = document.querySelector("#detail-function-section");
+const detailLookList = document.querySelector("#detail-look-list");
+const digestiveProcess = document.querySelector("#digestive-process");
+const digestiveSystemIntro = document.querySelector("#digestive-system-intro");
+const digestiveSystemIntroList = document.querySelector("#digestive-system-intro-list");
+const digestiveProcessList = document.querySelector("#digestive-process-list");
+const digestiveSequenceButton = document.querySelector("#digestive-sequence");
+const digestiveClassButton = document.querySelector("#digestive-class");
+const digestiveCopyLinkButton = document.querySelector("#digestive-copy-link");
+const openDigestiveModalButton = document.querySelector("#open-digestive-modal");
+const digestiveModal = document.querySelector("#digestive-modal");
+const closeDigestiveModalButton = document.querySelector("#close-digestive-modal");
+const digestiveClassroom = document.querySelector("#digestive-classroom");
+const digestiveClassStep = document.querySelector("#digestive-class-step");
+const digestiveClassTitle = document.querySelector("#digestive-class-title");
+const digestiveClassSummary = document.querySelector("#digestive-class-summary");
+const digestiveClassFigure = document.querySelector("#digestive-class-figure");
+const digestiveClassBullets = document.querySelector("#digestive-class-bullets");
+const digestiveClassPrev = document.querySelector("#digestive-class-prev");
+const digestiveClassNext = document.querySelector("#digestive-class-next");
+const digestiveRecapList = document.querySelector("#digestive-recap-list");
+const digestiveReferenceList = document.querySelector("#digestive-reference-list");
 const detailFunction = document.querySelector("#detail-function");
 const detailOrgans = document.querySelector("#detail-organs");
 const detailKeyFact = document.querySelector("#detail-key-fact");
 const detailQuestion = document.querySelector("#detail-question");
 const detailMiniSummary = document.querySelector("#detail-mini-summary");
 const detailThinking = document.querySelector("#detail-thinking");
+const learningCards = document.querySelector(".learning-cards");
 const organPanel = document.querySelector("#organ-panel");
 const organTitle = document.querySelector("#organ-title");
 const organDescription = document.querySelector("#organ-description");
@@ -90,14 +136,30 @@ const viewSheetButton = document.querySelector("#view-sheet");
 
 const loader = new GLTFLoader();
 const viewers = new Set();
+const previewObserver =
+  "IntersectionObserver" in window
+    ? new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.__loadPreview?.();
+            previewObserver.unobserve(entry.target);
+          });
+        },
+        { rootMargin: "360px" },
+      )
+    : null;
 let detailViewer = null;
 let tourActive = false;
 let currentSystemKey = systemOrder[0];
 let detailOpenToken = 0;
+let digestiveLessonMode = "sequence";
+let digestiveLessonIndex = 0;
 
 buildSystemGallery();
 buildQuickIndex();
 bindEvents();
+applyInitialRoute();
 
 function bindEvents() {
   backButton?.addEventListener("click", closeSystemDetail);
@@ -113,8 +175,23 @@ function bindEvents() {
   viewFullButton?.addEventListener("click", () => setDetailViewMode("full"));
   viewModelButton?.addEventListener("click", () => setDetailViewMode("model"));
   viewSheetButton?.addEventListener("click", () => setDetailViewMode("sheet"));
+  digestiveSequenceButton?.addEventListener("click", () => setDigestiveLessonMode("sequence"));
+  digestiveClassButton?.addEventListener("click", () => setDigestiveLessonMode("classroom"));
+  digestiveClassPrev?.addEventListener("click", () => moveDigestiveLesson(-1));
+  digestiveClassNext?.addEventListener("click", () => moveDigestiveLesson(1));
+  digestiveCopyLinkButton?.addEventListener("click", copyDigestiveTeacherLink);
+  openDigestiveModalButton?.addEventListener("click", openDigestiveModal);
+  closeDigestiveModalButton?.addEventListener("click", closeDigestiveModal);
+  digestiveModal?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target instanceof HTMLElement && target.dataset.closeDigestiveModal === "true") closeDigestiveModal();
+  });
 
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !digestiveModal?.classList.contains("hidden")) {
+      closeDigestiveModal();
+      return;
+    }
     if (event.key === "Escape" && !detailView.classList.contains("hidden")) closeSystemDetail();
   });
   document.addEventListener("fullscreenchange", updateFullscreenButton);
@@ -137,9 +214,11 @@ function buildSystemGallery() {
     stage.className = "model-stage";
 
     const organCount = Object.values(organInfo).filter((organ) => organ.systemKey === systemKey).length;
+    const audit = modelAudit[systemKey] ?? { status: "review", label: "En revision" };
+    card.dataset.status = audit.status;
     const meta = document.createElement("div");
     meta.className = "card-meta";
-    meta.innerHTML = `<span>${organCount} organos clave</span><span>Explorar</span>`;
+    meta.innerHTML = `<span>${organCount} organos clave</span><span data-status="${audit.status}">${audit.label}</span>`;
 
     const title = document.createElement("div");
     title.className = "system-title";
@@ -149,7 +228,11 @@ function buildSystemGallery() {
     summary.className = "card-summary";
     summary.textContent = systemDetails[systemKey]?.miniSummary ?? "Explora este sistema.";
 
-    card.append(stage, meta, title, summary);
+    const actionHint = document.createElement("p");
+    actionHint.className = "card-action-hint";
+    actionHint.textContent = "Abrir sistema";
+
+    card.append(stage, meta, title, summary, actionHint);
     card.tabIndex = 0;
     card.setAttribute("role", "button");
     card.setAttribute("aria-label", `Abrir ${systemConfig[systemKey].label}`);
@@ -184,16 +267,21 @@ function buildQuickIndex() {
 }
 
 function openSystemDetail(systemKey) {
+  const previousSystemKey = currentSystemKey;
   const openToken = ++detailOpenToken;
   currentSystemKey = systemKey;
+  if (systemKey === "digestive" && previousSystemKey !== "digestive") {
+    digestiveLessonMode = "sequence";
+    digestiveLessonIndex = 0;
+  }
   const detail = systemDetails[systemKey] ?? {
     title: systemConfig[systemKey].label,
     summary: "Vista general del sistema.",
     description: "Modelo independiente para explorar sin superponer capas.",
   };
 
-  setDetailViewMode("full");
-  setModelStatus("Cargando modelo 3D...", "loading");
+  setDetailViewMode(tourActive ? "model" : "full");
+  setModelStatus(`Cargando ${systemConfig[systemKey].label.toLowerCase()}...`, "loading");
   detailTitle.textContent = detail.title;
   detailSummary.textContent = detail.summary;
   detailDescription.textContent = detail.description ?? detail.summary;
@@ -205,12 +293,16 @@ function openSystemDetail(systemKey) {
   detailQuestion.textContent = detail.question ?? "Que organos reconoces en esta vista?";
   detailMiniSummary.textContent = detail.miniSummary ?? detail.summary;
   detailThinking.textContent = buildThinkingPrompt(systemKey, detail);
+  toggleDigestiveIntroLayout(systemKey);
+  renderLookList(systemKey, detail);
+  renderDigestiveProcess(systemKey);
   organPanel.classList.add("hidden");
 
   renderOrganList(systemKey);
   detailViewer?.dispose();
   detailViewer = null;
   detailStage.innerHTML = "";
+  detailView.style.setProperty("--system-color", systemConfig[systemKey].color);
   detailStage.style.setProperty("--system-color", systemConfig[systemKey].color);
 
   gallery.classList.add("hidden");
@@ -218,6 +310,8 @@ function openSystemDetail(systemKey) {
   atlasTools?.classList.add("hidden");
   tourComplete.classList.add("hidden");
   detailView.classList.remove("hidden");
+  detailView.classList.toggle("is-tour-active", tourActive);
+  updateRoute();
   updateTourBanner();
   backButton.focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -226,8 +320,8 @@ function openSystemDetail(systemKey) {
     if (openToken !== detailOpenToken || detailView.classList.contains("hidden")) return;
     detailViewer = createSystemViewer(detailStage, systemKey, {
       onLoad: () => setModelStatus("Modelo 3D cargado.", "ready"),
-      onFallback: () => setModelStatus("Modelo temporal disponible.", "fallback"),
-      onError: () => setModelStatus("No se pudo cargar el modelo 3D. Vista temporal disponible.", "error"),
+      onFallback: () => setModelStatus("Vista temporal disponible.", "fallback"),
+      onError: () => setModelStatus("No se pudo cargar el modelo. Vista temporal activa.", "error"),
     });
     renderOrganHotspots(systemKey);
   });
@@ -258,17 +352,264 @@ function renderOrganList(systemKey) {
   }
 }
 
+function renderLookList(systemKey, detail) {
+  if (!detailLookList) return;
+  const fallbackItems = [
+    detail.summary,
+    `Ubica: ${(detail.organs ?? []).slice(0, 3).join(", ")}.`,
+    detail.question,
+  ].filter(Boolean);
+  const items = detail.lookFor?.length ? detail.lookFor : fallbackItems;
+  detailLookList.innerHTML = "";
+  items.slice(0, 4).forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    detailLookList.appendChild(li);
+  });
+}
+
+function renderDigestiveProcess(systemKey) {
+  if (!digestiveProcess || !digestiveProcessList) return;
+
+  digestiveProcessList.innerHTML = "";
+  const sections = systemLessonSections[systemKey] ?? [];
+  const introSections = systemKey === "digestive" ? sections.slice(0, 3) : [];
+  const processSections = systemKey === "digestive" ? sections.slice(3) : sections;
+  const hasLesson = sections.length > 0;
+  digestiveProcess.classList.toggle("hidden", !hasLesson);
+  if (!hasLesson) return;
+
+  renderDigestiveIntro(introSections);
+  renderDigestiveSupport();
+  renderDigestiveClassroom(processSections);
+  syncDigestiveLessonMode();
+
+  processSections.forEach((section, index) => {
+    const card = document.createElement("article");
+    card.className = "process-card";
+    card.dataset.sectionId = section.id;
+    card.addEventListener("click", () => {
+      digestiveLessonIndex = index;
+      renderDigestiveClassroom(processSections);
+      updateDigestiveActiveCard();
+      if (digestiveLessonMode === "classroom") syncDigestiveLessonMode();
+      updateRoute();
+    });
+
+    const figure = document.createElement("figure");
+    figure.className = "process-figure has-fallback";
+
+    const fallback = document.createElement("span");
+    fallback.className = "process-image-placeholder";
+    fallback.textContent = "Espacio reservado para imagen";
+
+    figure.append(fallback);
+
+    const content = document.createElement("div");
+    content.className = "process-content";
+
+    const step = document.createElement("span");
+    step.className = "process-step";
+    step.textContent = `Paso ${index + 1}`;
+
+    const title = document.createElement("h3");
+    title.textContent = section.title.replace(/^\d+\.\s*/, "");
+
+    const summary = document.createElement("p");
+    summary.className = "process-summary";
+    summary.textContent = section.summary;
+
+    const body = document.createElement("p");
+    body.textContent = section.body;
+
+    const list = document.createElement("ul");
+    list.className = "process-bullets";
+    section.bullets.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      list.appendChild(li);
+    });
+
+    content.append(step, title, summary, body, list);
+    card.append(figure, content);
+    digestiveProcessList.appendChild(card);
+  });
+
+  updateDigestiveActiveCard();
+}
+
+function renderDigestiveIntro(sections) {
+  if (!digestiveSystemIntroList) return;
+  digestiveSystemIntroList.innerHTML = "";
+  if (!sections.length) return;
+
+  sections.forEach((section, index) => {
+    const article = document.createElement("article");
+    article.className = "digestive-intro-card";
+
+    const title = document.createElement("h4");
+    title.textContent = section.title.replace(/^\d+\.\s*/, "");
+
+    const summary = document.createElement("p");
+    summary.className = "process-summary";
+    summary.textContent = section.summary;
+
+    const list = document.createElement("ul");
+    list.className = "process-bullets";
+    [section.body, ...(section.bullets ?? []).slice(0, 2)].forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      list.appendChild(li);
+    });
+
+    article.append(title, summary, list);
+    digestiveSystemIntroList.appendChild(article);
+  });
+}
+
+function toggleDigestiveIntroLayout(systemKey) {
+  const isDigestive = systemKey === "digestive";
+  detailSummary?.classList.toggle("hidden", isDigestive);
+  detailDescription?.classList.toggle("hidden", isDigestive);
+  detailModelNote?.classList.toggle("hidden", isDigestive);
+  detailLookSection?.classList.toggle("hidden", isDigestive);
+  detailFunctionSection?.classList.toggle("hidden", isDigestive);
+  learningCards?.classList.toggle("hidden", isDigestive);
+  digestiveSystemIntro?.classList.toggle("hidden", !isDigestive);
+}
+
+function renderDigestiveSupport() {
+  if (digestiveRecapList) {
+    digestiveRecapList.innerHTML = "";
+    digestiveRecapPoints.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      digestiveRecapList.appendChild(li);
+    });
+  }
+
+  if (digestiveReferenceList) {
+    digestiveReferenceList.innerHTML = "";
+    digestiveReferenceLinks.forEach((link) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="${link.url}" target="_blank" rel="noreferrer">${link.label}</a><span>${link.note}</span>`;
+      digestiveReferenceList.appendChild(li);
+    });
+  }
+}
+
+function renderDigestiveClassroom(sections) {
+  if (!digestiveClassroom || !digestiveClassTitle || !digestiveClassSummary || !digestiveClassFigure || !digestiveClassBullets) return;
+  if (!sections.length) {
+    digestiveClassStep.textContent = "";
+    digestiveClassTitle.textContent = "";
+    digestiveClassSummary.textContent = "";
+    digestiveClassFigure.innerHTML = "";
+    digestiveClassBullets.innerHTML = "";
+    return;
+  }
+  const safeIndex = Math.max(0, Math.min(digestiveLessonIndex, sections.length - 1));
+  digestiveLessonIndex = safeIndex;
+  const section = sections[safeIndex];
+
+  digestiveClassStep.textContent = `Paso ${safeIndex + 1} de ${sections.length}`;
+  digestiveClassTitle.textContent = section.title.replace(/^\d+\.\s*/, "");
+  digestiveClassSummary.textContent = section.summary;
+  digestiveClassFigure.innerHTML = `<div class="process-image-placeholder process-image-placeholder-large">Espacio reservado para imagen</div>`;
+  digestiveClassBullets.innerHTML = "";
+  [section.body, ...(section.bullets ?? [])].forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    digestiveClassBullets.appendChild(li);
+  });
+  if (digestiveClassPrev) digestiveClassPrev.disabled = safeIndex === 0;
+  if (digestiveClassNext) digestiveClassNext.textContent = safeIndex === sections.length - 1 ? "Cerrar recorrido" : "Siguiente paso";
+}
+
+function setDigestiveLessonMode(mode) {
+  digestiveLessonMode = mode;
+  syncDigestiveLessonMode();
+  updateRoute();
+}
+
+function syncDigestiveLessonMode() {
+  if (!digestiveProcess) return;
+  const isDigestive = currentSystemKey === "digestive";
+  const isClassroom = isDigestive && digestiveLessonMode === "classroom";
+  digestiveProcess.dataset.lessonMode = isClassroom ? "classroom" : "sequence";
+  digestiveSequenceButton?.classList.toggle("is-active", !isClassroom);
+  digestiveClassButton?.classList.toggle("is-active", isClassroom);
+  digestiveSequenceButton?.setAttribute("aria-pressed", String(!isClassroom));
+  digestiveClassButton?.setAttribute("aria-pressed", String(isClassroom));
+  digestiveClassroom?.classList.toggle("hidden", !isClassroom);
+  digestiveProcessList?.classList.toggle("hidden", isClassroom);
+  updateDigestiveActiveCard();
+}
+
+function updateDigestiveActiveCard() {
+  document.querySelectorAll(".process-card").forEach((card, index) => {
+    card.classList.toggle("is-active", currentSystemKey === "digestive" && index === digestiveLessonIndex);
+  });
+}
+
+function moveDigestiveLesson(direction) {
+  const sections = (systemLessonSections.digestive ?? []).slice(3);
+  if (!sections.length) return;
+  if (direction > 0 && digestiveLessonIndex >= sections.length - 1) {
+    setDigestiveLessonMode("sequence");
+    return;
+  }
+  digestiveLessonIndex = Math.max(0, Math.min(sections.length - 1, digestiveLessonIndex + direction));
+  renderDigestiveClassroom(sections);
+  updateDigestiveActiveCard();
+  updateRoute();
+}
+
+function copyDigestiveTeacherLink() {
+  const url = buildCurrentShareUrl({
+    system: "digestive",
+    view: "sheet",
+    digestiveClass: "1",
+    step: String(digestiveLessonIndex + 1),
+    digestiveUnit: "1",
+  });
+  navigator.clipboard?.writeText(url).then(
+    () => setModelStatus("Link docente copiado.", "ready"),
+    () => setModelStatus("No se pudo copiar el link, pero la vista ya esta lista para compartir.", "fallback"),
+  );
+}
+
+function openDigestiveModal() {
+  if (!digestiveModal) return;
+  digestiveModal.classList.remove("hidden");
+  document.body.classList.add("has-modal-open");
+  syncDigestiveLessonMode();
+  closeDigestiveModalButton?.focus({ preventScroll: true });
+  updateRoute();
+}
+
+function closeDigestiveModal() {
+  if (!digestiveModal) return;
+  digestiveModal.classList.add("hidden");
+  document.body.classList.remove("has-modal-open");
+  openDigestiveModalButton?.focus({ preventScroll: true });
+  updateRoute();
+}
+
 function closeSystemDetail() {
   tourActive = false;
   detailOpenToken += 1;
+  closeDigestiveModal();
   detailViewer?.dispose();
   detailViewer = null;
   detailView.classList.add("hidden");
+  detailView.classList.remove("is-tour-active");
   gallery.classList.remove("hidden");
   heroCard.classList.remove("hidden");
   atlasTools?.classList.remove("hidden");
   tourBanner.classList.add("hidden");
   tourComplete.classList.add("hidden");
+  history.replaceState({}, "", window.location.pathname);
   clearSearchResults();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -314,6 +655,7 @@ function finishGuidedTour() {
   detailViewer?.dispose();
   detailViewer = null;
   detailView.classList.add("hidden");
+  detailView.classList.remove("is-tour-active");
   tourBanner.classList.add("hidden");
   heroCard.classList.remove("hidden");
   atlasTools?.classList.remove("hidden");
@@ -341,9 +683,9 @@ function updateTourBanner() {
   }
   const currentIndex = systemOrder.indexOf(currentSystemKey);
   const detail = systemDetails[currentSystemKey];
-  tourTitle.textContent = `Paso ${currentIndex + 1} de ${systemOrder.length}: ${detail.title}`;
-  tourCopy.textContent = detail.question;
-  tourNext.textContent = currentIndex === systemOrder.length - 1 ? "Finalizar recorrido" : "Siguiente sistema";
+  tourTitle.textContent = `${currentIndex + 1}. ${detail.title}`;
+  tourCopy.textContent = `${detail.classroomStep ?? detail.miniSummary} Pregunta guia: ${detail.question}`;
+  tourNext.textContent = currentIndex === systemOrder.length - 1 ? "Cerrar recorrido" : "Siguiente";
   tourProgressBar.style.width = `${((currentIndex + 1) / systemOrder.length) * 100}%`;
   tourBanner.classList.remove("hidden");
 }
@@ -388,6 +730,59 @@ function setModelStatus(message, state) {
 function toggleFullscreen() {
   if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
   else document.exitFullscreen?.();
+}
+
+function buildCurrentShareUrl(extraParams = {}) {
+  const url = new URL(window.location.href);
+  Object.entries(extraParams).forEach(([key, value]) => {
+    if (value === null || value === undefined || value === "") url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+  });
+  return url.toString();
+}
+
+function updateRoute() {
+  if (detailView.classList.contains("hidden")) return;
+  const params = new URLSearchParams();
+  params.set("system", currentSystemKey);
+  params.set("view", detailView.dataset.viewMode || "full");
+  if (currentSystemKey === "digestive" && digestiveLessonMode === "classroom") {
+    params.set("digestiveClass", "1");
+    params.set("step", String(digestiveLessonIndex + 1));
+  }
+  if (currentSystemKey === "digestive" && digestiveModal && !digestiveModal.classList.contains("hidden")) {
+    params.set("digestiveUnit", "1");
+  }
+  history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
+}
+
+function applyInitialRoute() {
+  const params = new URLSearchParams(window.location.search);
+  const system = params.get("system");
+  if (!system || !systemOrder.includes(system)) return;
+
+  const requestedView = params.get("view");
+  const digestClass = params.get("digestiveClass") === "1";
+  const digestUnit = params.get("digestiveUnit") === "1";
+  const step = Number(params.get("step") || "1");
+  if (system === "digestive") {
+    const processSections = (systemLessonSections.digestive ?? []).slice(3);
+    digestiveLessonIndex = Math.max(0, Math.min(processSections.length - 1, step - 1));
+    digestiveLessonMode = digestClass ? "classroom" : "sequence";
+  }
+
+  requestAnimationFrame(() => {
+    openSystemDetail(system);
+    if (requestedView && ["full", "model", "sheet"].includes(requestedView)) {
+      setDetailViewMode(requestedView);
+      updateRoute();
+    }
+    if (system === "digestive") {
+      renderDigestiveProcess("digestive");
+      syncDigestiveLessonMode();
+      if (digestUnit) openDigestiveModal();
+    }
+  });
 }
 
 function updateFullscreenButton() {
@@ -455,6 +850,8 @@ function createStaticPreview(container, systemKey) {
   const figure = document.createElement("div");
   figure.className = `static-preview static-preview-${systemKey}`;
   figure.style.setProperty("--system-color", color);
+  if (REAL_MODEL_KEYS.has(systemKey)) figure.classList.add("will-load-3d");
+  if (DEFERRED_MENU_PREVIEW_KEYS.has(systemKey)) figure.classList.add("is-deferred-preview");
   figure.innerHTML = `
     <div class="preview-body">
       <span class="preview-head"></span>
@@ -466,28 +863,107 @@ function createStaticPreview(container, systemKey) {
     </div>
     <div class="preview-system-mark"></div>
   `;
-  if (THUMBNAIL_KEYS.has(systemKey)) {
-    const image = document.createElement("img");
-    image.className = "preview-thumbnail";
-    image.alt = "";
-    image.loading = "lazy";
-    image.addEventListener("load", () => figure.classList.add("has-thumbnail"));
-    image.addEventListener("error", () => image.remove());
-    image.src = `${THUMBNAIL_BASE_PATH}/${systemKey}.png?v=${MODEL_VERSION}`;
-    figure.prepend(image);
-  }
+  figure.classList.add("is-loading");
   container.appendChild(figure);
+
+  let disposed = false;
+  let renderer = null;
+  let scene = null;
+  let loaded = false;
+
+  const loadPreview = () => {
+    if (disposed || loaded) return;
+    loaded = true;
+    const preview = createPreviewScene(figure, systemKey);
+    renderer = preview.renderer;
+    scene = preview.scene;
+  };
+
+  figure.__loadPreview = loadPreview;
+  if (DEFERRED_MENU_PREVIEW_KEYS.has(systemKey)) {
+    figure.addEventListener("pointerenter", loadPreview, { once: true });
+    figure.addEventListener("focusin", loadPreview, { once: true });
+    figure.addEventListener("click", loadPreview, { once: true });
+  } else if (previewObserver) previewObserver.observe(figure);
+  else requestAnimationFrame(loadPreview);
+
   return {
-    resize() {},
+    resize() {
+      if (!renderer || !scene) return;
+      renderPreviewScene(figure, renderer, scene.camera, scene.scene);
+    },
     dispose() {
+      disposed = true;
+      previewObserver?.unobserve(figure);
+      if (scene) clearObject(scene.scene);
+      renderer?.dispose();
       figure.remove();
     },
   };
 }
 
+function createPreviewScene(container, systemKey) {
+  const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "low-power" });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.domElement.className = "preview-canvas";
+  container.prepend(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
+  addLights(scene);
+  const root = new THREE.Group();
+  scene.add(root);
+
+  const renderPreview = () => {
+    fitCameraToObject(camera, null, root, systemKey, { preview: true });
+    renderPreviewScene(container, renderer, camera, scene);
+  };
+
+  if (!REAL_MODEL_KEYS.has(systemKey)) {
+    const fallback = createFallbackModel(systemKey);
+    root.add(fallback);
+    renderPreview();
+  } else {
+    renderPreviewScene(container, renderer, camera, scene);
+  }
+
+  loadSystemModel(systemKey)
+    .then((model) => {
+      if (!container.isConnected) return;
+      clearObject(root);
+      cleanupImportedModel(model);
+      normalizeModel(model, systemKey);
+      applySystemMaterial(model, systemKey);
+      root.add(model);
+      container.classList.add("has-3d");
+      container.classList.remove("is-loading");
+      renderPreview();
+    })
+    .catch(() => {
+      if (!container.isConnected) return;
+      clearObject(root);
+      root.add(createFallbackModel(systemKey));
+      container.classList.add("has-3d");
+      container.classList.remove("is-loading");
+      renderPreview();
+    });
+
+  return { renderer, scene: { scene, camera } };
+}
+
+function renderPreviewScene(container, renderer, camera, scene) {
+  const width = Math.max(1, container.clientWidth);
+  const height = Math.max(1, container.clientHeight);
+  renderer.setSize(width, height, false);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+}
+
 function createSystemViewer(container, systemKey, options = {}) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.45));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = false;
   renderer.domElement.className = "model-canvas";
@@ -500,13 +976,13 @@ function createSystemViewer(container, systemKey, options = {}) {
   controls.dampingFactor = 0.08;
   controls.zoomToCursor = true;
   controls.minDistance = 1.2;
-  controls.maxDistance = 9;
+  controls.maxDistance = CAMERA_CONFIG[systemKey]?.maxDistance ?? 8.5;
 
   addLights(scene);
   const root = new THREE.Group();
   scene.add(root);
 
-  const state = { disposed: false, animationId: 0 };
+  const state = { disposed: false, animationId: 0, paused: document.hidden };
   resize();
 
   const fallback = createFallbackModel(systemKey);
@@ -517,9 +993,9 @@ function createSystemViewer(container, systemKey, options = {}) {
   loadSystemModel(systemKey)
     .then((model) => {
       if (state.disposed) return;
-      root.clear();
+      clearObject(root);
       cleanupImportedModel(model);
-      normalizeModel(model);
+      normalizeModel(model, systemKey);
       applySystemMaterial(model, systemKey);
       root.add(model);
       fitCameraToObject(camera, controls, model, systemKey);
@@ -528,7 +1004,7 @@ function createSystemViewer(container, systemKey, options = {}) {
     })
     .catch(() => {
       if (state.disposed) return;
-      root.clear();
+      clearObject(root);
       root.add(createFallbackModel(systemKey));
       fitCameraToObject(camera, controls, root, systemKey);
       renderScene();
@@ -540,8 +1016,10 @@ function createSystemViewer(container, systemKey, options = {}) {
 
   function animate() {
     if (state.disposed) return;
-    controls.update();
-    renderScene();
+    if (!state.paused) {
+      controls.update();
+      renderScene();
+    }
     state.animationId = requestAnimationFrame(animate);
   }
 
@@ -561,17 +1039,18 @@ function createSystemViewer(container, systemKey, options = {}) {
   function dispose() {
     state.disposed = true;
     cancelAnimationFrame(state.animationId);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
     controls.dispose();
-    scene.traverse((object) => {
-      object.geometry?.dispose?.();
-      if (object.material) {
-        const materials = Array.isArray(object.material) ? object.material : [object.material];
-        materials.forEach((material) => material.dispose?.());
-      }
-    });
+    clearObject(scene);
     renderer.dispose();
     renderer.domElement.remove();
   }
+
+  function handleVisibilityChange() {
+    state.paused = document.hidden || detailView.classList.contains("hidden");
+  }
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
   return { resize, dispose };
 }
@@ -612,16 +1091,20 @@ function loadSystemModel(systemKey) {
 }
 
 function addLights(scene) {
-  scene.add(new THREE.HemisphereLight(0xdff7ff, 0x12334b, 2.6));
-  const key = new THREE.DirectionalLight(0xffffff, 2.8);
+  scene.add(new THREE.HemisphereLight(0xe9fbff, 0x193a54, 2.9));
+  const key = new THREE.DirectionalLight(0xffffff, 3.1);
   key.position.set(2.5, 4, 4);
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0x9adfff, 1.5);
+  const fill = new THREE.DirectionalLight(0x9adfff, 1.7);
   fill.position.set(-4, 1.2, 2);
   scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.9);
+  rim.position.set(0, 2, -3);
+  scene.add(rim);
 }
 
-function normalizeModel(model) {
+function normalizeModel(model, systemKey) {
+  applyInitialModelRotation(model, systemKey);
   const box = new THREE.Box3().setFromObject(model);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
@@ -630,6 +1113,13 @@ function normalizeModel(model) {
   model.scale.multiplyScalar(3.55 / maxDim);
   const nextBox = new THREE.Box3().setFromObject(model);
   model.position.y -= nextBox.min.y;
+}
+
+function applyInitialModelRotation(model, systemKey) {
+  const rotation = MODEL_ROTATION_CONFIG[systemKey];
+  if (!rotation) return;
+  model.rotation.set(rotation.x ?? 0, rotation.y ?? 0, rotation.z ?? 0);
+  model.updateMatrixWorld(true);
 }
 
 function cleanupImportedModel(model) {
@@ -657,17 +1147,20 @@ function looksLikeGuideMesh(object) {
   return (shortest / longest < 0.004 && middle / longest < 0.018) || (longest > 1.8 && shortest < 0.012);
 }
 
-function fitCameraToObject(camera, controls, object, systemKey) {
+function fitCameraToObject(camera, controls, object, systemKey, options = {}) {
   const box = new THREE.Box3().setFromObject(object);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
   const config = CAMERA_CONFIG[systemKey] ?? { zoom: 0.72, y: 0.03 };
-  const radius = Math.max(size.x, size.y, size.z) * config.zoom;
+  const zoom = options.preview ? (config.previewZoom ?? config.zoom * 1.16) : config.zoom;
+  const radius = Math.max(size.x, size.y, size.z) * zoom;
   const distance = Math.max(2.2, radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)));
-  camera.position.set(center.x, center.y + size.y * config.y, center.z + distance * 0.9);
-  camera.lookAt(center);
-  controls.target.copy(center);
-  controls.update();
+  const target = center.clone();
+  target.y += size.y * (config.y ?? 0.03);
+  camera.position.set(target.x, target.y, center.z + distance * 0.9);
+  camera.lookAt(target);
+  controls?.target.copy(target);
+  controls?.update();
 }
 
 function applySystemMaterial(model, systemKey) {
@@ -679,12 +1172,17 @@ function applySystemMaterial(model, systemKey) {
     const materials = Array.isArray(object.material) ? object.material : [object.material].filter(Boolean);
     if (!materials.length) object.material = createMaterial(color, opacity);
     materials.forEach((material) => {
+      const preserveSource = shouldPreserveSourceMaterial(systemKey, material, object);
+      const namedColor = getMaterialNameColor(systemKey, material);
       if (material.color) {
         const maxChannel = Math.max(material.color.r, material.color.g, material.color.b);
         const minChannel = Math.min(material.color.r, material.color.g, material.color.b);
         const brightness = material.color.r + material.color.g + material.color.b;
         const saturation = maxChannel - minChannel;
-        if (brightness < 0.28 || brightness > 2.35 || saturation < 0.08) material.color.copy(color);
+        if (!preserveSource && namedColor) material.color.copy(namedColor);
+        else if (!preserveSource && (brightness < 0.28 || brightness > 2.35 || saturation < 0.08)) {
+          material.color.copy(color);
+        }
       }
       material.transparent = opacity < 1;
       material.opacity = opacity;
@@ -694,6 +1192,19 @@ function applySystemMaterial(model, systemKey) {
       material.needsUpdate = true;
     });
   });
+}
+
+function shouldPreserveSourceMaterial(systemKey, material, object) {
+  if (!PRESERVE_SOURCE_MATERIAL_KEYS.has(systemKey)) return false;
+  return Boolean(material.map || material.emissiveMap || material.normalMap || object.geometry?.hasAttribute?.("color"));
+}
+
+function getMaterialNameColor(systemKey, material) {
+  const rules = MATERIAL_NAME_COLORS[systemKey];
+  if (!rules?.length) return null;
+  const name = (material.name ?? "").toLowerCase();
+  const rule = rules.find(({ match }) => name.includes(match));
+  return rule ? new THREE.Color(rule.color) : null;
 }
 
 function getSystemModelOpacity(systemKey) {
@@ -711,6 +1222,20 @@ function getSystemModelOpacity(systemKey) {
     reproductiveMale: 0.92,
     reproductiveFemale: 0.92,
   }[systemKey] ?? 0.9;
+}
+
+function clearObject(object) {
+  while (object.children.length) {
+    const child = object.children[0];
+    object.remove(child);
+    child.traverse((node) => {
+      node.geometry?.dispose?.();
+      if (node.material) {
+        const materials = Array.isArray(node.material) ? node.material : [node.material];
+        materials.forEach((material) => material.dispose?.());
+      }
+    });
+  }
 }
 
 function createFallbackModel(systemKey) {

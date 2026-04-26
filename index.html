@@ -27,13 +27,13 @@
         <p class="eyebrow">Atlas educativo interactivo</p>
         <h1>Atlas 3D del Cuerpo Humano</h1>
         <p class="hero-copy">
-          Un atlas preparado para clase: cada sistema se explora por separado, con modelo visual, organos clave y una lectura rapida para alumnos.
+          Un recorrido visual para entender como trabajan juntos los sistemas del cuerpo humano, pensado para alumnos que exploran solos o para proyectar en clase.
         </p>
         <div class="quick-guide" aria-label="Como usar el atlas">
-          <span>1. Elegi una tarjeta</span>
-          <span>2. Mira el visor</span>
-          <span>3. Toca puntos u organos</span>
-          <span>4. Avanza con modo clase</span>
+          <span>1. Elegi un sistema</span>
+          <span>2. Mira que organos lo forman</span>
+          <span>3. Abri puntos interactivos</span>
+          <span>4. Recorre como presentacion</span>
         </div>
         <div class="hero-actions" aria-label="Acciones principales">
           <button id="start-tour" class="primary-button" type="button">Empezar modo clase</button>
@@ -53,16 +53,16 @@
 
       <section class="teacher-guide-card" aria-label="Guia rapida de uso">
         <article>
-          <h2>Como usarlo en clase</h2>
-          <p>Abri un sistema, elegi modo solo modelo para explicar visualmente y cambia a solo ficha para leer lo esencial.</p>
+          <h2>Para alumnos</h2>
+          <p>Elegir un sistema, observar el modelo y abrir organos clave. La ficha resume lo importante sin textos largos.</p>
         </article>
         <article>
-          <h2>Recorrido recomendado</h2>
-          <p>Usa modo clase para avanzar sistema por sistema. El cierre muestra un resumen para repasar.</p>
+          <h2>Para docentes</h2>
+          <p>Usar pantalla completa y modo clase. Cada paso tiene una idea central, organos clave y una pregunta para conversar.</p>
         </article>
         <article>
           <h2>Si un modelo falla</h2>
-          <p>La app muestra una vista temporal para que la clase continue sin quedarse en blanco.</p>
+          <p>La app muestra una vista temporal para que la clase continue.</p>
         </article>
       </section>
 
@@ -94,7 +94,7 @@
 
           <div class="detail-layout">
             <div class="detail-stage-card">
-              <p class="stage-help">Arrastra para rotar. Usa los puntos para abrir organos.</p>
+              <p class="stage-help">Arrastra para rotar. Usa la rueda para acercar. Toca un punto para abrir la ficha.</p>
               <p id="model-status" class="model-status is-loading" aria-live="polite">Cargando modelo...</p>
               <div id="detail-stage" class="detail-stage"></div>
             </div>
@@ -106,7 +106,17 @@
               <p id="detail-description" class="detail-description"></p>
               <p id="detail-model-note" class="model-note"></p>
 
-              <div class="detail-section">
+              <section id="digestive-system-intro" class="detail-section digestive-system-intro hidden" aria-label="Introduccion al sistema digestivo">
+                <h3>Introduccion al sistema digestivo</h3>
+                <div id="digestive-system-intro-list" class="digestive-intro-list"></div>
+              </section>
+
+              <div id="detail-look-section" class="detail-section look-section">
+                <h3>Que mirar primero</h3>
+                <ul id="detail-look-list" class="look-list"></ul>
+              </div>
+
+              <div id="detail-function-section" class="detail-section">
                 <h3>Funcion principal</h3>
                 <p id="detail-function" class="detail-description"></p>
               </div>
@@ -136,13 +146,25 @@
                 </dl>
               </div>
 
+              <section id="digestive-process" class="digestive-process hidden" aria-label="Proceso de digestion">
+                <div class="digestive-launch-card">
+                  <p class="detail-eyebrow">Unidad especial</p>
+                  <h3>Introduccion al sistema digestivo</h3>
+                  <p>Primero mira las ideas base del sistema. Despues abre la secuencia completa para estudiar el proceso paso a paso con mas detalle.</p>
+                  <div class="digestive-launch-actions">
+                    <button id="open-digestive-modal" class="primary-button" type="button">Abrir proceso digestivo completo</button>
+                    <button id="digestive-copy-link" class="ghost-button" type="button">Copiar link docente</button>
+                  </div>
+                </div>
+              </section>
+
               <div class="learning-cards">
                 <article>
                   <h3>Dato clave</h3>
                   <p id="detail-key-fact"></p>
                 </article>
                 <article>
-                  <h3>Pregunta rapida</h3>
+                  <h3>Para observar</h3>
                   <p id="detail-question"></p>
                 </article>
                 <article>
@@ -161,14 +183,52 @@
 
       <section id="tour-complete" class="tour-complete hidden" aria-live="polite">
         <p class="eyebrow">Recorrido completo</p>
-        <h2>Listo para debatir en clase</h2>
-        <p>Ya recorriste todos los sistemas. Podes volver al menu o repetir el recorrido cuando quieras.</p>
+        <h2>Recorrido terminado</h2>
+        <p>Ya viste todos los sistemas. Este resumen sirve para repasar relaciones entre estructuras y funciones.</p>
         <ul id="tour-summary-list" class="tour-summary-list"></ul>
         <div class="hero-actions">
           <button id="complete-menu" class="primary-button" type="button">Volver al menu</button>
           <button id="complete-restart" class="ghost-button" type="button">Repetir recorrido</button>
         </div>
       </section>
+
+      <div id="digestive-modal" class="digestive-modal hidden" role="dialog" aria-modal="true" aria-labelledby="digestive-modal-title">
+        <div class="digestive-modal-backdrop" data-close-digestive-modal="true"></div>
+        <section class="digestive-modal-panel">
+          <div class="digestive-modal-header">
+            <div>
+              <p class="detail-eyebrow">Unidad especial</p>
+              <h2 id="digestive-modal-title">Proceso digestivo paso a paso</h2>
+              <p class="digestive-modal-subtitle">Recorrido detallado desde la boca hasta la eliminacion de residuos.</p>
+            </div>
+            <button id="close-digestive-modal" class="ghost-button" type="button">Cerrar</button>
+          </div>
+
+          <div class="process-toolbar" aria-label="Modos del digestivo">
+            <div class="process-toolbar-main">
+              <button id="digestive-sequence" class="view-mode-button is-active" type="button">Vista secuencia</button>
+              <button id="digestive-class" class="view-mode-button" type="button">Modo clase digestivo</button>
+            </div>
+          </div>
+
+          <article id="digestive-classroom" class="digestive-classroom hidden" aria-live="polite">
+            <div class="digestive-classroom-copy">
+              <p id="digestive-class-step" class="detail-eyebrow">Paso 1</p>
+              <h4 id="digestive-class-title"></h4>
+              <p id="digestive-class-summary" class="digestive-class-summary"></p>
+              <ul id="digestive-class-bullets" class="digestive-class-bullets"></ul>
+              <div class="digestive-class-actions">
+                <button id="digestive-class-prev" class="ghost-button" type="button">Anterior</button>
+                <button id="digestive-class-next" class="primary-button" type="button">Siguiente paso</button>
+              </div>
+            </div>
+            <figure id="digestive-class-figure" class="digestive-class-figure"></figure>
+          </article>
+
+          <div id="digestive-process-list" class="digestive-process-list"></div>
+
+        </section>
+      </div>
 
       <section class="credits-card" aria-label="Creditos y estado del proyecto">
         <p>
@@ -179,6 +239,6 @@
       </section>
     </main>
 
-    <script type="module" src="./app.js?v=20260422-restored-models-1"></script>
-  </body>
+  <script type="module" src="./app.js?v=20260424-digestive-prezi-1"></script>
+</body>
 </html>
