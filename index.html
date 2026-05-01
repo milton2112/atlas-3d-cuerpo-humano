@@ -93,10 +93,24 @@
           </div>
 
           <div class="detail-layout">
-            <div class="detail-stage-card">
-              <p class="stage-help">Arrastra para rotar. Usa la rueda para acercar. Toca un punto para abrir la ficha.</p>
-              <p id="model-status" class="model-status is-loading" aria-live="polite">Cargando modelo...</p>
-              <div id="detail-stage" class="detail-stage"></div>
+            <div class="detail-visual-column">
+              <div class="detail-stage-card">
+                <p class="stage-help">Arrastra para rotar. Usa la rueda para acercar. Toca un punto para abrir la ficha.</p>
+                <p id="model-status" class="model-status is-loading" aria-live="polite">Cargando modelo...</p>
+                <div id="detail-stage" class="detail-stage"></div>
+              </div>
+
+              <section id="digestive-process" class="digestive-process hidden" aria-label="Proceso de digestion">
+                <div class="digestive-launch-card">
+                  <p class="detail-eyebrow">Unidad especial</p>
+                  <h3>Introduccion al sistema digestivo</h3>
+                  <p>Primero mira las ideas base del sistema. Despues abre la secuencia completa para estudiar el proceso paso a paso con mas detalle.</p>
+                  <div class="digestive-launch-actions">
+                    <button id="open-digestive-modal" class="primary-button" type="button">Abrir proceso digestivo completo</button>
+                    <button id="digestive-copy-link" class="ghost-button" type="button">Copiar link docente</button>
+                  </div>
+                </div>
+              </section>
             </div>
 
             <aside class="detail-info-card">
@@ -145,18 +159,6 @@
                   </div>
                 </dl>
               </div>
-
-              <section id="digestive-process" class="digestive-process hidden" aria-label="Proceso de digestion">
-                <div class="digestive-launch-card">
-                  <p class="detail-eyebrow">Unidad especial</p>
-                  <h3>Introduccion al sistema digestivo</h3>
-                  <p>Primero mira las ideas base del sistema. Despues abre la secuencia completa para estudiar el proceso paso a paso con mas detalle.</p>
-                  <div class="digestive-launch-actions">
-                    <button id="open-digestive-modal" class="primary-button" type="button">Abrir proceso digestivo completo</button>
-                    <button id="digestive-copy-link" class="ghost-button" type="button">Copiar link docente</button>
-                  </div>
-                </div>
-              </section>
 
               <div class="learning-cards">
                 <article>

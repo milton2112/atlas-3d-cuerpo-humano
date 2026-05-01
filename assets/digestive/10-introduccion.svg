@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Introduccion al sistema digestivo">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M112 238c80-126 220-154 363-84" fill="none" stroke="#91d64f" stroke-width="34" stroke-linecap="round"/>
+  <path d="M158 236c70 38 137 40 202 6 40-21 78-22 115-3" fill="none" stroke="#ffd43d" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="163" cy="118" r="42" fill="#f6c77d"/>
+  <path d="M136 101c21-30 64-30 86 0" fill="none" stroke="#d64f3d" stroke-width="14" stroke-linecap="round"/>
+  <path d="M425 98c33 7 61 27 76 58-35 4-66-5-91-27 1-13 6-23 15-31z" fill="#8ad14d"/>
+  <path d="M420 216c38 20 69 14 94-17 10 33-3 61-38 83-34-5-53-27-56-66z" fill="#76e3ff"/>
+</svg>

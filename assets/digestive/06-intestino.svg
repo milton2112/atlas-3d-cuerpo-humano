@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Intestino delgado y organos anexos">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M103 111c76-57 150-69 226-36 60 26 113 14 171-27 24 59 7 105-51 137-68 37-138 27-210-16-46-27-91-37-136-58z" fill="#7b2f25"/>
+  <path d="M311 132c74-33 121-20 139 38 18 58-27 112-98 100-37-7-62 3-91 22-51 33-112 17-133-35-22-54 20-107 87-101 35 3 62-9 96-24z" fill="#f1a75f"/>
+  <path d="M212 243c33-27 64-27 94 0s60 27 91 0" fill="none" stroke="#ffd7a5" stroke-width="25" stroke-linecap="round"/>
+  <path d="M183 196c39 24 77 24 114 0s73-23 107 1" fill="none" stroke="#ffd7a5" stroke-width="25" stroke-linecap="round"/>
+  <path d="M186 290c68 31 156 31 247 0" fill="none" stroke="#8a4c34" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="344" cy="226" r="18" fill="#f6c77d"/>
+</svg>

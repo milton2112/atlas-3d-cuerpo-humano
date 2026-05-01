@@ -52,6 +52,7 @@ const MODEL_ROTATION_CONFIG = {
 };
 const PRESERVE_SOURCE_MATERIAL_KEYS = new Set(["digestive", "urinary", "reproductiveFemale"]);
 const DEFERRED_MENU_PREVIEW_KEYS = new Set(["nervous", "circulatory", "urinary"]);
+const COMPACT_VIEWPORT_QUERY = "(max-width: 768px)";
 const MATERIAL_NAME_COLORS = {
   urinary: [
     { match: "kidney", color: "#8d250f" },
@@ -66,6 +67,21 @@ const MATERIAL_NAME_COLORS = {
     { match: "tube", color: "#f08a6c" },
   ],
 };
+
+function isCompactViewport() {
+  return window.matchMedia(COMPACT_VIEWPORT_QUERY).matches;
+}
+
+function getPreviewPixelRatio() {
+  return isCompactViewport() ? 0.8 : 1;
+}
+
+function getDetailPixelRatio() {
+  const dpr = window.devicePixelRatio || 1;
+  if (isCompactViewport()) return Math.min(dpr, 0.9);
+  if (window.innerWidth <= 1100) return Math.min(dpr, 1);
+  return Math.min(dpr, 1.25);
+}
 
 const gallery = document.querySelector("#systems-gallery");
 const heroCard = document.querySelector(".hero-card");
@@ -399,11 +415,21 @@ function renderDigestiveProcess(systemKey) {
     const figure = document.createElement("figure");
     figure.className = "process-figure has-fallback";
 
-    const fallback = document.createElement("span");
-    fallback.className = "process-image-placeholder";
-    fallback.textContent = "Espacio reservado para imagen";
-
-    figure.append(fallback);
+    if (section.showImage && section.image) {
+      const image = document.createElement("img");
+      image.className = "digestive-lesson-image";
+      image.src = section.image;
+      image.alt = section.title.replace(/^\d+\.\s*/, "");
+      image.loading = "lazy";
+      image.decoding = "async";
+      figure.classList.remove("has-fallback");
+      figure.append(image);
+    } else {
+      const fallback = document.createElement("span");
+      fallback.className = "process-image-placeholder";
+      fallback.textContent = "Espacio reservado para imagen";
+      figure.append(fallback);
+    }
 
     const content = document.createElement("div");
     content.className = "process-content";
@@ -515,7 +541,11 @@ function renderDigestiveClassroom(sections) {
   digestiveClassStep.textContent = `Paso ${safeIndex + 1} de ${sections.length}`;
   digestiveClassTitle.textContent = section.title.replace(/^\d+\.\s*/, "");
   digestiveClassSummary.textContent = section.summary;
-  digestiveClassFigure.innerHTML = `<div class="process-image-placeholder process-image-placeholder-large">Espacio reservado para imagen</div>`;
+  if (section.showImage && section.image) {
+    digestiveClassFigure.innerHTML = `<img class="digestive-lesson-image digestive-lesson-image-large" src="${section.image}" alt="${section.title.replace(/^\d+\.\s*/, "")}">`;
+  } else {
+    digestiveClassFigure.innerHTML = `<div class="process-image-placeholder process-image-placeholder-large">Espacio reservado para imagen</div>`;
+  }
   digestiveClassBullets.innerHTML = "";
   [section.body, ...(section.bullets ?? [])].forEach((item) => {
     const li = document.createElement("li");
@@ -904,7 +934,7 @@ function createStaticPreview(container, systemKey) {
 
 function createPreviewScene(container, systemKey) {
   const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "low-power" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
+  renderer.setPixelRatio(getPreviewPixelRatio());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.domElement.className = "preview-canvas";
   container.prepend(renderer.domElement);
@@ -955,6 +985,7 @@ function createPreviewScene(container, systemKey) {
 function renderPreviewScene(container, renderer, camera, scene) {
   const width = Math.max(1, container.clientWidth);
   const height = Math.max(1, container.clientHeight);
+  renderer.setPixelRatio(getPreviewPixelRatio());
   renderer.setSize(width, height, false);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
@@ -962,8 +993,13 @@ function renderPreviewScene(container, renderer, camera, scene) {
 }
 
 function createSystemViewer(container, systemKey, options = {}) {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+  const compactViewport = isCompactViewport();
+  const renderer = new THREE.WebGLRenderer({
+    antialias: !compactViewport,
+    alpha: true,
+    powerPreference: compactViewport ? "low-power" : "high-performance",
+  });
+  renderer.setPixelRatio(getDetailPixelRatio());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = false;
   renderer.domElement.className = "model-canvas";
@@ -972,9 +1008,12 @@ function createSystemViewer(container, systemKey, options = {}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, 0.01, 100);
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
+  controls.enableDamping = !compactViewport;
   controls.dampingFactor = 0.08;
-  controls.zoomToCursor = true;
+  controls.zoomToCursor = !compactViewport;
+  controls.rotateSpeed = compactViewport ? 0.72 : 1;
+  controls.zoomSpeed = compactViewport ? 0.85 : 1;
+  controls.panSpeed = compactViewport ? 0.75 : 1;
   controls.minDistance = 1.2;
   controls.maxDistance = CAMERA_CONFIG[systemKey]?.maxDistance ?? 8.5;
 
@@ -982,7 +1021,14 @@ function createSystemViewer(container, systemKey, options = {}) {
   const root = new THREE.Group();
   scene.add(root);
 
-  const state = { disposed: false, animationId: 0, paused: document.hidden };
+  const state = {
+    disposed: false,
+    animationId: 0,
+    paused: document.hidden,
+    hotspotBindings: [],
+    renderQueued: false,
+    onDemand: compactViewport,
+  };
   resize();
 
   const fallback = createFallbackModel(systemKey);
@@ -999,7 +1045,7 @@ function createSystemViewer(container, systemKey, options = {}) {
       applySystemMaterial(model, systemKey);
       root.add(model);
       fitCameraToObject(camera, controls, model, systemKey);
-      renderScene();
+      requestRender();
       options.onLoad?.();
     })
     .catch(() => {
@@ -1007,12 +1053,15 @@ function createSystemViewer(container, systemKey, options = {}) {
       clearObject(root);
       root.add(createFallbackModel(systemKey));
       fitCameraToObject(camera, controls, root, systemKey);
-      renderScene();
+      requestRender();
       if (REAL_MODEL_KEYS.has(systemKey)) options.onError?.();
       else options.onFallback?.();
     });
 
-  animate();
+  controls.addEventListener("change", requestRender);
+
+  if (state.onDemand) requestRender();
+  else animate();
 
   function animate() {
     if (state.disposed) return;
@@ -1023,23 +1072,41 @@ function createSystemViewer(container, systemKey, options = {}) {
     state.animationId = requestAnimationFrame(animate);
   }
 
+  function requestRender() {
+    if (state.disposed) return;
+    if (!state.onDemand) {
+      renderScene();
+      return;
+    }
+    if (state.paused || state.renderQueued) return;
+    state.renderQueued = true;
+    state.animationId = requestAnimationFrame(() => {
+      state.renderQueued = false;
+      if (state.disposed || state.paused) return;
+      renderScene();
+    });
+  }
+
   function renderScene() {
     renderer.render(scene, camera);
+    updateHotspots();
   }
 
   function resize() {
     const width = Math.max(1, container.clientWidth);
     const height = Math.max(1, container.clientHeight);
+    renderer.setPixelRatio(getDetailPixelRatio());
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderScene();
+    requestRender();
   }
 
   function dispose() {
     state.disposed = true;
     cancelAnimationFrame(state.animationId);
     document.removeEventListener("visibilitychange", handleVisibilityChange);
+    controls.removeEventListener("change", requestRender);
     controls.dispose();
     clearObject(scene);
     renderer.dispose();
@@ -1048,11 +1115,42 @@ function createSystemViewer(container, systemKey, options = {}) {
 
   function handleVisibilityChange() {
     state.paused = document.hidden || detailView.classList.contains("hidden");
+    if (!state.paused) requestRender();
   }
 
   document.addEventListener("visibilitychange", handleVisibilityChange);
 
-  return { resize, dispose };
+  function setHotspotBindings(bindings) {
+    state.hotspotBindings = bindings ?? [];
+    updateHotspots();
+  }
+
+  function updateHotspots() {
+    if (!state.hotspotBindings.length) return;
+    const box = new THREE.Box3().setFromObject(root);
+    if (!Number.isFinite(box.min.x) || !Number.isFinite(box.max.x)) return;
+    const width = Math.max(1, container.clientWidth);
+    const height = Math.max(1, container.clientHeight);
+
+    state.hotspotBindings.forEach(({ button, hotspot }) => {
+      if (hasProjectedHotspot(hotspot) && box.max.y > box.min.y) {
+        const projectedPoint = projectHotspotFromBox(box, hotspot, camera);
+        const inFront = projectedPoint.z > -1 && projectedPoint.z < 1;
+        const x = (projectedPoint.x * 0.5 + 0.5) * width;
+        const y = (-projectedPoint.y * 0.5 + 0.5) * height;
+        const inside = x >= 0 && x <= width && y >= 0 && y <= height;
+        button.style.left = `${x}px`;
+        button.style.top = `${y}px`;
+        button.classList.toggle("is-offscreen", !(inFront && inside));
+      } else {
+        button.style.left = `${hotspot.x}%`;
+        button.style.top = `${hotspot.y}%`;
+        button.classList.remove("is-offscreen");
+      }
+    });
+  }
+
+  return { resize, dispose, setHotspotBindings };
 }
 
 function renderOrganHotspots(systemKey) {
@@ -1062,6 +1160,7 @@ function renderOrganHotspots(systemKey) {
   const layer = document.createElement("div");
   layer.className = "hotspot-layer";
   layer.setAttribute("aria-label", "Puntos interactivos del sistema");
+  const bindings = [];
 
   hotspots.forEach((hotspot) => {
     const organ = organInfo[hotspot.organId];
@@ -1070,15 +1169,28 @@ function renderOrganHotspots(systemKey) {
     button.type = "button";
     button.className = "hotspot-button";
     button.dataset.organId = hotspot.organId;
-    button.style.left = `${hotspot.x}%`;
-    button.style.top = `${hotspot.y}%`;
     button.setAttribute("aria-label", `Ver informacion de ${organ.title}`);
     button.innerHTML = `<span>${organ.title}</span>`;
     button.addEventListener("click", () => showOrganInfo(organ, hotspot.organId));
     layer.appendChild(button);
+    bindings.push({ button, hotspot });
   });
 
   detailStage.appendChild(layer);
+  detailViewer?.setHotspotBindings(bindings);
+}
+
+function hasProjectedHotspot(hotspot) {
+  return [hotspot.nx, hotspot.ny, hotspot.nz].every((value) => Number.isFinite(value));
+}
+
+function projectHotspotFromBox(box, hotspot, camera) {
+  const point = new THREE.Vector3(
+    THREE.MathUtils.lerp(box.min.x, box.max.x, hotspot.nx),
+    THREE.MathUtils.lerp(box.min.y, box.max.y, hotspot.ny),
+    THREE.MathUtils.lerp(box.min.z, box.max.z, hotspot.nz),
+  );
+  return point.project(camera);
 }
 
 function loadSystemModel(systemKey) {

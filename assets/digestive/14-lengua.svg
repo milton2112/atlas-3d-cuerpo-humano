@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Lengua y papilas gustativas">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M244 76c67-42 153-9 166 65 13 75-34 150-90 164-57-15-104-89-91-164 4-27 9-48 15-65z" fill="#e46d5f"/>
+  <path d="M260 116c41 25 79 25 119 0" fill="none" stroke="#f7a7a0" stroke-width="14" stroke-linecap="round"/>
+  <path d="M280 167c28 19 54 19 80 0M292 219c18 13 38 13 56 0" stroke="#ffd43d" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="258" cy="154" r="6" fill="#ffd43d"/>
+  <circle cx="386" cy="154" r="6" fill="#ffd43d"/>
+  <circle cx="280" cy="231" r="6" fill="#91d64f"/>
+  <circle cx="360" cy="231" r="6" fill="#91d64f"/>
+</svg>

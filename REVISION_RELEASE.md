@@ -29,35 +29,35 @@
 | Sistema | Estado | Nota |
 | --- | --- | --- |
 | Tegumentario | Usable | Base corporal general. Puede reemplazarse por un modelo tegumentario mas claro. |
-| Oseo | Usable | Modelo real Z-Anatomy optimizado. |
-| Muscular | Usable | Modelo real Z-Anatomy optimizado. |
-| Nervioso | Revisar | Modelo real optimizado, puede conservar lineas finas. |
-| Circulatorio | Revisar | Modelo real optimizado, puede verse cargado por vasos finos. |
+| Oseo | Presentable | Modelo real Z-Anatomy restaurado. |
+| Muscular | Presentable | Modelo real Z-Anatomy restaurado. |
+| Nervioso | Revisar | Modelo real con estructuras finas; puede exigir mas rendimiento. |
+| Circulatorio | Revisar | Modelo real con vasos finos; conviene usar solo modelo al proyectar. |
 | Respiratorio | Usable | Subset visceral compatible. |
 | Digestivo | Usable | Subset visceral compatible. |
 | Urinario | Usable | Subset visceral liviano. |
 | Endocrino | Usable | Subset liviano de glandulas. |
 | Linfatico | Revisar | Sirve como organos linfoides, no como red linfatica completa. |
 | Reproductor masculino | Usable | Subset visceral liviano. |
-| Reproductor femenino | Placeholder | Falta GLB real compatible. Se mantiene vista temporal para no romper la clase. |
+| Reproductor femenino | Temporal | Falta GLB real compatible. Se mantiene vista temporal para no romper la clase. |
 
 ## Optimizacion aplicada
 
-Modelos grandes optimizados con `tools/cleanup_glb_model.py`:
+Modelos grandes restaurados desde fuentes FBX de Z-Anatomy:
 
 - `skeletal.glb`: 28.2 MB a 20.9 MB.
 - `muscular.glb`: 26.4 MB a 25.3 MB.
 - `nervous.glb`: 44.7 MB a 27.7 MB.
 - `circulatory.glb`: 37.9 MB a 23.8 MB.
 
-Los originales quedaron en `assets/models/_source-originals/`, fuera del commit por `.gitignore`.
+Si se vuelven a optimizar, revisar visualmente que no se deformen estructuras finas.
 
 ## Decisiones tomadas
 
-- Reproductor femenino queda como placeholder hasta conseguir un modelo real compatible, en pose neutral y licencia clara.
+- Reproductor femenino queda como vista temporal hasta conseguir un modelo real compatible, en pose neutral y licencia clara.
 - Tegumentario queda como usable pero revisable, porque una piel/cuerpo completo educativo suele requerir un asset especifico.
 - Los thumbnails reales se descartaron por ahora: los renders automaticos salian visualmente incorrectos por problemas del asset fuente.
-- La app mantiene placeholders consistentes en el menu para no depender de thumbnails malos.
+- La app mantiene vistas temporales consistentes en el menu para no depender de thumbnails malos.
 
 ## Licencias
 

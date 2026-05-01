@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Deglucion y faringe">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M238 61c45-22 93-4 105 39 11 39-9 71-45 87l-20 9c-31 14-42 43-26 74" fill="none" stroke="#f3b0a3" stroke-width="44" stroke-linecap="round"/>
+  <path d="M331 64c54 42 68 95 40 150-22 45-18 79 14 111" fill="none" stroke="#9bd9ff" stroke-width="20" stroke-linecap="round"/>
+  <path d="M331 168c33 2 62-12 82-43" fill="none" stroke="#ffd56a" stroke-width="13" stroke-linecap="round"/>
+  <path d="M216 116c56 7 92 34 112 82" fill="none" stroke="#76e3ff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M313 181l17 48 18-48" fill="#f6c77d"/>
+  <circle cx="206" cy="113" r="18" fill="#f6c77d"/>
+</svg>

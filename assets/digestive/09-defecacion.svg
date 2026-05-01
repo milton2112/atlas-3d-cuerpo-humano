@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Defecacion y salida de residuos">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M210 76c65 42 154 42 220 0 24 46 21 98-8 136-44 58-159 58-205 0-29-37-32-90-7-136z" fill="none" stroke="#b76f43" stroke-width="35" stroke-linecap="round"/>
+  <path d="M320 212v73" stroke="#b76f43" stroke-width="38" stroke-linecap="round"/>
+  <path d="M292 301h56" stroke="#d58a55" stroke-width="18" stroke-linecap="round"/>
+  <path d="M255 126c39 24 85 24 130 0" fill="none" stroke="#f5bd73" stroke-width="18" stroke-linecap="round"/>
+  <path d="M395 252l54 32-54 32" fill="none" stroke="#76e3ff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="320" cy="284" r="17" fill="#6e3b24"/>
+</svg>

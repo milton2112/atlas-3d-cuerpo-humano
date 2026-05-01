@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Ingestion digestion absorcion y egestion">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M92 95h456" stroke="#ffd43d" stroke-width="16" stroke-linecap="round"/>
+  <path d="M492 63l56 32-56 32" fill="none" stroke="#ffd43d" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="123" cy="95" r="30" fill="#f6c77d"/>
+  <path d="M206 55c45 32 45 78 0 110" fill="none" stroke="#e46d5f" stroke-width="22" stroke-linecap="round"/>
+  <path d="M300 72c54 0 88 41 68 86-20 44-88 32-88-16 0-25 19-45 45-45" fill="none" stroke="#f0a04a" stroke-width="18" stroke-linecap="round"/>
+  <path d="M414 62v86M392 99h44" stroke="#75e3ff" stroke-width="14" stroke-linecap="round"/>
+  <path d="M505 152v96" stroke="#b76f43" stroke-width="22" stroke-linecap="round"/>
+  <path d="M472 257h66" stroke="#d58a55" stroke-width="14" stroke-linecap="round"/>
+</svg>

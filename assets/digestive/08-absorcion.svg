@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Absorcion de nutrientes">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M169 244c30-70 60-70 90 0s60 70 90 0 60-70 90 0 60 70 90 0" fill="none" stroke="#f5bd73" stroke-width="34" stroke-linecap="round"/>
+  <path d="M190 244c24-46 45-46 69 0s45 46 69 0 45-46 69 0 45 46 69 0" fill="none" stroke="#ffd7a5" stroke-width="16" stroke-linecap="round"/>
+  <path d="M205 95v96M289 81v105M373 88v100M457 100v91" stroke="#76e3ff" stroke-width="11" stroke-linecap="round"/>
+  <path d="M205 95l-22 38M205 95l22 38M289 81l-24 42M289 81l24 42M373 88l-22 40M373 88l22 40M457 100l-20 37M457 100l20 37" stroke="#76e3ff" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="205" cy="73" r="16" fill="#f6c77d"/>
+  <circle cx="289" cy="59" r="16" fill="#ffd56a"/>
+  <circle cx="373" cy="66" r="16" fill="#f6c77d"/>
+  <circle cx="457" cy="78" r="16" fill="#ffd56a"/>
+</svg>

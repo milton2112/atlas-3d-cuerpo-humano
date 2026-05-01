@@ -10,7 +10,7 @@ Usar el atlas como reemplazo interactivo de una presentacion lineal. Cada sistem
 2. Iniciar un servidor local:
 
 ```bash
-python -m http.server 8000
+node tools/local_smoke_server.js 8000
 ```
 
 3. Entrar en el navegador a:
@@ -38,7 +38,7 @@ Si se usa Live Server de VS Code, tambien sirve.
 
 - Recargar con `Ctrl + F5`.
 - Verificar que se este abriendo desde servidor local y no directamente como archivo.
-- Si un modelo 3D falla, la app conserva una vista placeholder para no cortar la clase.
+- Si un modelo 3D falla, la app conserva una vista temporal para no cortar la clase.
 
 ## Creditos
 

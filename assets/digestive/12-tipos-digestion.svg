@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Digestiones mecanica y quimica">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M91 187h178" stroke="#f5bd73" stroke-width="30" stroke-linecap="round" stroke-dasharray="1 42"/>
+  <path d="M181 106l-31 143M229 111l-62 131" stroke="#fff7e7" stroke-width="10" stroke-linecap="round"/>
+  <path d="M370 102h144" stroke="#75e3ff" stroke-width="24" stroke-linecap="round"/>
+  <path d="M370 165h88M370 226h132" stroke="#75e3ff" stroke-width="20" stroke-linecap="round"/>
+  <path d="M514 102l-62 63 62 61" fill="none" stroke="#ffd43d" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="333" cy="165" r="24" fill="#d64f3d"/>
+  <circle cx="333" cy="226" r="18" fill="#91d64f"/>
+</svg>

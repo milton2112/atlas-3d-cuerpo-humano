@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Boca y bolo alimenticio">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M145 150c54-56 143-57 197 0 34 36 89 35 126-4 24-25 58-25 77-1 29 37-12 95-67 85-59-10-100 17-139 42-56 36-132 33-187-11-42-34-48-77-7-111z" fill="#f1a7a2"/>
+  <path d="M190 169c40 24 92 31 144 5 43-22 91-15 132 15" fill="none" stroke="#842b2c" stroke-width="10" stroke-linecap="round"/>
+  <path d="M245 184c36 15 75 15 112 0" fill="none" stroke="#fff7e7" stroke-width="22" stroke-linecap="round"/>
+  <path d="M292 236c48 2 81-13 102-42" fill="none" stroke="#ffd56a" stroke-width="16" stroke-linecap="round"/>
+  <path d="M415 88l52 40-52 40" fill="none" stroke="#76e3ff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="146" cy="74" r="18" fill="#f6c77d"/>
+</svg>

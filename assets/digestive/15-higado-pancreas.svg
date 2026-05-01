@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Higado pancreas y vesicula">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M114 112c84-57 180-69 288-35 51 16 93 9 124-20 11 62-14 111-76 147-75 43-158 35-250-24-35-22-64-44-86-68z" fill="#8d2f26"/>
+  <path d="M343 205c75-25 131-11 168 41-45 48-112 50-200 6-31-16-58-18-82-7 17-32 55-46 114-40z" fill="#f2b358"/>
+  <path d="M353 134c20 19 20 46 0 65-22-18-22-46 0-65z" fill="#5c9e3c"/>
+  <path d="M354 193c-14 34-5 61 28 82" fill="none" stroke="#5c9e3c" stroke-width="12" stroke-linecap="round"/>
+  <path d="M250 253c44 22 88 21 132-2" fill="none" stroke="#ffd43d" stroke-width="11" stroke-linecap="round" stroke-dasharray="1 20"/>
+</svg>

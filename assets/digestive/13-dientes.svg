@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Tipos de dientes">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M179 110c78-71 204-71 282 0" fill="none" stroke="#f1a7a2" stroke-width="32" stroke-linecap="round"/>
+  <path d="M174 236c80 71 212 71 292 0" fill="none" stroke="#f1a7a2" stroke-width="32" stroke-linecap="round"/>
+  <path d="M224 97l-8 43M270 78l-4 52M320 70v56M370 78l4 52M416 97l8 43M224 263l-8-43M270 282l-4-52M320 290v-56M370 282l4-52M416 263l8-43" stroke="#fff7e7" stroke-width="24" stroke-linecap="round"/>
+  <path d="M120 78h74M446 78h74M120 282h74M446 282h74" stroke="#76e3ff" stroke-width="10" stroke-linecap="round"/>
+</svg>

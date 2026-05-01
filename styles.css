@@ -691,6 +691,12 @@ input {
   gap: 22px;
 }
 
+.detail-visual-column {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
 .detail-stage-card,
 .detail-info-card {
   border: 1px solid var(--panel-line);
@@ -790,6 +796,11 @@ input {
   pointer-events: auto;
   transform: translate(-50%, -50%);
   transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.hotspot-button.is-offscreen {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hotspot-button span {
@@ -980,7 +991,6 @@ input {
 }
 
 .digestive-process {
-  margin-top: 24px;
   padding: 16px;
   border: 1px solid rgba(201, 233, 255, 0.16);
   border-radius: 24px;
@@ -1199,19 +1209,15 @@ body.has-modal-open {
 
 .digestive-class-figure {
   display: grid;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   min-height: 280px;
   margin: 0;
   place-items: center;
-  align-content: start;
+  align-content: center;
   overflow: hidden;
   border-radius: 20px;
   background: linear-gradient(180deg, rgba(13, 53, 86, 0.88), rgba(6, 28, 47, 0.96));
-}
-
-.digestive-class-figure img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 }
 
 .process-card {
@@ -1238,19 +1244,29 @@ body.has-modal-open {
 .process-figure {
   position: relative;
   display: grid;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   min-height: 180px;
   margin: 0;
   place-items: center;
-  align-content: start;
+  align-content: center;
   overflow: hidden;
   border-radius: 18px;
   background: radial-gradient(circle at 50% 35%, rgba(247, 169, 83, 0.22), rgba(7, 34, 58, 0.84));
 }
 
-.process-figure img {
+.digestive-lesson-image {
+  display: block;
   width: 100%;
   height: 100%;
+  padding: 12px;
   object-fit: contain;
+  object-position: center;
+  image-rendering: auto;
+}
+
+.digestive-lesson-image-large {
+  padding: 16px;
 }
 
 .process-caption {
@@ -1276,8 +1292,9 @@ body.has-modal-open {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 180px;
+  min-height: 100%;
   width: 100%;
+  height: 100%;
   padding: 18px;
   color: #ffd9a6;
   font-family: "Space Grotesk", sans-serif;
@@ -1293,7 +1310,7 @@ body.has-modal-open {
 }
 
 .process-image-placeholder-large {
-  min-height: 320px;
+  min-height: 100%;
   border-radius: 20px;
 }
 
@@ -1393,6 +1410,11 @@ body.has-modal-open {
   justify-content: center;
 }
 
+.system-detail[data-view-mode="model"] .detail-visual-column {
+  max-width: 1040px;
+  width: 100%;
+}
+
 .system-detail[data-view-mode="model"] .detail-stage {
   min-height: min(78vh, 820px);
 }
@@ -1404,6 +1426,10 @@ body.has-modal-open {
 .system-detail[data-view-mode="sheet"] .detail-layout {
   grid-template-columns: minmax(320px, 920px);
   justify-content: center;
+}
+
+.system-detail[data-view-mode="sheet"] .detail-visual-column {
+  display: none;
 }
 
 .system-detail[data-view-mode="sheet"] .detail-stage-card {
@@ -1548,11 +1574,12 @@ body.has-modal-open {
 
 @media (max-width: 640px) {
   .atlas-page {
-    padding: 12px;
+    padding: 10px;
   }
 
   .systems-gallery {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .primary-button,
@@ -1562,10 +1589,80 @@ body.has-modal-open {
     width: 100%;
   }
 
+  .hero-card,
+  .detail-stage-card,
+  .detail-info-card,
+  .digestive-process,
+  .digestive-system-intro {
+    border-radius: 18px;
+  }
+
   .hero-actions,
   .tour-actions,
   .detail-toolbar {
     flex-direction: column;
+  }
+
+  .detail-stage-card,
+  .detail-info-card {
+    padding: 14px;
+  }
+
+  .detail-shell,
+  .detail-layout,
+  .detail-visual-column {
+    gap: 12px;
+  }
+
+  .detail-stage {
+    aspect-ratio: 0.82;
+    min-height: min(54vh, 520px);
+    touch-action: none;
+  }
+
+  .system-detail[data-view-mode="model"] .detail-stage {
+    min-height: min(60vh, 560px);
+  }
+
+  .digestive-launch-actions {
+    flex-direction: column;
+  }
+
+  .digestive-modal-panel {
+    width: 100%;
+    max-height: 100vh;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .digestive-process-list {
+    gap: 12px;
+  }
+
+  .process-card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .process-figure,
+  .digestive-class-figure {
+    aspect-ratio: 1 / 1;
+    min-height: 220px;
+  }
+
+  .quick-index {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .quick-index-button {
+    white-space: nowrap;
   }
 
   .card-meta {

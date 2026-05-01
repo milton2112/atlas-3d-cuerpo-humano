@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Intestino grueso y eliminacion">
+  <rect width="640" height="360" rx="28" fill="#08263c"/>
+  <path d="M171 98c74-45 212-46 286 0 39 24 57 63 51 109-7 52-45 78-99 78H246c-71 0-118-44-113-105 3-35 16-62 38-82z" fill="none" stroke="#b76f43" stroke-width="38" stroke-linecap="round"/>
+  <path d="M210 122c45 28 94 31 147 9 40-16 75-11 104 15" fill="none" stroke="#e39857" stroke-width="21" stroke-linecap="round"/>
+  <path d="M220 204c38-23 72-23 101 0s62 23 98 0" fill="none" stroke="#f5bd73" stroke-width="22" stroke-linecap="round"/>
+  <path d="M320 286v36" stroke="#b76f43" stroke-width="34" stroke-linecap="round"/>
+  <path d="M288 326h64" stroke="#d58a55" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="461" cy="205" r="18" fill="#f6c77d"/>
+</svg>
