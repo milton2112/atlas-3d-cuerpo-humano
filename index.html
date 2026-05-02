@@ -27,16 +27,16 @@
         <p class="eyebrow">Atlas educativo interactivo</p>
         <h1>Atlas 3D del Cuerpo Humano</h1>
         <p class="hero-copy">
-          Un recorrido visual para entender como trabajan juntos los sistemas del cuerpo humano, pensado para alumnos que exploran solos o para proyectar en clase.
+          Un atlas visual para explorar organos, procesos y relaciones del cuerpo humano con un recorrido claro, moderno y facil de compartir por link.
         </p>
         <div class="quick-guide" aria-label="Como usar el atlas">
-          <span>1. Elegi un sistema</span>
-          <span>2. Mira que organos lo forman</span>
-          <span>3. Abri puntos interactivos</span>
-          <span>4. Recorre como presentacion</span>
+          <span>1. Entra a un sistema</span>
+          <span>2. Observa el modelo y los organos clave</span>
+          <span>3. Abre fichas y puntos interactivos</span>
+          <span>4. Recorre el proceso completo</span>
         </div>
         <div class="hero-actions" aria-label="Acciones principales">
-          <button id="start-tour" class="primary-button" type="button">Empezar modo clase</button>
+          <button id="start-tour" class="primary-button" type="button">Empezar recorrido guiado</button>
           <button id="fullscreen-button" class="ghost-button" type="button">Pantalla completa</button>
         </div>
       </header>
@@ -51,24 +51,24 @@
 
       <nav id="quick-index" class="quick-index" aria-label="Indice rapido de sistemas"></nav>
 
-      <section class="teacher-guide-card" aria-label="Guia rapida de uso">
+      <section class="use-guide-card" aria-label="Guia rapida de uso">
         <article>
-          <h2>Para alumnos</h2>
-          <p>Elegir un sistema, observar el modelo y abrir organos clave. La ficha resume lo importante sin textos largos.</p>
+          <h2>Como empezar</h2>
+          <p>Entra a un sistema, mira el modelo principal y abre sus organos clave. La ficha ya resume lo mas importante para una lectura rapida.</p>
         </article>
         <article>
-          <h2>Para docentes</h2>
-          <p>Usar pantalla completa y modo clase. Cada paso tiene una idea central, organos clave y una pregunta para conversar.</p>
+          <h2>Como recorrer</h2>
+          <p>Usa pantalla completa y el recorrido guiado para avanzar paso a paso. Cada etapa deja una idea central y un punto concreto para observar.</p>
         </article>
         <article>
-          <h2>Si un modelo falla</h2>
-          <p>La app muestra una vista temporal para que la clase continue.</p>
+          <h2>Si un modelo tarda</h2>
+          <p>La app muestra una vista temporal o un mensaje claro para que la exploracion pueda continuar sin cortar el recorrido.</p>
         </article>
       </section>
 
       <section id="tour-banner" class="tour-banner hidden" aria-live="polite">
         <div>
-          <p class="eyebrow">Modo clase</p>
+          <p class="eyebrow">Recorrido guiado</p>
           <h2 id="tour-title">Recorrido guiado</h2>
           <p id="tour-copy">Avanza sistema por sistema como una presentacion interactiva.</p>
           <div class="tour-progress" aria-hidden="true"><span id="tour-progress-bar"></span></div>
@@ -90,6 +90,7 @@
             <button id="view-full" class="view-mode-button is-active" type="button">Vista completa</button>
             <button id="view-model" class="view-mode-button" type="button">Solo modelo</button>
             <button id="view-sheet" class="view-mode-button" type="button">Solo ficha</button>
+            <button id="copy-system-link" class="view-mode-button" type="button">Copiar link de este sistema</button>
           </div>
 
           <div class="detail-layout">
@@ -104,10 +105,12 @@
                 <div class="digestive-launch-card">
                   <p class="detail-eyebrow">Unidad especial</p>
                   <h3>Introduccion al sistema digestivo</h3>
-                  <p>Primero mira las ideas base del sistema. Despues abre la secuencia completa para estudiar el proceso paso a paso con mas detalle.</p>
+                  <p>Empieza por las ideas base del sistema y despues abre la secuencia completa para seguir el recorrido del alimento de forma ordenada.</p>
+                  <div id="digestive-guide" class="digestive-guide" aria-label="Guia del digestivo"></div>
                   <div class="digestive-launch-actions">
                     <button id="open-digestive-modal" class="primary-button" type="button">Abrir proceso digestivo completo</button>
-                    <button id="digestive-copy-link" class="ghost-button" type="button">Copiar link docente</button>
+                    <button id="open-digestive-class" class="ghost-button" type="button">Abrir recorrido guiado</button>
+                    <button id="digestive-copy-link" class="ghost-button" type="button">Copiar link del digestivo</button>
                   </div>
                 </div>
               </section>
@@ -209,7 +212,7 @@
           <div class="process-toolbar" aria-label="Modos del digestivo">
             <div class="process-toolbar-main">
               <button id="digestive-sequence" class="view-mode-button is-active" type="button">Vista secuencia</button>
-              <button id="digestive-class" class="view-mode-button" type="button">Modo clase digestivo</button>
+              <button id="digestive-class" class="view-mode-button" type="button">Recorrido guiado digestivo</button>
             </div>
           </div>
 
@@ -241,6 +244,6 @@
       </section>
     </main>
 
-  <script type="module" src="./app.js?v=20260424-digestive-prezi-1"></script>
+  <script type="module" src="./app.js?v=20260502-digestive-finish-1"></script>
 </body>
 </html>
