@@ -96,7 +96,10 @@
           <div class="detail-layout">
             <div class="detail-visual-column">
               <div class="detail-stage-card">
-                <p class="stage-help">Arrastra para rotar. Usa la rueda para acercar. Toca un punto para abrir la ficha.</p>
+                <div class="stage-topbar">
+                  <p class="stage-help">Arrastra para rotar. Usa la rueda para acercar. Toca un punto para abrir la ficha.</p>
+                  <button id="center-model" class="stage-action-button" type="button">Centrar modelo</button>
+                </div>
                 <p id="model-status" class="model-status is-loading" aria-live="polite">Cargando modelo...</p>
                 <div id="detail-stage" class="detail-stage"></div>
               </div>
@@ -149,16 +152,24 @@
                 <p id="organ-description"></p>
                 <dl class="organ-facts">
                   <div>
-                    <dt>Ubicacion</dt>
+                    <dt>Donde esta</dt>
                     <dd id="organ-location"></dd>
                   </div>
                   <div>
-                    <dt>Funcion</dt>
+                    <dt>Que hace</dt>
                     <dd id="organ-function"></dd>
                   </div>
                   <div>
-                    <dt>Dato clave</dt>
-                    <dd id="organ-key-fact"></dd>
+                    <dt>Que pasa ahi</dt>
+                    <dd id="organ-what-happens"></dd>
+                  </div>
+                  <div>
+                    <dt>Relacion con el proceso</dt>
+                    <dd id="organ-process-role"></dd>
+                  </div>
+                  <div>
+                    <dt>Error comun</dt>
+                    <dd id="organ-common-mistake"></dd>
                   </div>
                 </dl>
               </div>
@@ -213,24 +224,44 @@
             <div class="process-toolbar-main">
               <button id="digestive-sequence" class="view-mode-button is-active" type="button">Vista secuencia</button>
               <button id="digestive-class" class="view-mode-button" type="button">Recorrido guiado digestivo</button>
+              <button id="digestive-quick-study" class="view-mode-button" type="button">Estudio rapido</button>
+            </div>
+            <div class="process-toolbar-main">
+              <button id="digestive-back-model" class="view-mode-button" type="button">Volver al modelo</button>
+              <button id="digestive-fullscreen" class="view-mode-button" type="button">Pantalla completa</button>
             </div>
           </div>
 
-          <article id="digestive-classroom" class="digestive-classroom hidden" aria-live="polite">
-            <div class="digestive-classroom-copy">
-              <p id="digestive-class-step" class="detail-eyebrow">Paso 1</p>
-              <h4 id="digestive-class-title"></h4>
-              <p id="digestive-class-summary" class="digestive-class-summary"></p>
-              <ul id="digestive-class-bullets" class="digestive-class-bullets"></ul>
-              <div class="digestive-class-actions">
-                <button id="digestive-class-prev" class="ghost-button" type="button">Anterior</button>
-                <button id="digestive-class-next" class="primary-button" type="button">Siguiente paso</button>
-              </div>
-            </div>
-            <figure id="digestive-class-figure" class="digestive-class-figure"></figure>
-          </article>
+          <div class="digestive-progress" aria-label="Progreso del proceso digestivo">
+            <span id="digestive-progress-label">Paso 1</span>
+            <div class="digestive-progress-track"><span id="digestive-progress-bar"></span></div>
+          </div>
 
-          <div id="digestive-process-list" class="digestive-process-list"></div>
+          <section id="digestive-route-map" class="digestive-route-map" aria-label="Mapa del recorrido digestivo"></section>
+
+          <div class="digestive-modal-layout">
+            <nav id="digestive-step-nav" class="digestive-step-nav" aria-label="Etapas del proceso digestivo"></nav>
+
+            <div class="digestive-modal-content">
+              <article id="digestive-quick-study-panel" class="digestive-quick-study-panel hidden" aria-live="polite"></article>
+
+              <article id="digestive-classroom" class="digestive-classroom hidden" aria-live="polite">
+                <div class="digestive-classroom-copy">
+                  <p id="digestive-class-step" class="detail-eyebrow">Paso 1</p>
+                  <h4 id="digestive-class-title"></h4>
+                  <p id="digestive-class-summary" class="digestive-class-summary"></p>
+                  <ul id="digestive-class-bullets" class="digestive-class-bullets"></ul>
+                  <div class="digestive-class-actions">
+                    <button id="digestive-class-prev" class="ghost-button" type="button">Anterior</button>
+                    <button id="digestive-class-next" class="primary-button" type="button">Siguiente paso</button>
+                  </div>
+                </div>
+                <figure id="digestive-class-figure" class="digestive-class-figure"></figure>
+              </article>
+
+              <div id="digestive-process-list" class="digestive-process-list"></div>
+            </div>
+          </div>
 
         </section>
       </div>
@@ -244,6 +275,6 @@
       </section>
     </main>
 
-  <script type="module" src="./app.js?v=20260502-digestive-finish-1"></script>
+  <script type="module" src="./app.js?v=20260503-digestive-polish-1"></script>
 </body>
 </html>

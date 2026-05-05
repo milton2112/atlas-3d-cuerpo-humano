@@ -568,6 +568,84 @@ export const digestiveRecapPoints = [
   "En el intestino grueso se recupera agua y se eliminan los residuos.",
 ];
 
+export const digestiveTransformationRecap = [
+  "Bolo: alimento triturado y humedecido con saliva, listo para ser tragado.",
+  "Quimo: mezcla acida y semiliquida que se forma en el estomago.",
+  "Quilo: contenido intestinal con nutrientes listos para pasar a sangre o linfa.",
+  "Heces: residuos compactados luego de recuperar agua en el intestino grueso.",
+];
+
+export const digestiveKeyConcepts = [
+  { title: "Peristaltismo", text: "Ondas musculares que empujan el alimento por el tubo digestivo." },
+  { title: "Enzimas", text: "Sustancias que aceleran la digestion quimica y rompen moleculas complejas." },
+  { title: "Bilis", text: "Ayuda a dividir las grasas en gotas mas pequenas; no es una enzima." },
+  { title: "Absorcion", text: "Paso de nutrientes y agua hacia la sangre o la linfa." },
+  { title: "Vellosidades", text: "Pliegues del intestino delgado que aumentan la superficie de absorcion." },
+  { title: "Egestion", text: "Eliminacion de restos que el cuerpo no aprovecho." },
+];
+
+export const digestiveCommonConfusions = [
+  {
+    title: "Digestion vs absorcion",
+    text: "Digerir es transformar alimentos; absorber es pasar nutrientes al interior del cuerpo.",
+  },
+  {
+    title: "Quimo vs quilo",
+    text: "El quimo se forma en el estomago; el quilo aparece en el intestino delgado durante la absorcion.",
+  },
+  {
+    title: "Intestino delgado vs grueso",
+    text: "El delgado absorbe la mayor parte de nutrientes; el grueso recupera agua y forma heces.",
+  },
+  {
+    title: "Bilis vs enzima",
+    text: "La bilis ayuda con las grasas, pero no rompe moleculas como una enzima digestiva.",
+  },
+];
+
+export const respiratoryLearningTemplate = {
+  routeMap: ["Nariz/boca", "Faringe", "Laringe", "Traquea", "Bronquios", "Pulmones", "Alveolos"],
+  keyConcepts: ["Ventilacion", "Intercambio gaseoso", "Oxigeno", "Dioxido de carbono", "Diafragma"],
+  organFichaFields: ["Que hace", "Donde esta", "Que pasa ahi", "Relacion con el proceso", "Error comun"],
+  nextPriority: "Copiar la estructura del digestivo: intro, modelo, organos, recorrido, repaso y confusiones comunes.",
+};
+
+Object.assign(systemDetails.respiratory, {
+  introHighlights: [
+    "Permite incorporar oxigeno y eliminar dioxido de carbono.",
+    "Trabaja junto al sistema circulatorio para llevar oxigeno a las celulas.",
+    "El aire sigue un recorrido ordenado hasta llegar a los pulmones.",
+  ],
+  processTimeline: [
+    "Nariz o boca -> faringe -> laringe",
+    "Traquea -> bronquios -> bronquiolos",
+    "Alveolos -> intercambio gaseoso con la sangre",
+    "Diafragma y costillas -> entrada y salida de aire",
+  ],
+  organMap: [
+    "Traquea: conduce el aire hacia el torax.",
+    "Bronquios: reparten el aire dentro de cada pulmon.",
+    "Pulmones: alojan la zona de intercambio gaseoso.",
+    "Diafragma: ayuda a mover el aire al contraerse y relajarse.",
+  ],
+  guideFocus: [
+    "Diferenciar ventilacion de intercambio gaseoso.",
+    "Relacionar alveolos y capilares sanguineos.",
+    "Ver que respirar no es solo llenar pulmones: es obtener oxigeno para las celulas.",
+  ],
+  guideSequence: [
+    "Empezar por el recorrido del aire.",
+    "Ubicar traquea, bronquios y pulmones.",
+    "Cerrar conectando respiratorio con circulatorio.",
+  ],
+  fiveMinuteGuide: [
+    "1. Ubica traquea, bronquios y pulmones.",
+    "2. Segui el camino del aire hasta los alveolos.",
+    "3. Relaciona pulmones con sangre y oxigeno.",
+    "4. Revisa el papel del diafragma.",
+  ],
+});
+
 export const digestiveReferenceLinks = [
   {
     label: "Digestive system diagram - Wikimedia Commons",
@@ -857,63 +935,142 @@ Object.assign(systemDetails.digestive, {
 
 Object.assign(organInfo, {
   mouth: { title: "Boca", systemKey: "digestive", description: "Permite la ingestion y mezcla el alimento con saliva." },
+  teeth: { title: "Dientes", systemKey: "digestive", description: "Cortan, desgarran y trituran los alimentos." },
+  tongue: { title: "Lengua", systemKey: "digestive", description: "Mezcla el alimento, forma el bolo y lo empuja hacia la faringe." },
   salivaryGlands: { title: "Glandulas salivales", systemKey: "digestive", description: "Producen saliva con amilasa para humedecer e iniciar la digestion." },
+  pharynx: { title: "Faringe", systemKey: "digestive", description: "Conduce el bolo desde la boca hacia el esofago." },
   esophagus: { title: "Esofago", systemKey: "digestive", description: "Empuja el bolo al estomago mediante movimientos peristalticos." },
   liver: { title: "Higado", systemKey: "digestive", description: "Produce bilis y participa en metabolismo, almacenamiento y desintoxicacion." },
   pancreas: { title: "Pancreas", systemKey: "digestive", description: "Produce jugo pancreatico y tambien hormonas como insulina y glucagon." },
   stomach: { title: "Estomago", systemKey: "digestive", description: "Mezcla el alimento con jugos gastricos y forma el quimo." },
+  smallIntestine: { title: "Intestino delgado", systemKey: "digestive", description: "Completa la digestion y absorbe la mayor parte de nutrientes." },
+  largeIntestine: { title: "Intestino grueso", systemKey: "digestive", description: "Recupera agua y forma las heces antes de la eliminacion." },
 });
 
 Object.assign(organStudyInfo, {
   mouth: {
     location: "Cabeza, en la cavidad oral.",
-    function: "Recibe el alimento e inicia la digestion mecanica y quimica.",
-    keyFact: "En la boca se forma el bolo alimenticio gracias a dientes, lengua y saliva.",
+    function: "Recibe el alimento, permite la masticacion y mezcla cada bocado con saliva. Aca empieza la digestion mecanica por accion de los dientes y la digestion quimica por accion de la amilasa salival.",
+    keyFact: "En la boca se forma el bolo alimenticio: una masa humeda que la lengua empuja hacia la faringe para iniciar la deglucion.",
   },
   teeth: {
     location: "En las arcadas dentarias de la cavidad oral.",
-    function: "Cortan, desgarran y trituran el alimento antes de la deglucion.",
-    keyFact: "Incisivos cortan, caninos desgarran y molares trituran.",
+    function: "Fragmentan el alimento para aumentar su superficie de contacto con la saliva y los jugos digestivos. Esto facilita que las enzimas actuen mejor durante el recorrido.",
+    keyFact: "Incisivos cortan, caninos desgarran, premolares y molares trituran. Sin esta preparacion mecanica, la digestion quimica seria menos eficiente.",
   },
   tongue: {
     location: "En el piso de la boca.",
-    function: "Mezcla el alimento con saliva, ayuda a formar el bolo y lo empuja hacia la faringe.",
-    keyFact: "Sus papilas gustativas participan en la percepcion del sabor.",
+    function: "Mueve el alimento dentro de la boca, lo acomoda entre los dientes, lo mezcla con saliva y finalmente empuja el bolo hacia la faringe durante la deglucion.",
+    keyFact: "Ademas de participar en el gusto mediante papilas gustativas, coordina el paso del alimento desde la boca hacia el esofago.",
   },
   salivaryGlands: {
     location: "Alrededor de la boca y la mandibula.",
-    function: "Producen saliva para humedecer el alimento e iniciar la digestion del almidon.",
-    keyFact: "La saliva contiene amilasa salival.",
+    function: "Producen saliva, que humedece el alimento, facilita la formacion del bolo y empieza la digestion quimica de algunos carbohidratos.",
+    keyFact: "La saliva contiene amilasa salival, una enzima que comienza a descomponer el almidon antes de que el alimento llegue al estomago.",
   },
   pharynx: {
     location: "En el cuello, detras de la boca y la cavidad nasal.",
-    function: "Conduce el bolo hacia el esofago durante la deglucion.",
-    keyFact: "La epiglotis evita que el alimento entre en la traquea.",
+    function: "Actua como zona de paso compartida por el sistema digestivo y respiratorio. Durante la deglucion conduce el bolo desde la boca hacia el esofago.",
+    keyFact: "La epiglotis cubre la entrada de la laringe para que el alimento no entre en la traquea. Por eso respirar y tragar se coordinan cuidadosamente.",
   },
   esophagus: {
     location: "Entre la faringe y el estomago.",
-    function: "Transporta el bolo por movimientos peristalticos.",
-    keyFact: "No digiere ni absorbe: su tarea principal es trasladar.",
+    function: "Transporta el bolo hacia el estomago mediante movimientos peristalticos: ondas de contraccion y relajacion de la pared muscular.",
+    keyFact: "Su tarea principal es el transporte. No realiza una absorcion importante ni mezcla el alimento como lo hacen el estomago o los intestinos.",
   },
   liver: {
     location: "Abdomen superior derecho, junto al estomago.",
-    function: "Produce bilis y participa en metabolismo, almacenamiento y desintoxicacion.",
-    keyFact: "La bilis ayuda a la digestion de las grasas en el intestino delgado.",
+    function: "Produce bilis, participa en el metabolismo de nutrientes, almacena glucogeno y vitaminas, y ayuda a neutralizar o eliminar sustancias toxicas.",
+    keyFact: "La bilis no es una enzima: emulsiona grasas, es decir, las divide en gotas mas pequenas para que las enzimas puedan actuar mejor en el intestino delgado.",
   },
   pancreas: {
     location: "Debajo y detras del estomago.",
-    function: "Produce jugo pancreatico con enzimas digestivas y hormonas como insulina y glucagon.",
-    keyFact: "Cumple una funcion digestiva y otra endocrina.",
+    function: "Libera jugo pancreatico hacia el duodeno. Ese jugo contiene enzimas que ayudan a digerir carbohidratos, proteinas y grasas.",
+    keyFact: "Tiene doble funcion: digestiva, por sus enzimas, y endocrina, porque produce hormonas como insulina y glucagon que regulan la glucosa en sangre.",
   },
   stomach: {
     location: "Abdomen superior izquierdo.",
-    function: "Mezcla el alimento con jugos gastricos y lo transforma en quimo.",
-    keyFact: "Aqui empieza una digestion importante de las proteinas.",
+    function: "Recibe el bolo, lo mezcla con jugo gastrico y lo bate mediante movimientos musculares. Asi se forma el quimo, una mezcla acida y semiliquida.",
+    keyFact: "El acido clorhidrico ayuda a destruir microorganismos y activa la pepsina, enzima que inicia una digestion importante de las proteinas.",
   },
   smallIntestine: {
     location: "Centro del abdomen.",
-    function: "Completa gran parte de la digestion y absorbe la mayor parte de los nutrientes.",
-    keyFact: "Sus vellosidades y microvellosidades aumentan mucho la superficie de absorcion.",
+    function: "Completa gran parte de la digestion con ayuda de bilis, jugo pancreatico y jugo intestinal. Luego absorbe nutrientes hacia sangre o linfa.",
+    keyFact: "Sus vellosidades y microvellosidades aumentan muchisimo la superficie de absorcion. Por eso es el lugar principal donde los nutrientes entran al cuerpo.",
+  },
+  largeIntestine: {
+    location: "Rodea al intestino delgado en el abdomen.",
+    function: "Recibe los restos no digeridos, recupera agua y electrolitos, compacta el material y forma las heces antes de su eliminacion.",
+    keyFact: "No es el principal sitio de absorcion de nutrientes; su papel clave es recuperar agua y preparar los residuos para la egestion.",
+  },
+});
+
+Object.assign(organStudyInfo, {
+  mouth: {
+    ...organStudyInfo.mouth,
+    whatHappens: "El alimento entra, se mastica, se humedece con saliva y empieza a transformarse.",
+    processRole: "Inicia la ingestion y prepara el bolo alimenticio.",
+    commonMistake: "Pensar que en la boca solo se mastica: tambien empieza la digestion quimica del almidon.",
+  },
+  teeth: {
+    ...organStudyInfo.teeth,
+    whatHappens: "Cortan, desgarran y trituran el alimento para hacerlo mas facil de mezclar.",
+    processRole: "Hacen la digestion mecanica inicial.",
+    commonMistake: "Creer que todos los dientes hacen lo mismo: cada tipo tiene una funcion distinta.",
+  },
+  tongue: {
+    ...organStudyInfo.tongue,
+    whatHappens: "Mezcla el alimento con saliva, ayuda a formar el bolo y lo empuja hacia atras.",
+    processRole: "Coordina la masticacion y el inicio de la deglucion.",
+    commonMistake: "Pensarla solo como organo del gusto: tambien mueve y dirige el alimento.",
+  },
+  salivaryGlands: {
+    ...organStudyInfo.salivaryGlands,
+    whatHappens: "Liberan saliva que humedece el alimento y aporta amilasa salival.",
+    processRole: "Permiten formar un bolo facil de tragar e iniciar la digestion quimica.",
+    commonMistake: "Confundir saliva con agua: contiene sustancias que ayudan a digerir y proteger.",
+  },
+  pharynx: {
+    ...organStudyInfo.pharynx,
+    whatHappens: "El bolo pasa desde la boca hacia el esofago mientras se protege la via respiratoria.",
+    processRole: "Es una zona de cruce entre digestivo y respiratorio durante la deglucion.",
+    commonMistake: "Creer que solo pertenece al sistema digestivo: tambien participa en el paso del aire.",
+  },
+  esophagus: {
+    ...organStudyInfo.esophagus,
+    whatHappens: "Las paredes musculares empujan el bolo con movimientos peristalticos.",
+    processRole: "Transporta el bolo al estomago sin realizar absorcion importante.",
+    commonMistake: "Pensar que la comida cae por gravedad: avanza por contracciones musculares.",
+  },
+  stomach: {
+    ...organStudyInfo.stomach,
+    whatHappens: "El bolo se bate con jugo gastrico y se convierte en quimo.",
+    processRole: "Mezcla, almacena temporalmente y comienza con fuerza la digestion de proteinas.",
+    commonMistake: "Creer que toda la digestion ocurre aca: es una etapa importante, pero no la unica.",
+  },
+  liver: {
+    ...organStudyInfo.liver,
+    whatHappens: "Produce bilis, que luego se vierte al intestino delgado para ayudar con las grasas.",
+    processRole: "Aporta una secrecion auxiliar que facilita la digestion de lipidos.",
+    commonMistake: "Decir que la bilis es enzima: la bilis emulsiona grasas, no las rompe quimicamente.",
+  },
+  pancreas: {
+    ...organStudyInfo.pancreas,
+    whatHappens: "Libera enzimas digestivas al duodeno y tambien regula glucosa con hormonas.",
+    processRole: "Completa la digestion quimica de carbohidratos, proteinas y grasas.",
+    commonMistake: "Olvidar su doble funcion: digestiva y endocrina.",
+  },
+  smallIntestine: {
+    ...organStudyInfo.smallIntestine,
+    whatHappens: "Se completa la digestion y los nutrientes atraviesan la pared intestinal.",
+    processRole: "Es el tramo principal de absorcion de nutrientes.",
+    commonMistake: "Confundirlo con el intestino grueso: el delgado absorbe la mayor parte de nutrientes.",
+  },
+  largeIntestine: {
+    ...organStudyInfo.largeIntestine,
+    whatHappens: "Se recupera agua, se compactan residuos y se forman las heces.",
+    processRole: "Cierra el recorrido preparando la egestion.",
+    commonMistake: "Pensar que absorbe la mayor parte de nutrientes: su papel principal es agua y residuos.",
   },
 });
 
@@ -950,9 +1107,12 @@ Object.assign(systemDetails.digestive, {
     "Intestino grueso como tramo de recuperacion de agua.",
   ],
   guideFocus: [
-    "Primero mostrar el recorrido completo del alimento.",
-    "Diferenciar digestion mecanica y quimica sin mezclar conceptos.",
-    "Remarcar que absorber nutrientes no es lo mismo que eliminar residuos.",
+    "Digestion mecanica: corta, tritura y mezcla el alimento.",
+    "Digestion quimica: enzimas y jugos transforman moleculas complejas.",
+    "Absorcion: nutrientes y agua pasan hacia sangre o linfa.",
+    "Quimo: mezcla semiliquida formada en el estomago.",
+    "Quilo: contenido intestinal listo para la absorcion.",
+    "Egestion: eliminacion de restos no aprovechados.",
   ],
   guideSequence: [
     "Comenzar por la introduccion al sistema y su funcion general.",
@@ -960,21 +1120,31 @@ Object.assign(systemDetails.digestive, {
     "Volver al modelo y senalar los organos principales.",
     "Cerrar con el resumen final del proceso completo.",
   ],
+  fiveMinuteGuide: [
+    "1. Mira el modelo 3D y ubica esofago, estomago, higado, pancreas e intestinos.",
+    "2. Abre el proceso completo y segui la linea: boca -> faringe -> esofago -> estomago -> intestinos.",
+    "3. Usa Estudio rapido para repasar solo las ideas clave.",
+    "4. Toca los puntos del modelo para ver que hace cada organo.",
+    "5. Cerra con el repaso: bolo, quimo, quilo y heces.",
+  ],
 });
 
 const digestiveLessonOverrides = {
   intro: {
+    shortTitle: "Introduccion",
     summary: "Antes de absorber nutrientes, el cuerpo necesita transformar los alimentos.",
     body:
-      "El alimento no puede ser aprovechado tal como entra. A lo largo del tubo digestivo se tritura, se mezcla con secreciones y se convierte en nutrientes simples que pueden llegar a las celulas.",
+      "El sistema digestivo permite obtener energia y materiales a partir de los alimentos. Como el alimento no puede ser aprovechado tal como entra, debe recorrer un tubo donde se tritura, se mezcla con secreciones, se transforma en sustancias simples, se absorbe y finalmente elimina lo que no se usa.",
     bullets: [
       "Los alimentos aportan energia para las funciones diarias.",
       "Tambien aportan materiales para crecer, reparar y mantener tejidos.",
+      "El recorrido general va de boca a faringe, esofago, estomago, intestino delgado e intestino grueso.",
       "Lo que no se aprovecha termina eliminandose como residuo.",
     ],
     classroomSummary: "El cuerpo necesita transformar los alimentos antes de poder usarlos.",
   },
   "general-process": {
+    shortTitle: "Proceso general",
     summary: "El proceso digestivo se entiende mejor si se divide en cuatro momentos.",
     body:
       "Primero el alimento entra por la boca. Despues se digiere, luego se absorben nutrientes y agua, y finalmente se eliminan los restos no aprovechables.",
@@ -983,10 +1153,12 @@ const digestiveLessonOverrides = {
       "Digestion: transformacion mecanica y quimica.",
       "Absorcion: paso de nutrientes y agua al interior del cuerpo.",
       "Egestion: eliminacion de residuos.",
+      "No confundir digestion con absorcion: digerir es transformar; absorber es pasar nutrientes al interior del cuerpo.",
     ],
     classroomSummary: "Ingreso, digestion, absorcion y eliminacion forman el recorrido basico del sistema.",
   },
   "digestion-types": {
+    shortTitle: "Tipos de digestion",
     summary: "La digestion mecanica prepara el alimento y la quimica lo descompone.",
     body:
       "La digestion mecanica corta, tritura y mezcla. La digestion quimica rompe moleculas complejas gracias a enzimas y jugos digestivos. Las dos actuan juntas durante todo el recorrido.",
@@ -994,53 +1166,181 @@ const digestiveLessonOverrides = {
       "Mecanica: masticacion, fragmentacion y mezclado.",
       "Quimica: enzimas y jugos que transforman nutrientes.",
       "Ambas trabajan de forma complementaria.",
+      "Enzimas: sustancias que aceleran la digestion quimica y rompen moleculas complejas.",
     ],
     classroomSummary: "Mecanica y quimica actuan juntas para volver util el alimento.",
   },
   "mouth-parts": {
+    shortTitle: "Boca",
+    summary: "La boca concentra la ingestion, la masticacion y la primera digestion quimica.",
+    body:
+      "En la boca el alimento ingresa al sistema digestivo. Los dientes lo cortan y trituran, la lengua lo acomoda y lo mezcla, y las glandulas salivales liberan saliva. La saliva humedece el alimento y contiene amilasa salival, una enzima que empieza la digestion del almidon. Con esa accion conjunta se forma el bolo alimenticio, una masa blanda que puede ser deglutida.",
+    bullets: [
+      "Dientes: incisivos cortan, caninos desgarran, premolares y molares trituran.",
+      "Lengua: mezcla el alimento con saliva, ayuda al gusto y empuja el bolo hacia la faringe.",
+      "Glandulas salivales: parotidas, submaxilares y sublinguales producen saliva.",
+      "Bolo alimenticio: alimento triturado y humedecido, listo para ser tragado.",
+    ],
     classroomSummary: "En la boca empieza la ingestion y se activa la primera digestion.",
   },
   bolus: {
+    shortTitle: "Bolo",
+    summary: "El bolo es el resultado final del trabajo de la boca.",
+    body:
+      "El bolo alimenticio se forma cuando el alimento ya fue triturado por los dientes y mezclado con saliva. Tiene consistencia blanda y pastosa, lo que permite que la lengua lo empuje hacia la faringe para iniciar la deglucion. Aunque ocurre en la boca, combina digestion mecanica y digestion quimica.",
+    bullets: [
+      "Se forma por la accion conjunta de dientes, lengua y saliva.",
+      "La masticacion reduce el tamano del alimento.",
+      "La amilasa salival comienza a actuar sobre el almidon.",
+      "La lengua lo empuja hacia la faringe para tragarlo.",
+    ],
     classroomSummary: "El bolo alimenticio se forma por la accion conjunta de dientes, lengua y saliva.",
   },
   teeth: {
+    shortTitle: "Dientes",
+    summary: "Los dientes hacen la digestion mecanica inicial.",
+    body:
+      "Los dientes son piezas duras que fragmentan el alimento. Al romperlo en porciones pequenas, facilitan la mezcla con saliva y aumentan la superficie de contacto para que actuen las enzimas digestivas. Cada tipo de diente cumple una funcion concreta dentro de la masticacion.",
+    bullets: [
+      "Incisivos: cortan.",
+      "Caninos: desgarran.",
+      "Premolares y molares: trituran.",
+      "Su accion prepara el alimento para formar el bolo.",
+    ],
     classroomSummary: "Los dientes cortan, desgarran y trituran antes de la deglucion.",
   },
   tongue: {
+    shortTitle: "Lengua",
+    summary: "La lengua coordina la mezcla, el gusto y el empuje del bolo.",
+    body:
+      "La lengua es un organo musculoso. Durante la masticacion mueve el alimento para ubicarlo entre los dientes, lo mezcla con saliva y ayuda a formar el bolo. En su superficie tiene papilas gustativas, que permiten percibir sabores. Al final de esta etapa empuja el bolo hacia la faringe.",
+    bullets: [
+      "Mezcla alimento y saliva.",
+      "Ayuda a ubicar el alimento para la masticacion.",
+      "Participa en la percepcion del sabor.",
+      "Inicia el paso del bolo hacia la faringe.",
+    ],
     classroomSummary: "La lengua mezcla, acomoda y empuja el alimento hacia la faringe.",
   },
   pharynx: {
+    shortTitle: "Faringe",
+    summary: "La faringe dirige el bolo hacia el esofago y protege la via respiratoria.",
+    body:
+      "La faringe es una cavidad comun al sistema digestivo y al respiratorio. Por ella pasan los alimentos desde la boca hacia el esofago y tambien el aire hacia la laringe. Durante la deglucion, la epiglotis desciende y cubre la entrada de las vias respiratorias para evitar que el alimento obstruya la traquea.",
+    bullets: [
+      "Conecta la boca con el esofago.",
+      "Tambien se relaciona con el paso del aire.",
+      "La epiglotis evita que el bolo entre en la via respiratoria.",
+      "En esta etapa la respiracion se interrumpe por un instante.",
+    ],
     classroomSummary: "La faringe conduce el bolo y la epiglotis protege la via respiratoria.",
   },
   "esophagus-lesson": {
+    shortTitle: "Esofago",
+    summary: "El esofago transporta el bolo mediante peristaltismo.",
+    body:
+      "El esofago comunica la faringe con el estomago. Sus paredes musculares realizan movimientos peristalticos: ondas de contraccion y relajacion que empujan el bolo alimenticio a lo largo del tubo digestivo. Su funcion principal es transportar, no absorber nutrientes.",
+    bullets: [
+      "Comunica faringe y estomago.",
+      "Peristaltismo: ondas musculares que empujan el alimento por el tubo digestivo.",
+      "No depende solamente de la gravedad.",
+      "No es una zona principal de absorcion.",
+    ],
     classroomSummary: "El esofago transporta el bolo con movimientos peristalticos.",
   },
   "stomach-lesson": {
+    shortTitle: "Estomago",
+    summary: "El estomago mezcla, bate y transforma el bolo en quimo.",
+    body:
+      "El estomago es un ensanchamiento del tubo digestivo con forma de J. El bolo entra desde el esofago por el cardias y se mezcla con jugo gastrico. El acido clorhidrico ayuda a desintegrar el alimento y destruir microorganismos; la pepsina participa en la digestion de proteinas; el moco protege la pared estomacal. El piloro regula la salida hacia el intestino delgado.",
+    bullets: [
+      "Cardias: valvula de entrada desde el esofago.",
+      "Jugo gastrico: acido clorhidrico, pepsina y otras sustancias.",
+      "Moco: protege la pared del estomago.",
+      "Piloro: regula el paso del quimo al intestino delgado.",
+    ],
     classroomSummary: "En el estomago el alimento se mezcla con jugos gastricos y empieza la formacion del quimo.",
   },
   chyme: {
+    shortTitle: "Quimo",
+    summary: "El quimo es el producto de la digestion estomacal.",
+    body:
+      "En el estomago, los alimentos se mezclan y son batidos con el jugo gastrico. De esa mezcla se forma el quimo, una masa liquida, espesa y muy acida. Luego el quimo ingresa al intestino delgado a traves de la valvula pilorica.",
+    bullets: [
+      "Se forma en el estomago.",
+      "Resulta de la mezcla con jugo gastrico.",
+      "Tiene consistencia semiliquida y acida.",
+      "Pasa al duodeno por el piloro.",
+      "No confundir quimo con quilo: el quimo se forma en el estomago; el quilo aparece en el intestino delgado durante la absorcion.",
+    ],
     classroomSummary: "El quimo es la mezcla semiliquida que sale del estomago hacia el duodeno.",
   },
   "small-intestine-lesson": {
+    shortTitle: "Intestino delgado",
+    summary: "El intestino delgado completa la digestion y absorbe la mayor parte de los nutrientes.",
+    body:
+      "El intestino delgado es un tubo largo, de aproximadamente seis metros, con vellosidades intestinales que aumentan mucho la superficie de contacto. Se divide en duodeno, yeyuno e ileon. En el duodeno el quimo recibe bilis, jugo pancreatico y jugo intestinal; en yeyuno e ileon se absorbe la mayor parte de los nutrientes.",
+    bullets: [
+      "Duodeno: continua al estomago y recibe secreciones digestivas.",
+      "Yeyuno: zona intermedia donde avanza la absorcion.",
+      "Ileon: comunica con el intestino grueso.",
+      "Vellosidades: permiten que nutrientes pasen a sangre o linfa.",
+      "No confundirlo con el intestino grueso: el delgado absorbe la mayor parte de nutrientes.",
+    ],
     classroomSummary: "En el intestino delgado se completa la digestion y se absorbe la mayor parte de los nutrientes.",
   },
   "digestive-juices": {
+    shortTitle: "Bilis y jugos",
+    summary: "La bilis y los jugos digestivos completan la digestion quimica.",
+    body:
+      "En el intestino delgado el quimo se mezcla con tres liquidos importantes. La bilis, producida por el higado y almacenada en la vesicula biliar, ayuda a digerir grasas. El jugo pancreatico aporta enzimas para carbohidratos, proteinas y grasas. El jugo intestinal, producido por el propio intestino, tambien contiene enzimas. Estas secreciones ayudan a neutralizar la acidez del quimo.",
+    bullets: [
+      "Bilis: producida por el higado y almacenada en la vesicula biliar.",
+      "Jugo pancreatico: libera enzimas hacia el duodeno.",
+      "Jugo intestinal: completa la digestion en la pared intestinal.",
+      "Sustancias bicarbonatadas: ayudan a neutralizar el pH acido.",
+      "La bilis ayuda a dividir las grasas en gotas mas pequenas, pero no es una enzima.",
+    ],
     classroomSummary: "La bilis y los jugos digestivos completan la digestion dentro del intestino delgado.",
   },
   chyle: {
+    shortTitle: "Absorcion",
+    summary: "El quilo marca el paso desde la digestion hacia la absorcion.",
+    body:
+      "Cuando el contenido intestinal ya puede atravesar la pared del intestino, se habla de absorcion. Las vellosidades y microvellosidades intestinales permiten que los nutrientes pasen hacia la sangre. Algunos nutrientes, como acidos grasos, pasan primero a la linfa. Luego son transportados hasta las celulas que los utilizan.",
+    bullets: [
+      "Ocurre principalmente en yeyuno e ileon.",
+      "Las vellosidades aumentan la superficie de absorcion.",
+      "La sangre transporta la mayoria de los nutrientes.",
+      "La linfa transporta parte de los lipidos.",
+      "Absorcion: paso de nutrientes y agua hacia la sangre o la linfa.",
+    ],
     classroomSummary: "La absorcion permite que los nutrientes pasen a sangre o linfa.",
   },
   "large-intestine-lesson": {
+    shortTitle: "Intestino grueso",
+    summary: "El intestino grueso recupera agua y forma las heces.",
+    body:
+      "El intestino grueso recibe el material que no fue digerido ni absorbido en el intestino delgado. Su funcion principal es absorber agua y algunas sales, compactar los restos y formar las heces. Esta formado por ciego, colon, recto y ano. Desde el recto los residuos se eliminan por egestion.",
+    bullets: [
+      "Ciego: recibe el contenido que llega desde el ileon.",
+      "Colon: recupera agua y compacta residuos.",
+      "Recto: almacena las heces antes de la eliminacion.",
+      "Ano: salida final del sistema digestivo.",
+      "Egestion: eliminacion de restos que el cuerpo no aprovecho.",
+    ],
     classroomSummary: "En el intestino grueso se recupera agua y se forman los residuos finales.",
   },
   "annex-glands": {
+    shortTitle: "Glandulas anexas",
     summary: "Las glandulas anexas ayudan a la digestion aunque el alimento no pase por dentro de ellas.",
     body:
-      "Las glandulas salivales, el higado y el pancreas producen secreciones que desembocan en distintos tramos del tubo digestivo y facilitan la digestion.",
+      "Las glandulas anexas desembocan en distintos tramos del tubo digestivo y producen secreciones indispensables. Las glandulas salivales humedecen el alimento y aportan amilasa. El higado produce bilis, participa en desintoxicacion, metabolismo y almacenamiento. El pancreas produce jugo pancreatico para la digestion y hormonas como insulina y glucagon.",
     bullets: [
-      "Las glandulas salivales producen saliva con amilasa.",
-      "El higado produce bilis para ayudar con las grasas.",
-      "El pancreas libera jugo pancreatico con enzimas digestivas.",
+      "Glandulas salivales: parotidas, submaxilares y sublinguales producen saliva.",
+      "Higado: produce bilis, almacena nutrientes y ayuda a neutralizar toxinas.",
+      "Pancreas exocrino: libera enzimas digestivas al duodeno.",
+      "Pancreas endocrino: regula glucosa mediante insulina y glucagon.",
     ],
     classroomSummary: "Las glandulas anexas aportan secreciones clave para completar la digestion.",
   },

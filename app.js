@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import {
   digestiveRecapPoints,
+  digestiveTransformationRecap,
   modelAudit,
   systemLessonSections,
   organHotspots,
@@ -11,9 +12,9 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260502-digestive-finish-1";
+} from "./data.js?v=20260503-digestive-polish-1";
 
-const MODEL_VERSION = "20260502-digestive-finish-1";
+const MODEL_VERSION = "20260503-digestive-polish-1";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
@@ -105,6 +106,7 @@ const digestiveGuide = document.querySelector("#digestive-guide");
 const digestiveProcessList = document.querySelector("#digestive-process-list");
 const digestiveSequenceButton = document.querySelector("#digestive-sequence");
 const digestiveClassButton = document.querySelector("#digestive-class");
+const digestiveQuickStudyButton = document.querySelector("#digestive-quick-study");
 const digestiveCopyLinkButton = document.querySelector("#digestive-copy-link");
 const openDigestiveModalButton = document.querySelector("#open-digestive-modal");
 const openDigestiveClassButton = document.querySelector("#open-digestive-class");
@@ -118,6 +120,13 @@ const digestiveClassFigure = document.querySelector("#digestive-class-figure");
 const digestiveClassBullets = document.querySelector("#digestive-class-bullets");
 const digestiveClassPrev = document.querySelector("#digestive-class-prev");
 const digestiveClassNext = document.querySelector("#digestive-class-next");
+const digestiveBackModelButton = document.querySelector("#digestive-back-model");
+const digestiveFullscreenButton = document.querySelector("#digestive-fullscreen");
+const digestiveStepNav = document.querySelector("#digestive-step-nav");
+const digestiveProgressLabel = document.querySelector("#digestive-progress-label");
+const digestiveProgressBar = document.querySelector("#digestive-progress-bar");
+const digestiveRouteMap = document.querySelector("#digestive-route-map");
+const digestiveQuickStudyPanel = document.querySelector("#digestive-quick-study-panel");
 const detailFunction = document.querySelector("#detail-function");
 const detailOrgans = document.querySelector("#detail-organs");
 const detailKeyFact = document.querySelector("#detail-key-fact");
@@ -130,7 +139,9 @@ const organTitle = document.querySelector("#organ-title");
 const organDescription = document.querySelector("#organ-description");
 const organLocation = document.querySelector("#organ-location");
 const organFunction = document.querySelector("#organ-function");
-const organKeyFact = document.querySelector("#organ-key-fact");
+const organWhatHappens = document.querySelector("#organ-what-happens");
+const organProcessRole = document.querySelector("#organ-process-role");
+const organCommonMistake = document.querySelector("#organ-common-mistake");
 const backButton = document.querySelector("#back-to-gallery");
 const startTourButton = document.querySelector("#start-tour");
 const fullscreenButton = document.querySelector("#fullscreen-button");
@@ -149,6 +160,7 @@ const viewFullButton = document.querySelector("#view-full");
 const viewModelButton = document.querySelector("#view-model");
 const viewSheetButton = document.querySelector("#view-sheet");
 const copySystemLinkButton = document.querySelector("#copy-system-link");
+const centerModelButton = document.querySelector("#center-model");
 
 const loader = new GLTFLoader();
 const viewers = new Set();
@@ -192,10 +204,21 @@ function bindEvents() {
   viewModelButton?.addEventListener("click", () => setDetailViewMode("model"));
   viewSheetButton?.addEventListener("click", () => setDetailViewMode("sheet"));
   copySystemLinkButton?.addEventListener("click", copyCurrentSystemLink);
+  centerModelButton?.addEventListener("click", () => {
+    detailViewer?.resetView();
+    setModelStatus("Modelo centrado.", "ready");
+  });
   digestiveSequenceButton?.addEventListener("click", () => setDigestiveLessonMode("sequence"));
   digestiveClassButton?.addEventListener("click", () => setDigestiveLessonMode("classroom"));
+  digestiveQuickStudyButton?.addEventListener("click", () => setDigestiveLessonMode("quick"));
   digestiveClassPrev?.addEventListener("click", () => moveDigestiveLesson(-1));
   digestiveClassNext?.addEventListener("click", () => moveDigestiveLesson(1));
+  digestiveBackModelButton?.addEventListener("click", () => {
+    closeDigestiveModal();
+    setDetailViewMode("model");
+    detailViewer?.resetView();
+  });
+  digestiveFullscreenButton?.addEventListener("click", toggleDigestiveFullscreen);
   digestiveCopyLinkButton?.addEventListener("click", copyDigestiveLink);
   openDigestiveModalButton?.addEventListener("click", openDigestiveModal);
   openDigestiveClassButton?.addEventListener("click", openDigestiveClassroom);
@@ -314,7 +337,12 @@ function openSystemDetail(systemKey) {
   };
 
   setDetailViewMode(tourActive ? "model" : "full");
-  setModelStatus(`Cargando ${systemConfig[systemKey].label.toLowerCase()}...`, "loading");
+  setModelStatus(
+    systemKey === "digestive"
+      ? "Cargando modelo digestivo... Si tarda, podes abrir el mapa del recorrido debajo."
+      : `Cargando ${systemConfig[systemKey].label.toLowerCase()}...`,
+    "loading",
+  );
   detailTitle.textContent = detail.title;
   detailSummary.textContent = detail.summary;
   detailDescription.textContent = detail.description ?? detail.summary;
@@ -354,7 +382,13 @@ function openSystemDetail(systemKey) {
     detailViewer = createSystemViewer(detailStage, systemKey, {
       onLoad: () => setModelStatus("Modelo 3D cargado.", "ready"),
       onFallback: () => setModelStatus("Vista temporal disponible.", "fallback"),
-      onError: () => setModelStatus("No se pudo cargar el modelo. Vista temporal activa.", "error"),
+      onError: () =>
+        setModelStatus(
+          systemKey === "digestive"
+            ? "No se pudo cargar el modelo 3D. Usa el mapa del recorrido y las fichas para continuar."
+            : "No se pudo cargar el modelo. Vista temporal activa.",
+          "error",
+        ),
     });
     renderOrganHotspots(systemKey);
   });
@@ -415,6 +449,10 @@ function renderDigestiveProcess(systemKey) {
   renderDigestiveIntro(introSections);
   renderDigestiveGuide(systemDetails[systemKey]);
   renderDigestiveClassroom(processSections);
+  renderDigestiveRouteMap(processSections);
+  renderDigestiveQuickStudy(processSections);
+  renderDigestiveStepNav(processSections);
+  updateDigestiveProgress(processSections.length);
   syncDigestiveLessonMode();
 
   processSections.forEach((section, index) => {
@@ -425,6 +463,8 @@ function renderDigestiveProcess(systemKey) {
       digestiveLessonIndex = index;
       renderDigestiveClassroom(processSections);
       updateDigestiveActiveCard();
+      updateDigestiveProgress(processSections.length);
+      updateDigestiveStepNav();
       if (digestiveLessonMode === "classroom") syncDigestiveLessonMode();
       updateRoute();
     });
@@ -463,6 +503,7 @@ function renderDigestiveProcess(systemKey) {
     summary.textContent = section.summary;
 
     const body = document.createElement("p");
+    body.className = "process-body";
     body.textContent = section.body;
 
     const list = document.createElement("ul");
@@ -473,12 +514,101 @@ function renderDigestiveProcess(systemKey) {
       list.appendChild(li);
     });
 
-    content.append(step, title, summary, body, list);
+    const detailHint = document.createElement("span");
+    detailHint.className = "process-detail-hint";
+    detailHint.textContent = "Tocar para abrir este paso en el recorrido.";
+
+    content.append(step, title, summary, body, list, detailHint);
     card.append(figure, content);
     digestiveProcessList.appendChild(card);
   });
 
   updateDigestiveActiveCard();
+  updateDigestiveStepNav();
+}
+
+function renderDigestiveRouteMap(sections) {
+  if (!digestiveRouteMap) return;
+  digestiveRouteMap.innerHTML = "";
+  if (currentSystemKey !== "digestive" || !sections.length) return;
+
+  const stages = [
+    { label: "Boca", note: "bolo", sectionId: "mouth-parts" },
+    { label: "Faringe", note: "deglucion", sectionId: "pharynx" },
+    { label: "Esofago", note: "transporte", sectionId: "esophagus-lesson" },
+    { label: "Estomago", note: "quimo", sectionId: "stomach-lesson" },
+    { label: "Int. delgado", note: "quilo y absorcion", sectionId: "small-intestine-lesson" },
+    { label: "Int. grueso", note: "heces", sectionId: "large-intestine-lesson" },
+  ];
+
+  stages.forEach((stage) => {
+    const index = sections.findIndex((section) => section.id === stage.sectionId);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "digestive-route-step";
+    button.dataset.sectionId = stage.sectionId;
+    button.innerHTML = `<strong>${stage.label}</strong><span>${stage.note}</span>`;
+    button.addEventListener("click", () => {
+      if (index >= 0) {
+        digestiveLessonIndex = index;
+        renderDigestiveClassroom(sections);
+        setDigestiveLessonMode("classroom");
+        updateDigestiveActiveCard();
+        updateDigestiveStepNav();
+        updateDigestiveProgress(sections.length);
+      }
+    });
+    digestiveRouteMap.appendChild(button);
+  });
+  updateDigestiveRouteMap();
+}
+
+function updateDigestiveRouteMap() {
+  if (!digestiveRouteMap) return;
+  const sections = (systemLessonSections.digestive ?? []).slice(3);
+  const currentId = sections[digestiveLessonIndex]?.id;
+  digestiveRouteMap.querySelectorAll(".digestive-route-step").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.sectionId === currentId);
+  });
+}
+
+function renderDigestiveStepNav(sections) {
+  if (!digestiveStepNav) return;
+  digestiveStepNav.innerHTML = "";
+  sections.forEach((section, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "digestive-step-nav-button";
+    button.dataset.stepIndex = String(index);
+    button.textContent = section.shortTitle ?? section.title.replace(/^\d+\.\s*/, "");
+    button.addEventListener("click", () => {
+      digestiveLessonIndex = index;
+      renderDigestiveClassroom(sections);
+      updateDigestiveActiveCard();
+      updateDigestiveProgress(sections.length);
+      updateDigestiveStepNav();
+      setDigestiveLessonMode("classroom");
+      updateRoute();
+    });
+    digestiveStepNav.appendChild(button);
+  });
+  updateDigestiveStepNav();
+}
+
+function updateDigestiveStepNav() {
+  digestiveStepNav?.querySelectorAll(".digestive-step-nav-button").forEach((button, index) => {
+    button.classList.toggle("is-active", index === digestiveLessonIndex);
+  });
+  updateDigestiveRouteMap();
+}
+
+function updateDigestiveProgress(totalSteps) {
+  const classroomSections = buildDigestiveClassroomSections((systemLessonSections.digestive ?? []).slice(3));
+  const total = classroomSections.length || totalSteps || 1;
+  const safeIndex = Math.max(0, Math.min(digestiveLessonIndex, total - 1));
+  const isFinal = safeIndex === total - 1;
+  if (digestiveProgressLabel) digestiveProgressLabel.textContent = isFinal ? "Cierre final" : `Paso ${safeIndex + 1} de ${total}`;
+  if (digestiveProgressBar) digestiveProgressBar.style.width = `${((safeIndex + 1) / total) * 100}%`;
 }
 
 function renderDigestiveIntro(sections) {
@@ -514,53 +644,8 @@ function renderDigestiveGuide(detail) {
   if (!digestiveGuide) return;
   digestiveGuide.innerHTML = "";
   if (currentSystemKey !== "digestive") return;
-
-  const cards = [
-    {
-      title: "Que es este sistema",
-      items: detail?.introHighlights ?? [],
-    },
-    {
-      title: "Linea del proceso",
-      items: detail?.processTimeline ?? [],
-    },
-    {
-      title: "Mapa rapido de organos",
-      items: detail?.organMap ?? [],
-    },
-    {
-      title: "Que mirar primero",
-      items: detail?.lookFor?.slice(0, 3) ?? [],
-    },
-    {
-      title: "Como recorrerlo",
-      items: detail?.guideSequence ?? [],
-    },
-    {
-      title: "Idea central",
-      items: detail?.guideFocus ?? [],
-    },
-  ].filter((card) => card.items.length);
-
-  cards.forEach((card) => {
-    const article = document.createElement("article");
-      article.className = "digestive-guide-card";
-
-    const title = document.createElement("h4");
-    title.textContent = card.title;
-
-    const list = document.createElement("ul");
-    list.className = "process-bullets";
-    card.items.forEach((item) => {
-      const li = document.createElement("li");
-      li.textContent = item;
-      list.appendChild(li);
-    });
-
-    article.append(title, list);
-      digestiveGuide.appendChild(article);
-    });
-  }
+  digestiveGuide.setAttribute("aria-hidden", "true");
+}
 
 function toggleDigestiveIntroLayout(systemKey) {
   const isDigestive = systemKey === "digestive";
@@ -600,12 +685,14 @@ function renderDigestiveClassroom(sections) {
     recapTitle.className = "process-caption";
     recapTitle.textContent = "Resumen visual del recorrido";
 
-    const recapList = document.createElement("ol");
-    recapList.className = "digestive-recap-figure-list";
+    const recapList = document.createElement("div");
+    recapList.className = "digestive-transformation-line";
     (section.visualPoints ?? section.bullets ?? []).forEach((item) => {
-      const li = document.createElement("li");
-      li.textContent = item;
-      recapList.appendChild(li);
+      const [label, ...textParts] = item.split(":");
+      const card = document.createElement("article");
+      card.className = "digestive-transformation-card";
+      card.innerHTML = `<strong>${label}</strong><span>${textParts.join(":").trim() || item}</span>`;
+      recapList.appendChild(card);
     });
 
     recap.append(recapTitle, recapList);
@@ -623,6 +710,36 @@ function renderDigestiveClassroom(sections) {
   });
   if (digestiveClassPrev) digestiveClassPrev.disabled = safeIndex === 0;
   if (digestiveClassNext) digestiveClassNext.textContent = safeIndex === classroomSections.length - 1 ? "Cerrar recorrido" : "Siguiente paso";
+  updateDigestiveProgress(classroomSections.length);
+  updateDigestiveStepNav();
+}
+
+function renderDigestiveQuickStudy(sections) {
+  if (!digestiveQuickStudyPanel) return;
+  digestiveQuickStudyPanel.innerHTML = "";
+  const classroomSections = buildDigestiveClassroomSections(sections);
+  if (!classroomSections.length) return;
+
+  const heading = document.createElement("div");
+  heading.className = "quick-study-heading";
+  heading.innerHTML = "<p class=\"detail-eyebrow\">Repaso en 2 minutos</p><h4>Solo ideas clave</h4><p>Lee los titulos y la idea principal de cada etapa para repasar rapido antes de volver al modelo.</p>";
+
+  const list = document.createElement("div");
+  list.className = "quick-study-grid";
+  classroomSections.forEach((section, index) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "quick-study-card";
+    card.innerHTML = `<span>${index + 1}</span><strong>${section.shortTitle ?? section.title.replace(/^\d+\.\s*/, "")}</strong><small>${section.classroomSummary ?? section.summary}</small>`;
+    card.addEventListener("click", () => {
+      digestiveLessonIndex = Math.min(index, classroomSections.length - 1);
+      renderDigestiveClassroom(sections);
+      setDigestiveLessonMode("classroom");
+    });
+    list.appendChild(card);
+  });
+
+  digestiveQuickStudyPanel.append(heading, list);
 }
 
 function buildDigestiveClassroomSections(sections) {
@@ -635,18 +752,12 @@ function buildDigestiveClassroomSections(sections) {
     })),
     {
       id: "digestive-recap",
-      title: "Cierre: repaso del proceso digestivo",
-      summary: "Antes de salir, repasa el recorrido completo del alimento.",
-      classroomSummary: "Una ultima pasada corta para unir boca, estomago, intestino delgado e intestino grueso en una sola idea.",
-      body: "Este cierre resume la idea central de cada tramo para que el proceso quede claro de principio a fin.",
+      title: "Cierre: bolo -> quimo -> quilo -> heces",
+      summary: "Repaso del viaje completo del alimento y sus transformaciones.",
+      classroomSummary: "El alimento cambia de forma en cada tramo: bolo, quimo, quilo y finalmente heces.",
+      body: "Este cierre une las transformaciones principales para que el proceso quede claro de principio a fin.",
       bullets: digestiveRecapPoints,
-      visualPoints: [
-        "Boca: ingreso, masticacion y formacion del bolo.",
-        "Faringe y esofago: deglucion y transporte.",
-        "Estomago: mezcla con jugos gastricos y formacion del quimo.",
-        "Intestino delgado: digestion final y absorcion.",
-        "Intestino grueso: recuperacion de agua y eliminacion.",
-      ],
+      visualPoints: digestiveTransformationRecap,
       showImage: false,
       image: "",
     },
@@ -663,13 +774,17 @@ function syncDigestiveLessonMode() {
   if (!digestiveProcess) return;
   const isDigestive = currentSystemKey === "digestive";
   const isClassroom = isDigestive && digestiveLessonMode === "classroom";
-  digestiveProcess.dataset.lessonMode = isClassroom ? "classroom" : "sequence";
-  digestiveSequenceButton?.classList.toggle("is-active", !isClassroom);
+  const isQuick = isDigestive && digestiveLessonMode === "quick";
+  digestiveProcess.dataset.lessonMode = isClassroom ? "classroom" : isQuick ? "quick" : "sequence";
+  digestiveSequenceButton?.classList.toggle("is-active", !isClassroom && !isQuick);
   digestiveClassButton?.classList.toggle("is-active", isClassroom);
-  digestiveSequenceButton?.setAttribute("aria-pressed", String(!isClassroom));
+  digestiveQuickStudyButton?.classList.toggle("is-active", isQuick);
+  digestiveSequenceButton?.setAttribute("aria-pressed", String(!isClassroom && !isQuick));
   digestiveClassButton?.setAttribute("aria-pressed", String(isClassroom));
+  digestiveQuickStudyButton?.setAttribute("aria-pressed", String(isQuick));
   digestiveClassroom?.classList.toggle("hidden", !isClassroom);
-  digestiveProcessList?.classList.toggle("hidden", isClassroom);
+  digestiveQuickStudyPanel?.classList.toggle("hidden", !isQuick);
+  digestiveProcessList?.classList.toggle("hidden", isClassroom || isQuick);
   updateDigestiveActiveCard();
 }
 
@@ -680,15 +795,18 @@ function updateDigestiveActiveCard() {
 }
 
 function moveDigestiveLesson(direction) {
-  const sections = buildDigestiveClassroomSections((systemLessonSections.digestive ?? []).slice(3));
-  if (!sections.length) return;
-  if (direction > 0 && digestiveLessonIndex >= sections.length - 1) {
+  const rawSections = (systemLessonSections.digestive ?? []).slice(3);
+  const classroomSections = buildDigestiveClassroomSections(rawSections);
+  if (!classroomSections.length) return;
+  if (direction > 0 && digestiveLessonIndex >= classroomSections.length - 1) {
     setDigestiveLessonMode("sequence");
     return;
   }
-  digestiveLessonIndex = Math.max(0, Math.min(sections.length - 1, digestiveLessonIndex + direction));
-  renderDigestiveClassroom(sections);
+  digestiveLessonIndex = Math.max(0, Math.min(classroomSections.length - 1, digestiveLessonIndex + direction));
+  renderDigestiveClassroom(rawSections);
   updateDigestiveActiveCard();
+  updateDigestiveProgress(classroomSections.length);
+  updateDigestiveStepNav();
   updateRoute();
 }
 
@@ -704,6 +822,13 @@ function copyDigestiveLink() {
     () => setModelStatus("Link del digestivo copiado.", "ready"),
     () => setModelStatus("No se pudo copiar el link, pero la vista ya esta lista para compartir.", "fallback"),
   );
+}
+
+function toggleDigestiveFullscreen() {
+  const target = digestiveModal?.querySelector(".digestive-modal-panel") ?? digestiveModal;
+  if (!target) return;
+  if (!document.fullscreenElement) target.requestFullscreen?.();
+  else document.exitFullscreen?.();
 }
 
 function copyCurrentSystemLink() {
@@ -773,11 +898,15 @@ function showOrganInfo(organ, organId) {
   organDescription.textContent = organ.description;
   organLocation.textContent = study.location ?? "Ubicacion general dentro del sistema.";
   organFunction.textContent = study.function ?? organ.description;
-  organKeyFact.textContent = study.keyFact ?? "Relacionar con otros sistemas ayuda a entender su funcion.";
+  if (organWhatHappens) organWhatHappens.textContent = study.whatHappens ?? study.keyFact ?? "Aca ocurre una parte importante del trabajo del sistema.";
+  if (organProcessRole) organProcessRole.textContent = study.processRole ?? "Se conecta con otras estructuras para completar el recorrido.";
+  if (organCommonMistake) organCommonMistake.textContent = study.commonMistake ?? "No confundir estructura, funcion y etapa del proceso.";
   organPanel.classList.remove("hidden");
   document.querySelectorAll(".organ-chip, .hotspot-button").forEach((element) => {
     element.classList.toggle("is-active", element.dataset.organId === organId);
   });
+  const selectedChip = detailOrgans?.querySelector(`.organ-chip[data-organ-id="${organId}"]`);
+  selectedChip?.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
 function startGuidedTour() {
@@ -903,6 +1032,9 @@ function updateRoute() {
     params.set("digestiveClass", "1");
     params.set("step", String(digestiveLessonIndex + 1));
   }
+  if (currentSystemKey === "digestive" && digestiveLessonMode === "quick") {
+    params.set("digestiveQuick", "1");
+  }
   if (currentSystemKey === "digestive" && digestiveModal && !digestiveModal.classList.contains("hidden")) {
     params.set("digestiveUnit", "1");
   }
@@ -916,12 +1048,13 @@ function applyInitialRoute() {
 
   const requestedView = params.get("view");
   const digestClass = params.get("digestiveClass") === "1";
+  const digestQuick = params.get("digestiveQuick") === "1";
   const digestUnit = params.get("digestiveUnit") === "1";
   const step = Number(params.get("step") || "1");
   if (system === "digestive") {
     const processSections = (systemLessonSections.digestive ?? []).slice(3);
     digestiveLessonIndex = Math.max(0, Math.min(processSections.length - 1, step - 1));
-    digestiveLessonMode = digestClass ? "classroom" : "sequence";
+    digestiveLessonMode = digestClass ? "classroom" : digestQuick ? "quick" : "sequence";
   }
 
   requestAnimationFrame(() => {
@@ -1143,6 +1276,7 @@ function createSystemViewer(container, systemKey, options = {}) {
   addLights(scene);
   const root = new THREE.Group();
   scene.add(root);
+  let fittedObject = root;
 
   const state = {
     disposed: false,
@@ -1156,6 +1290,7 @@ function createSystemViewer(container, systemKey, options = {}) {
 
   const fallback = createFallbackModel(systemKey);
   root.add(fallback);
+  fittedObject = fallback;
   fitCameraToObject(camera, controls, fallback, systemKey);
   renderScene();
 
@@ -1167,6 +1302,7 @@ function createSystemViewer(container, systemKey, options = {}) {
       normalizeModel(model, systemKey);
       applySystemMaterial(model, systemKey);
       root.add(model);
+      fittedObject = model;
       fitCameraToObject(camera, controls, model, systemKey);
       requestRender();
       options.onLoad?.();
@@ -1174,7 +1310,9 @@ function createSystemViewer(container, systemKey, options = {}) {
     .catch(() => {
       if (state.disposed) return;
       clearObject(root);
-      root.add(createFallbackModel(systemKey));
+      const fallbackModel = createFallbackModel(systemKey);
+      root.add(fallbackModel);
+      fittedObject = fallbackModel;
       fitCameraToObject(camera, controls, root, systemKey);
       requestRender();
       if (REAL_MODEL_KEYS.has(systemKey)) options.onError?.();
@@ -1248,6 +1386,11 @@ function createSystemViewer(container, systemKey, options = {}) {
     updateHotspots();
   }
 
+  function resetView() {
+    fitCameraToObject(camera, controls, fittedObject, systemKey);
+    requestRender();
+  }
+
   function updateHotspots() {
     if (!state.hotspotBindings.length) return;
     const box = new THREE.Box3().setFromObject(root);
@@ -1273,7 +1416,7 @@ function createSystemViewer(container, systemKey, options = {}) {
     });
   }
 
-  return { resize, dispose, setHotspotBindings };
+  return { resize, dispose, resetView, setHotspotBindings };
 }
 
 function renderOrganHotspots(systemKey) {
