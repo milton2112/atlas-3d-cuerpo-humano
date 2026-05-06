@@ -12,9 +12,10 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260503-digestive-polish-1";
+} from "./data.js?v=20260506-digestivo-aula";
 
-const MODEL_VERSION = "20260503-digestive-polish-1";
+const APP_VERSION_NAME = "Version Digestivo Aula - Mayo 2026";
+const MODEL_VERSION = "20260506-digestivo-aula";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
@@ -53,6 +54,7 @@ const MODEL_ROTATION_CONFIG = {
 const PRESERVE_SOURCE_MATERIAL_KEYS = new Set(["digestive", "urinary", "reproductiveFemale"]);
 const DEFERRED_MENU_PREVIEW_KEYS = new Set(["nervous", "circulatory", "urinary"]);
 const COMPACT_VIEWPORT_QUERY = "(max-width: 768px)";
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const MATERIAL_NAME_COLORS = {
   urinary: [
     { match: "kidney", color: "#8d250f" },
@@ -70,6 +72,13 @@ const MATERIAL_NAME_COLORS = {
 
 function isCompactViewport() {
   return window.matchMedia(COMPACT_VIEWPORT_QUERY).matches;
+}
+
+function shouldUseStaticMenuPreview() {
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const slowConnection = connection && ["slow-2g", "2g", "3g"].includes(connection.effectiveType);
+  const lowMemoryDevice = Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory <= 4;
+  return isCompactViewport() || window.matchMedia(REDUCED_MOTION_QUERY).matches || slowConnection || lowMemoryDevice;
 }
 
 function getPreviewPixelRatio() {
@@ -174,7 +183,7 @@ const previewObserver =
             previewObserver.unobserve(entry.target);
           });
         },
-        { rootMargin: "360px" },
+        { rootMargin: "220px" },
       )
     : null;
 let detailViewer = null;
@@ -183,6 +192,7 @@ let currentSystemKey = systemOrder[0];
 let detailOpenToken = 0;
 let digestiveLessonMode = "sequence";
 let digestiveLessonIndex = 0;
+let resizeFrame = 0;
 
 buildSystemGallery();
 buildQuickIndex();
@@ -233,10 +243,21 @@ function bindEvents() {
       closeDigestiveModal();
       return;
     }
+    if (!digestiveModal?.classList.contains("hidden") && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+      event.preventDefault();
+      moveDigestiveLesson(event.key === "ArrowRight" ? 1 : -1);
+      return;
+    }
     if (event.key === "Escape" && !detailView.classList.contains("hidden")) closeSystemDetail();
   });
   document.addEventListener("fullscreenchange", updateFullscreenButton);
-  window.addEventListener("resize", () => {
+  window.addEventListener("resize", scheduleViewerResize);
+}
+
+function scheduleViewerResize() {
+  if (resizeFrame) cancelAnimationFrame(resizeFrame);
+  resizeFrame = requestAnimationFrame(() => {
+    resizeFrame = 0;
     viewers.forEach((viewer) => viewer.resize());
     detailViewer?.resize();
   });
@@ -514,11 +535,15 @@ function renderDigestiveProcess(systemKey) {
       list.appendChild(li);
     });
 
+    const focus = document.createElement("p");
+    focus.className = "process-focus";
+    focus.textContent = section.classroomSummary ?? section.summary;
+
     const detailHint = document.createElement("span");
     detailHint.className = "process-detail-hint";
     detailHint.textContent = "Tocar para abrir este paso en el recorrido.";
 
-    content.append(step, title, summary, body, list, detailHint);
+    content.append(step, title, summary, body, list, focus, detailHint);
     card.append(figure, content);
     digestiveProcessList.appendChild(card);
   });
@@ -616,9 +641,16 @@ function renderDigestiveIntro(sections) {
   digestiveSystemIntroList.innerHTML = "";
   if (!sections.length) return;
 
-  sections.forEach((section) => {
+  const introLabels = ["Panorama", "Ruta del alimento", "Como se transforma"];
+
+  sections.forEach((section, index) => {
     const article = document.createElement("article");
     article.className = "digestive-intro-card";
+    article.dataset.introKind = section.id;
+
+    const badge = document.createElement("span");
+    badge.className = "digestive-intro-badge";
+    badge.textContent = introLabels[index] ?? "Ficha";
 
     const title = document.createElement("h4");
     title.textContent = section.title.replace(/^\d+\.\s*/, "");
@@ -629,13 +661,13 @@ function renderDigestiveIntro(sections) {
 
     const list = document.createElement("ul");
     list.className = "process-bullets";
-    [section.body, ...(section.bullets ?? []).slice(0, 2)].forEach((item) => {
+    [section.body, ...(section.bullets ?? [])].forEach((item) => {
       const li = document.createElement("li");
       li.textContent = item;
       list.appendChild(li);
     });
 
-    article.append(title, summary, list);
+    article.append(badge, title, summary, list);
     digestiveSystemIntroList.appendChild(article);
   });
 }
@@ -861,6 +893,7 @@ function openDigestiveModal() {
   if (!digestiveModal) return;
   digestiveModal.classList.remove("hidden");
   document.body.classList.add("has-modal-open");
+  detailViewer?.setPaused?.(true);
   syncDigestiveLessonMode();
   closeDigestiveModalButton?.focus({ preventScroll: true });
   updateRoute();
@@ -870,6 +903,7 @@ function closeDigestiveModal() {
   if (!digestiveModal) return;
   digestiveModal.classList.add("hidden");
   document.body.classList.remove("has-modal-open");
+  detailViewer?.setPaused?.(false);
   openDigestiveModalButton?.focus({ preventScroll: true });
   updateRoute();
 }
@@ -907,6 +941,8 @@ function showOrganInfo(organ, organId) {
   });
   const selectedChip = detailOrgans?.querySelector(`.organ-chip[data-organ-id="${organId}"]`);
   selectedChip?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  setModelStatus(`Ficha abierta: ${organ.title}.`, "ready");
+  if (isCompactViewport()) organPanel.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
 function startGuidedTour() {
@@ -1157,12 +1193,30 @@ function createStaticPreview(container, systemKey) {
   let scene = null;
   let loaded = false;
 
+  if (shouldUseStaticMenuPreview()) {
+    figure.classList.add("is-static-only");
+    figure.classList.remove("is-loading");
+    return {
+      resize() {},
+      dispose() {
+        disposed = true;
+        previewObserver?.unobserve(figure);
+        figure.remove();
+      },
+    };
+  }
+
   const loadPreview = () => {
     if (disposed || loaded) return;
     loaded = true;
-    const preview = createPreviewScene(figure, systemKey);
-    renderer = preview.renderer;
-    scene = preview.scene;
+    const start = () => {
+      if (disposed || !figure.isConnected) return;
+      const preview = createPreviewScene(figure, systemKey);
+      renderer = preview.renderer;
+      scene = preview.scene;
+    };
+    if ("requestIdleCallback" in window) window.requestIdleCallback(start, { timeout: 900 });
+    else window.setTimeout(start, 80);
   };
 
   figure.__loadPreview = loadPreview;
@@ -1183,6 +1237,7 @@ function createStaticPreview(container, systemKey) {
       previewObserver?.unobserve(figure);
       if (scene) clearObject(scene.scene);
       renderer?.dispose();
+      renderer?.forceContextLoss?.();
       figure.remove();
     },
   };
@@ -1282,6 +1337,7 @@ function createSystemViewer(container, systemKey, options = {}) {
     disposed: false,
     animationId: 0,
     paused: document.hidden,
+    manualPaused: false,
     hotspotBindings: [],
     renderQueued: false,
     onDemand: compactViewport,
@@ -1326,7 +1382,7 @@ function createSystemViewer(container, systemKey, options = {}) {
 
   function animate() {
     if (state.disposed) return;
-    if (!state.paused) {
+    if (!state.paused && !state.manualPaused) {
       controls.update();
       renderScene();
     }
@@ -1339,11 +1395,11 @@ function createSystemViewer(container, systemKey, options = {}) {
       renderScene();
       return;
     }
-    if (state.paused || state.renderQueued) return;
+    if (state.paused || state.manualPaused || state.renderQueued) return;
     state.renderQueued = true;
     state.animationId = requestAnimationFrame(() => {
       state.renderQueued = false;
-      if (state.disposed || state.paused) return;
+      if (state.disposed || state.paused || state.manualPaused) return;
       renderScene();
     });
   }
@@ -1371,12 +1427,13 @@ function createSystemViewer(container, systemKey, options = {}) {
     controls.dispose();
     clearObject(scene);
     renderer.dispose();
+    renderer.forceContextLoss?.();
     renderer.domElement.remove();
   }
 
   function handleVisibilityChange() {
     state.paused = document.hidden || detailView.classList.contains("hidden");
-    if (!state.paused) requestRender();
+    if (!state.paused && !state.manualPaused) requestRender();
   }
 
   document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -1389,6 +1446,12 @@ function createSystemViewer(container, systemKey, options = {}) {
   function resetView() {
     fitCameraToObject(camera, controls, fittedObject, systemKey);
     requestRender();
+  }
+
+  function setPaused(paused) {
+    state.manualPaused = Boolean(paused);
+    state.paused = document.hidden || detailView.classList.contains("hidden");
+    if (!state.paused && !state.manualPaused) requestRender();
   }
 
   function updateHotspots() {
@@ -1416,7 +1479,7 @@ function createSystemViewer(container, systemKey, options = {}) {
     });
   }
 
-  return { resize, dispose, resetView, setHotspotBindings };
+  return { resize, dispose, resetView, setHotspotBindings, setPaused };
 }
 
 function renderOrganHotspots(systemKey) {

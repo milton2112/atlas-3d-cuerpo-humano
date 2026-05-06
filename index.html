@@ -103,20 +103,6 @@
                 <p id="model-status" class="model-status is-loading" aria-live="polite">Cargando modelo...</p>
                 <div id="detail-stage" class="detail-stage"></div>
               </div>
-
-              <section id="digestive-process" class="digestive-process hidden" aria-label="Proceso de digestion">
-                <div class="digestive-launch-card">
-                  <p class="detail-eyebrow">Unidad especial</p>
-                  <h3>Introduccion al sistema digestivo</h3>
-                  <p>Empieza por las ideas base del sistema y despues abre la secuencia completa para seguir el recorrido del alimento de forma ordenada.</p>
-                  <div id="digestive-guide" class="digestive-guide" aria-label="Guia del digestivo"></div>
-                  <div class="digestive-launch-actions">
-                    <button id="open-digestive-modal" class="primary-button" type="button">Abrir proceso digestivo completo</button>
-                    <button id="open-digestive-class" class="ghost-button" type="button">Abrir recorrido guiado</button>
-                    <button id="digestive-copy-link" class="ghost-button" type="button">Copiar link del digestivo</button>
-                  </div>
-                </div>
-              </section>
             </div>
 
             <aside class="detail-info-card">
@@ -126,9 +112,36 @@
               <p id="detail-description" class="detail-description"></p>
               <p id="detail-model-note" class="model-note"></p>
 
-              <section id="digestive-system-intro" class="detail-section digestive-system-intro hidden" aria-label="Introduccion al sistema digestivo">
-                <h3>Introduccion al sistema digestivo</h3>
-                <div id="digestive-system-intro-list" class="digestive-intro-list"></div>
+              <section id="digestive-process" class="digestive-process hidden" aria-label="Proceso de digestion">
+                <div class="digestive-launch-card">
+                  <p class="detail-eyebrow">Unidad especial</p>
+                  <h3>Introduccion al sistema digestivo</h3>
+                  <p>Empieza por las ideas base del sistema y despues abre la secuencia completa para seguir el recorrido del alimento de forma ordenada.</p>
+                  <div class="digestive-launch-kpis" aria-label="Resumen rapido de la unidad digestiva">
+                    <span>
+                      <strong>3 ideas base</strong>
+                      <small>Que es, como se organiza y tipos de digestion.</small>
+                    </span>
+                    <span>
+                      <strong>13 etapas</strong>
+                      <small>Del ingreso del alimento hasta la egestion.</small>
+                    </span>
+                    <span>
+                      <strong>Modo rapido</strong>
+                      <small>Repaso corto para estudiar antes de clase.</small>
+                    </span>
+                  </div>
+                  <div id="digestive-guide" class="digestive-guide" aria-label="Guia del digestivo"></div>
+                  <section id="digestive-system-intro" class="digestive-system-intro hidden" aria-label="Introduccion al sistema digestivo">
+                    <h3>Ideas base del sistema digestivo</h3>
+                    <div id="digestive-system-intro-list" class="digestive-intro-list"></div>
+                  </section>
+                  <div class="digestive-launch-actions">
+                    <button id="open-digestive-modal" class="primary-button" type="button">Abrir proceso digestivo completo</button>
+                    <button id="open-digestive-class" class="ghost-button" type="button">Abrir recorrido guiado</button>
+                    <button id="digestive-copy-link" class="ghost-button" type="button">Copiar link del digestivo</button>
+                  </div>
+                </div>
               </section>
 
               <div id="detail-look-section" class="detail-section look-section">
@@ -268,13 +281,13 @@
 
       <section class="credits-card" aria-label="Creditos y estado del proyecto">
         <p>
-          Version para compartir: modelos 3D usados como base educativa. Fuente principal:
+          <strong>Version Digestivo Aula 2026.</strong> Modelos 3D usados como base educativa. Fuente principal:
           <a href="https://github.com/LluisV/Z-Anatomy" target="_blank" rel="noreferrer">Z-Anatomy</a>,
           licencia CC BY 4.0. Las vistas temporales pueden reemplazarse sin rehacer la app.
         </p>
       </section>
     </main>
 
-  <script type="module" src="./app.js?v=20260503-digestive-polish-1"></script>
+  <script type="module" src="./app.js?v=20260506-digestivo-aula"></script>
 </body>
 </html>
