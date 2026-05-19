@@ -1709,6 +1709,8 @@ body.has-modal-open {
   border-radius: 22px;
   background: rgba(0, 0, 0, 0.24);
   cursor: pointer;
+  content-visibility: auto;
+  contain-intrinsic-size: 420px;
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
@@ -1722,10 +1724,16 @@ body.has-modal-open {
 
 .process-card:hover,
 .process-card:focus-within,
+.process-card:focus-visible,
 .process-card.is-active {
   transform: translateY(-2px);
   border-color: rgba(255, 201, 122, 0.42);
   background: rgba(255, 157, 76, 0.08);
+}
+
+.process-card:focus-visible {
+  outline: 3px solid rgba(157, 231, 255, 0.72);
+  outline-offset: 3px;
 }
 
 .process-figure {
@@ -1751,6 +1759,7 @@ body.has-modal-open {
   object-position: center;
   image-rendering: auto;
   background: rgba(255, 255, 255, 0.04);
+  content-visibility: auto;
 }
 
 .digestive-lesson-image-large {
@@ -1848,6 +1857,42 @@ body.has-modal-open {
   background: rgba(255, 255, 255, 0.035);
 }
 
+.process-context {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.process-context div {
+  display: grid;
+  gap: 3px;
+  padding: 9px 10px;
+  border: 1px solid rgba(157, 231, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(157, 231, 255, 0.055);
+}
+
+.process-context dt {
+  color: #9de7ff;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.process-context dd {
+  margin: 0;
+  color: #e6f7ff;
+  font-size: 0.86rem;
+  line-height: 1.28;
+}
+
+.process-card .process-context + .process-bullets {
+  margin-top: 0;
+}
+
 .process-focus {
   margin: 2px 0 0;
   padding: 9px 11px;
@@ -1899,6 +1944,12 @@ body.has-modal-open {
   font-family: "Space Grotesk", sans-serif;
   font-size: 0.76rem;
   font-weight: 800;
+}
+
+.process-card.is-active .process-detail-hint {
+  border-color: rgba(141, 231, 182, 0.32);
+  color: #cbffe0;
+  background: rgba(141, 231, 182, 0.1);
 }
 
 .digestive-support-grid {
@@ -2320,6 +2371,10 @@ body.has-modal-open {
     grid-template-columns: 1fr;
     gap: 12px;
     padding: 10px;
+  }
+
+  .process-context {
+    grid-template-columns: 1fr;
   }
 
   .process-figure,

@@ -12,10 +12,10 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260506-digestivo-aula";
+} from "./data.js?v=20260518-digestivo-completo";
 
-const APP_VERSION_NAME = "Version Digestivo Aula - Mayo 2026";
-const MODEL_VERSION = "20260506-digestivo-aula";
+const APP_VERSION_NAME = "Version Digestivo Completo - Mayo 2026";
+const MODEL_VERSION = "20260518-digestivo-completo";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
@@ -68,6 +68,73 @@ const MATERIAL_NAME_COLORS = {
     { match: "ovaries", color: "#f08a6c" },
     { match: "tube", color: "#f08a6c" },
   ],
+};
+const DIGESTIVE_STAGE_CONTEXT = {
+  "mouth-parts": {
+    organ: "Boca",
+    concept: "Ingestion + digestion inicial",
+    result: "Comienza la formacion del bolo.",
+  },
+  bolus: {
+    organ: "Dientes, lengua y saliva",
+    concept: "Bolo alimenticio",
+    result: "Masa humeda lista para deglutir.",
+  },
+  teeth: {
+    organ: "Dientes",
+    concept: "Digestion mecanica",
+    result: "Alimento fragmentado.",
+  },
+  tongue: {
+    organ: "Lengua",
+    concept: "Mezcla y deglucion",
+    result: "El bolo avanza hacia la faringe.",
+  },
+  pharynx: {
+    organ: "Faringe y epiglotis",
+    concept: "Cruce digestivo-respiratorio",
+    result: "El bolo pasa al esofago.",
+  },
+  "esophagus-lesson": {
+    organ: "Esofago",
+    concept: "Peristaltismo",
+    result: "Transporte hacia el estomago.",
+  },
+  "stomach-lesson": {
+    organ: "Estomago",
+    concept: "Jugo gastrico",
+    result: "Se forma el quimo.",
+  },
+  chyme: {
+    organ: "Estomago y piloro",
+    concept: "Quimo",
+    result: "Mezcla acida hacia duodeno.",
+  },
+  "small-intestine-lesson": {
+    organ: "Intestino delgado",
+    concept: "Digestion final",
+    result: "Nutrientes listos para absorber.",
+  },
+  "digestive-juices": {
+    organ: "Higado, pancreas e intestino",
+    concept: "Bilis y enzimas",
+    result: "Se completan transformaciones quimicas.",
+  },
+  chyle: {
+    organ: "Vellosidades intestinales",
+    concept: "Absorcion",
+    result: "Nutrientes a sangre o linfa.",
+  },
+  "large-intestine-lesson": {
+    organ: "Intestino grueso",
+    concept: "Recuperacion de agua",
+    result: "Se forman las heces.",
+  },
+  "annex-glands": {
+    organ: "Glandulas anexas",
+    concept: "Secreciones digestivas",
+    result: "Ayudan sin que el alimento pase por ellas.",
+  },
 };
 
 function isCompactViewport() {
@@ -480,7 +547,10 @@ function renderDigestiveProcess(systemKey) {
     const card = document.createElement("article");
     card.className = "process-card";
     card.dataset.sectionId = section.id;
-    card.addEventListener("click", () => {
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Abrir ${section.title.replace(/^\d+\.\s*/, "")} en recorrido guiado`);
+    const openSection = () => {
       digestiveLessonIndex = index;
       renderDigestiveClassroom(processSections);
       updateDigestiveActiveCard();
@@ -488,18 +558,19 @@ function renderDigestiveProcess(systemKey) {
       updateDigestiveStepNav();
       if (digestiveLessonMode === "classroom") syncDigestiveLessonMode();
       updateRoute();
+    };
+    card.addEventListener("click", openSection);
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      openSection();
     });
 
     const figure = document.createElement("figure");
     figure.className = "process-figure has-fallback";
 
     if (section.showImage && section.image) {
-      const image = document.createElement("img");
-      image.className = "digestive-lesson-image";
-      image.src = section.image;
-      image.alt = section.title.replace(/^\d+\.\s*/, "");
-      image.loading = "lazy";
-      image.decoding = "async";
+      const image = createDigestiveLessonImage(section);
       figure.classList.remove("has-fallback");
       figure.append(image);
     } else {
@@ -539,17 +610,62 @@ function renderDigestiveProcess(systemKey) {
     focus.className = "process-focus";
     focus.textContent = section.classroomSummary ?? section.summary;
 
+    const context = createDigestiveStageContext(section);
     const detailHint = document.createElement("span");
     detailHint.className = "process-detail-hint";
     detailHint.textContent = "Tocar para abrir este paso en el recorrido.";
 
-    content.append(step, title, summary, body, list, focus, detailHint);
+    content.append(step, title, summary, body, context, list, focus, detailHint);
     card.append(figure, content);
     digestiveProcessList.appendChild(card);
   });
 
   updateDigestiveActiveCard();
   updateDigestiveStepNav();
+}
+
+function createDigestiveLessonImage(section, extraClass = "") {
+  const image = document.createElement("img");
+  image.className = `digestive-lesson-image ${extraClass}`.trim();
+  image.src = section.image;
+  image.alt = section.title.replace(/^\d+\.\s*/, "");
+  image.loading = "lazy";
+  image.decoding = "async";
+  image.setAttribute("fetchpriority", "low");
+  image.addEventListener(
+    "error",
+    () => {
+      const fallback = document.createElement("span");
+      fallback.className = "process-image-placeholder";
+      fallback.textContent = "Imagen pendiente";
+      image.closest(".process-figure, .digestive-class-figure")?.classList.add("has-fallback");
+      image.replaceWith(fallback);
+    },
+    { once: true },
+  );
+  return image;
+}
+
+function createDigestiveStageContext(section) {
+  const context = DIGESTIVE_STAGE_CONTEXT[section.id];
+  const list = document.createElement("dl");
+  list.className = "process-context";
+  [
+    ["Organo", context?.organ],
+    ["Concepto", context?.concept],
+    ["Resultado", context?.result],
+  ]
+    .filter(([, value]) => Boolean(value))
+    .forEach(([label, value]) => {
+      const item = document.createElement("div");
+      const dt = document.createElement("dt");
+      const dd = document.createElement("dd");
+      dt.textContent = label;
+      dd.textContent = value;
+      item.append(dt, dd);
+      list.appendChild(item);
+    });
+  return list;
 }
 
 function renderDigestiveRouteMap(sections) {
@@ -605,7 +721,9 @@ function renderDigestiveStepNav(sections) {
     button.type = "button";
     button.className = "digestive-step-nav-button";
     button.dataset.stepIndex = String(index);
-    button.textContent = section.shortTitle ?? section.title.replace(/^\d+\.\s*/, "");
+    const cleanTitle = section.title.replace(/^\d+\.\s*/, "");
+    button.textContent = section.shortTitle ?? cleanTitle;
+    button.setAttribute("aria-label", `Abrir paso ${index + 1}: ${cleanTitle}`);
     button.addEventListener("click", () => {
       digestiveLessonIndex = index;
       renderDigestiveClassroom(sections);
@@ -622,7 +740,10 @@ function renderDigestiveStepNav(sections) {
 
 function updateDigestiveStepNav() {
   digestiveStepNav?.querySelectorAll(".digestive-step-nav-button").forEach((button, index) => {
-    button.classList.toggle("is-active", index === digestiveLessonIndex);
+    const active = index === digestiveLessonIndex;
+    button.classList.toggle("is-active", active);
+    if (active) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
   });
   updateDigestiveRouteMap();
 }
@@ -730,8 +851,11 @@ function renderDigestiveClassroom(sections) {
     recap.append(recapTitle, recapList);
     digestiveClassFigure.appendChild(recap);
   } else if (section.showImage && section.image) {
-    digestiveClassFigure.innerHTML = `<img class="digestive-lesson-image digestive-lesson-image-large" src="${section.image}" alt="${section.title.replace(/^\d+\.\s*/, "")}">`;
+    digestiveClassFigure.innerHTML = "";
+    digestiveClassFigure.classList.remove("has-fallback");
+    digestiveClassFigure.appendChild(createDigestiveLessonImage(section, "digestive-lesson-image-large"));
   } else {
+    digestiveClassFigure.classList.add("has-fallback");
     digestiveClassFigure.innerHTML = `<div class="process-image-placeholder process-image-placeholder-large">Espacio reservado para imagen</div>`;
   }
   digestiveClassBullets.innerHTML = "";
