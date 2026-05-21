@@ -41,6 +41,7 @@ Si se usa Live Server de VS Code, tambien sirve.
 3. Senalar boca, faringe, estomago, higado, pancreas, intestino delgado e intestino grueso en el visor.
 4. Abrir `Abrir proceso digestivo completo` para pasar a la secuencia detallada.
 5. Si se proyecta en grupo o se comparte por link, usar `Abrir recorrido guiado` o copiar el `link del digestivo`.
+6. Para repasar rapido, usar `Estudio rapido`: resume cada etapa con la idea principal sin abrir textos largos.
 
 ### Ideas clave para remarcar
 
@@ -48,6 +49,7 @@ Si se usa Live Server de VS Code, tambien sirve.
 - La digestion tiene una parte mecanica y otra quimica.
 - La mayor parte de la absorcion ocurre en el intestino delgado.
 - El intestino grueso no absorbe nutrientes principales: recupera agua y prepara la eliminacion.
+- Bolo, quimo, quilo y heces son nombres de transformaciones distintas del contenido digestivo.
 
 ## Si algo no carga
 

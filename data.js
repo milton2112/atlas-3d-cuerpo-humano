@@ -1089,6 +1089,141 @@ digestiveLessonSections.forEach((section) => {
   if (digestivoTitles[section.id]) section.title = digestivoTitles[section.id];
 });
 
+const digestiveSectionEnhancements = {
+  intro: {
+    shortTitle: "Introduccion",
+    studyNotes: [
+      { title: "Idea central", text: "El alimento no puede aprovecharse tal como entra: debe transformarse en nutrientes simples." },
+      { title: "Para mirar", text: "Ubica el tubo digestivo como un recorrido continuo desde la boca hasta la eliminacion." },
+      { title: "No confundir", text: "Comer es incorporar alimentos; digerir es transformarlos para que el cuerpo pueda usarlos." },
+    ],
+  },
+  "general-process": {
+    shortTitle: "Proceso general",
+    studyNotes: [
+      { title: "Cuatro momentos", text: "Ingestion, digestion, absorcion y egestion ordenan todo el viaje del alimento." },
+      { title: "Relacion clave", text: "La digestion prepara sustancias simples; la absorcion las hace pasar al interior del cuerpo." },
+      { title: "Error comun", text: "Absorber no es eliminar: son etapas distintas y ocurren en tramos diferentes." },
+    ],
+  },
+  "digestion-types": {
+    shortTitle: "Tipos de digestion",
+    studyNotes: [
+      { title: "Mecanica", text: "Corta, tritura, mezcla y aumenta la superficie de contacto del alimento." },
+      { title: "Quimica", text: "Usa enzimas y jugos digestivos para romper moleculas complejas." },
+      { title: "Juntas", text: "No compiten: se complementan durante el recorrido digestivo." },
+    ],
+  },
+  "mouth-parts": {
+    shortTitle: "Boca",
+    studyNotes: [
+      { title: "Que pasa ahi", text: "Ingresa el alimento, se mastica y se mezcla con saliva." },
+      { title: "Organos clave", text: "Dientes, lengua y glandulas salivales trabajan juntos desde el primer momento." },
+      { title: "Resultado", text: "El alimento empieza a prepararse para formar el bolo alimenticio." },
+    ],
+  },
+  bolus: {
+    shortTitle: "Bolo",
+    studyNotes: [
+      { title: "Transformacion", text: "El alimento triturado y humedecido se convierte en una masa blanda llamada bolo." },
+      { title: "Concepto clave", text: "La amilasa salival inicia la digestion quimica del almidon." },
+      { title: "Siguiente paso", text: "La lengua empuja el bolo hacia la faringe para deglutirlo." },
+    ],
+  },
+  teeth: {
+    shortTitle: "Dientes",
+    studyNotes: [
+      { title: "Funcion", text: "Realizan la digestion mecanica inicial: cortar, desgarrar y triturar." },
+      { title: "Tipos", text: "Incisivos cortan, caninos desgarran, premolares y molares trituran." },
+      { title: "Importancia", text: "Cuanto mas fragmentado esta el alimento, mejor actuan las enzimas." },
+    ],
+  },
+  tongue: {
+    shortTitle: "Lengua",
+    studyNotes: [
+      { title: "Funcion", text: "Mezcla alimento y saliva, acomoda el alimento entre los dientes y empuja el bolo." },
+      { title: "Gusto", text: "Sus papilas gustativas ayudan a reconocer sabores." },
+      { title: "No confundir", text: "No solo sirve para saborear: tambien coordina el inicio de la deglucion." },
+    ],
+  },
+  pharynx: {
+    shortTitle: "Faringe",
+    studyNotes: [
+      { title: "Cruce", text: "Es una zona compartida por el paso del alimento y del aire." },
+      { title: "Proteccion", text: "La epiglotis cubre la via respiratoria para evitar que el bolo entre en la traquea." },
+      { title: "Resultado", text: "El bolo sigue hacia el esofago." },
+    ],
+  },
+  "esophagus-lesson": {
+    shortTitle: "Esofago",
+    studyNotes: [
+      { title: "Funcion", text: "Transporta el bolo desde la faringe hasta el estomago." },
+      { title: "Peristaltismo", text: "Ondas musculares de contraccion y relajacion empujan el alimento." },
+      { title: "Error comun", text: "El alimento no baja solo por gravedad: tambien avanzan las contracciones musculares." },
+    ],
+  },
+  "stomach-lesson": {
+    shortTitle: "Estomago",
+    studyNotes: [
+      { title: "Que pasa ahi", text: "El bolo se mezcla con jugo gastrico y se bate por movimientos musculares." },
+      { title: "Jugo gastrico", text: "Incluye acido clorhidrico, pepsina y moco protector." },
+      { title: "Resultado", text: "Se forma el quimo, mezcla acida y semiliquida." },
+    ],
+  },
+  chyme: {
+    shortTitle: "Quimo",
+    studyNotes: [
+      { title: "Que es", text: "Una mezcla liquida, espesa y acida formada en el estomago." },
+      { title: "Salida", text: "Pasa al duodeno por el piloro." },
+      { title: "No confundir", text: "Quimo se forma en el estomago; quilo aparece despues, durante la absorcion intestinal." },
+    ],
+  },
+  "small-intestine-lesson": {
+    shortTitle: "Intestino delgado",
+    studyNotes: [
+      { title: "Partes", text: "Duodeno, yeyuno e ileon." },
+      { title: "Funcion", text: "Completa la digestion y absorbe la mayor parte de nutrientes." },
+      { title: "Clave", text: "Las vellosidades aumentan la superficie de absorcion." },
+    ],
+  },
+  "digestive-juices": {
+    shortTitle: "Bilis y jugos",
+    studyNotes: [
+      { title: "Bilis", text: "Ayuda a dividir las grasas en gotas mas pequenas; no es una enzima." },
+      { title: "Pancreas", text: "Aporta enzimas para carbohidratos, proteinas y grasas." },
+      { title: "Jugo intestinal", text: "Completa la digestion dentro del intestino delgado." },
+    ],
+  },
+  chyle: {
+    shortTitle: "Absorcion",
+    studyNotes: [
+      { title: "Quilo", text: "Contenido intestinal listo para que sus nutrientes sean absorbidos." },
+      { title: "Absorcion", text: "Los nutrientes pasan a la sangre o a la linfa atravesando la pared intestinal." },
+      { title: "Conecta con", text: "El sistema circulatorio distribuye los nutrientes hacia las celulas." },
+    ],
+  },
+  "large-intestine-lesson": {
+    shortTitle: "Intestino grueso",
+    studyNotes: [
+      { title: "Funcion", text: "Recupera agua y electrolitos de los residuos no digeridos." },
+      { title: "Resultado", text: "Los residuos se compactan y forman heces." },
+      { title: "No confundir", text: "El intestino grueso no absorbe la mayor parte de nutrientes: eso ocurre en el delgado." },
+    ],
+  },
+  "annex-glands": {
+    shortTitle: "Glandulas anexas",
+    studyNotes: [
+      { title: "Salivales", text: "Producen saliva y amilasa salival." },
+      { title: "Higado", text: "Produce bilis y participa en metabolismo, almacenamiento y desintoxicacion." },
+      { title: "Pancreas", text: "Libera jugo pancreatico y tambien hormonas como insulina y glucagon." },
+    ],
+  },
+};
+
+digestiveLessonSections.forEach((section) => {
+  Object.assign(section, digestiveSectionEnhancements[section.id] ?? {});
+});
+
 Object.assign(systemDetails.digestive, {
   summary: "Convierte alimentos en nutrientes y elimina residuos.",
   description:

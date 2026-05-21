@@ -12,10 +12,10 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260518-digestivo-completo";
+} from "./data.js?v=20260520-digestivo-aula";
 
-const APP_VERSION_NAME = "Version Digestivo Completo - Mayo 2026";
-const MODEL_VERSION = "20260518-digestivo-completo";
+const APP_VERSION_NAME = "Version Digestivo Aula - Mayo 2026";
+const MODEL_VERSION = "20260520-digestivo-aula";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
@@ -611,11 +611,12 @@ function renderDigestiveProcess(systemKey) {
     focus.textContent = section.classroomSummary ?? section.summary;
 
     const context = createDigestiveStageContext(section);
+    const studyNotes = createDigestiveStudyNotes(section);
     const detailHint = document.createElement("span");
     detailHint.className = "process-detail-hint";
     detailHint.textContent = "Tocar para abrir este paso en el recorrido.";
 
-    content.append(step, title, summary, body, context, list, focus, detailHint);
+    content.append(step, title, summary, body, context, studyNotes, list, focus, detailHint);
     card.append(figure, content);
     digestiveProcessList.appendChild(card);
   });
@@ -665,6 +666,25 @@ function createDigestiveStageContext(section) {
       item.append(dt, dd);
       list.appendChild(item);
     });
+  return list;
+}
+
+function createDigestiveStudyNotes(section) {
+  const notes = section.studyNotes ?? [];
+  const list = document.createElement("div");
+  list.className = "process-study-notes";
+  if (!notes.length) return list;
+
+  notes.forEach((note) => {
+    const article = document.createElement("article");
+    const title = document.createElement("strong");
+    const text = document.createElement("p");
+    title.textContent = note.title;
+    text.textContent = note.text;
+    article.append(title, text);
+    list.appendChild(article);
+  });
+
   return list;
 }
 
@@ -797,7 +817,33 @@ function renderDigestiveGuide(detail) {
   if (!digestiveGuide) return;
   digestiveGuide.innerHTML = "";
   if (currentSystemKey !== "digestive") return;
-  digestiveGuide.setAttribute("aria-hidden", "true");
+  const guideBlocks = [
+    ["Que mirar primero", detail?.lookFor],
+    ["Recorrido recomendado", detail?.guideSequence],
+    ["Estudio en 5 minutos", detail?.fiveMinuteGuide],
+  ].filter(([, items]) => Array.isArray(items) && items.length);
+
+  if (!guideBlocks.length) {
+    digestiveGuide.setAttribute("aria-hidden", "true");
+    return;
+  }
+
+  digestiveGuide.removeAttribute("aria-hidden");
+  guideBlocks.forEach(([title, items]) => {
+    const card = document.createElement("article");
+    card.className = "digestive-guide-card";
+    const heading = document.createElement("h4");
+    heading.textContent = title;
+    const list = document.createElement("ul");
+    list.className = "process-bullets";
+    items.slice(0, 5).forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      list.appendChild(li);
+    });
+    card.append(heading, list);
+    digestiveGuide.appendChild(card);
+  });
 }
 
 function toggleDigestiveIntroLayout(systemKey) {
@@ -859,7 +905,11 @@ function renderDigestiveClassroom(sections) {
     digestiveClassFigure.innerHTML = `<div class="process-image-placeholder process-image-placeholder-large">Espacio reservado para imagen</div>`;
   }
   digestiveClassBullets.innerHTML = "";
-  (section.bullets ?? []).filter(Boolean).forEach((item) => {
+  const classItems = [
+    ...(section.studyNotes ?? []).map((note) => `${note.title}: ${note.text}`),
+    ...(section.bullets ?? []),
+  ];
+  classItems.filter(Boolean).slice(0, 6).forEach((item) => {
     const li = document.createElement("li");
     li.textContent = item;
     digestiveClassBullets.appendChild(li);
@@ -886,7 +936,8 @@ function renderDigestiveQuickStudy(sections) {
     const card = document.createElement("button");
     card.type = "button";
     card.className = "quick-study-card";
-    card.innerHTML = `<span>${index + 1}</span><strong>${section.shortTitle ?? section.title.replace(/^\d+\.\s*/, "")}</strong><small>${section.classroomSummary ?? section.summary}</small>`;
+    const notePreview = section.studyNotes?.[0]?.text ?? section.classroomSummary ?? section.summary;
+    card.innerHTML = `<span>${index + 1}</span><strong>${section.shortTitle ?? section.title.replace(/^\d+\.\s*/, "")}</strong><small>${notePreview}</small>`;
     card.addEventListener("click", () => {
       digestiveLessonIndex = Math.min(index, classroomSections.length - 1);
       renderDigestiveClassroom(sections);
@@ -1443,7 +1494,7 @@ function createSystemViewer(container, systemKey, options = {}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, 0.01, 100);
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = !compactViewport;
+  controls.enableDamping = false;
   controls.dampingFactor = 0.08;
   controls.zoomToCursor = !compactViewport;
   controls.rotateSpeed = compactViewport ? 0.72 : 1;
@@ -1464,7 +1515,7 @@ function createSystemViewer(container, systemKey, options = {}) {
     manualPaused: false,
     hotspotBindings: [],
     renderQueued: false,
-    onDemand: compactViewport,
+    onDemand: true,
   };
   resize();
 

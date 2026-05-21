@@ -2,7 +2,7 @@
 
 Atlas interactivo para explorar sistemas del cuerpo humano con modelos 3D, fichas breves, hotspots y recorridos guiados. El proyecto esta pensado para compartirse por link y funcionar tanto como apoyo en clase como para exploracion individual.
 
-**Version actual:** Digestivo Completo 2026 (mayo 2026). Esta version prioriza la unidad de sistema digestivo, rendimiento mobile, fichas mas concentradas y una navegacion mas clara para alumnos.
+**Version actual:** Digestivo Aula 2026 (mayo 2026). Esta version prioriza la unidad de sistema digestivo, rendimiento mobile, fichas mas concentradas dentro del proceso y una navegacion mas clara para alumnos.
 
 ## Que incluye hoy
 
@@ -15,9 +15,9 @@ Atlas interactivo para explorar sistemas del cuerpo humano con modelos 3D, ficha
   - organos y estructuras destacadas.
 - Unidad especial del **Sistema digestivo** con:
   - introduccion propia;
-  - proceso paso a paso;
+  - proceso paso a paso con fichas de estudio por etapa;
   - recorrido guiado proyectable;
-  - fichas de organos y cierre final.
+  - fichas de organos, conceptos clave y cierre final.
 
 ## Como abrirlo
 
