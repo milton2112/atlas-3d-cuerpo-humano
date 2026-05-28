@@ -5,6 +5,7 @@
 - El repositorio remoto clona correctamente desde GitHub.
 - El clon incluye los modelos `.glb` activos necesarios para abrir la app.
 - `app.js` y `data.js` pasan validacion sintactica con Node.
+- `tools/audit_release.mjs` revisa assets, datos y peso de modelos antes de compartir.
 - La app responde desde un servidor local temporal:
   - `index.html`: 200
   - `app.js`: 200
@@ -23,6 +24,7 @@
 - Puntos clickeables y tarjetas de organos.
 - Modo clase con avance, cierre final y resumen.
 - Mensajes de carga, modelo temporal y error de modelo.
+- En celular, el menu usa vistas livianas y el GLB se descarga bajo demanda desde cada sistema.
 
 ## Estado de modelos
 
@@ -51,6 +53,18 @@ Modelos grandes restaurados desde fuentes FBX de Z-Anatomy:
 - `circulatory.glb`: 37.9 MB a 23.8 MB.
 
 Si se vuelven a optimizar, revisar visualmente que no se deformen estructuras finas.
+
+## Advertencias de rendimiento pendientes
+
+La auditoria actual marca como pesados:
+
+- `urinary.glb`
+- `nervous.glb`
+- `circulatory.glb`
+- `skeletal.glb`
+- `muscular.glb`
+
+La mejora recomendada es crear variantes mobile o reexportar con una optimizacion visualmente revisada, no borrar los modelos activos.
 
 ## Decisiones tomadas
 

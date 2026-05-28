@@ -12,10 +12,10 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260520-digestivo-aula";
+} from "./data.js?v=20260528-performance";
 
 const APP_VERSION_NAME = "Version Digestivo Aula - Mayo 2026";
-const MODEL_VERSION = "20260520-digestivo-aula";
+const MODEL_VERSION = "20260528-performance";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
@@ -52,6 +52,7 @@ const MODEL_ROTATION_CONFIG = {
   reproductiveFemale: { y: -Math.PI / 2 },
 };
 const PRESERVE_SOURCE_MATERIAL_KEYS = new Set(["digestive", "urinary", "reproductiveFemale"]);
+const ENABLE_3D_MENU_PREVIEWS = true;
 const DEFERRED_MENU_PREVIEW_KEYS = new Set(["nervous", "circulatory", "urinary"]);
 const COMPACT_VIEWPORT_QUERY = "(max-width: 768px)";
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
@@ -142,6 +143,7 @@ function isCompactViewport() {
 }
 
 function shouldUseStaticMenuPreview() {
+  if (!ENABLE_3D_MENU_PREVIEWS) return true;
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const slowConnection = connection && ["slow-2g", "2g", "3g"].includes(connection.effectiveType);
   const lowMemoryDevice = Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory <= 4;
@@ -149,12 +151,12 @@ function shouldUseStaticMenuPreview() {
 }
 
 function getPreviewPixelRatio() {
-  return isCompactViewport() ? 0.8 : 1;
+  return isCompactViewport() ? 0.7 : 1;
 }
 
 function getDetailPixelRatio() {
   const dpr = window.devicePixelRatio || 1;
-  if (isCompactViewport()) return Math.min(dpr, 0.9);
+  if (isCompactViewport()) return Math.min(dpr, 0.75);
   if (window.innerWidth <= 1100) return Math.min(dpr, 1);
   return Math.min(dpr, 1.25);
 }
@@ -237,6 +239,7 @@ const viewModelButton = document.querySelector("#view-model");
 const viewSheetButton = document.querySelector("#view-sheet");
 const copySystemLinkButton = document.querySelector("#copy-system-link");
 const centerModelButton = document.querySelector("#center-model");
+const loadModelButton = document.querySelector("#load-model");
 
 const loader = new GLTFLoader();
 const viewers = new Set();
@@ -250,13 +253,14 @@ const previewObserver =
             previewObserver.unobserve(entry.target);
           });
         },
-        { rootMargin: "220px" },
+        { rootMargin: "80px" },
       )
     : null;
 let detailViewer = null;
 let tourActive = false;
 let currentSystemKey = systemOrder[0];
 let detailOpenToken = 0;
+let pendingDetailModelKey = null;
 let digestiveLessonMode = "sequence";
 let digestiveLessonIndex = 0;
 let resizeFrame = 0;
@@ -284,6 +288,12 @@ function bindEvents() {
   centerModelButton?.addEventListener("click", () => {
     detailViewer?.resetView();
     setModelStatus("Modelo centrado.", "ready");
+  });
+  loadModelButton?.addEventListener("click", () => {
+    loadModelButton.classList.add("hidden");
+    centerModelButton?.classList.remove("hidden");
+    if (detailViewer) detailViewer.loadModel?.();
+    else if (pendingDetailModelKey) startDetailModelViewer(pendingDetailModelKey, detailOpenToken, false);
   });
   digestiveSequenceButton?.addEventListener("click", () => setDigestiveLessonMode("sequence"));
   digestiveClassButton?.addEventListener("click", () => setDigestiveLessonMode("classroom"));
@@ -425,12 +435,8 @@ function openSystemDetail(systemKey) {
   };
 
   setDetailViewMode(tourActive ? "model" : "full");
-  setModelStatus(
-    systemKey === "digestive"
-      ? "Cargando modelo digestivo... Si tarda, podes abrir el mapa del recorrido debajo."
-      : `Cargando ${systemConfig[systemKey].label.toLowerCase()}...`,
-    "loading",
-  );
+  const shouldDeferDetailModel = shouldDeferDetailModelLoad(systemKey);
+  setModelStatus(getInitialModelStatus(systemKey, shouldDeferDetailModel), shouldDeferDetailModel ? "fallback" : "loading");
   detailTitle.textContent = detail.title;
   detailSummary.textContent = detail.summary;
   detailDescription.textContent = detail.description ?? detail.summary;
@@ -450,9 +456,12 @@ function openSystemDetail(systemKey) {
   renderOrganList(systemKey);
   detailViewer?.dispose();
   detailViewer = null;
+  pendingDetailModelKey = null;
   detailStage.innerHTML = "";
   detailView.style.setProperty("--system-color", systemConfig[systemKey].color);
   detailStage.style.setProperty("--system-color", systemConfig[systemKey].color);
+  loadModelButton?.classList.toggle("hidden", !shouldDeferDetailModel);
+  centerModelButton?.classList.toggle("hidden", shouldDeferDetailModel);
 
   gallery.classList.add("hidden");
   heroCard.classList.add("hidden");
@@ -465,9 +474,51 @@ function openSystemDetail(systemKey) {
   backButton.focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: "smooth" });
 
+  if (shouldDeferDetailModel) {
+    pendingDetailModelKey = systemKey;
+    renderDeferredModelPlaceholder(systemKey);
+    return;
+  }
+
+  startDetailModelViewer(systemKey, openToken, false);
+}
+
+function shouldDeferDetailModelLoad(systemKey) {
+  return isCompactViewport() && REAL_MODEL_KEYS.has(systemKey) && !tourActive;
+}
+
+function getInitialModelStatus(systemKey, deferred) {
+  if (deferred) return "Vista liviana lista. Toca Abrir modelo 3D para descargar el modelo completo.";
+  if (systemKey === "digestive") return "Cargando modelo digestivo... Si tarda, podes abrir el mapa del recorrido debajo.";
+  return `Cargando ${systemConfig[systemKey].label.toLowerCase()}...`;
+}
+
+function renderDeferredModelPlaceholder(systemKey) {
+  detailStage.innerHTML = `
+    <div class="detail-static-preview static-preview static-preview-${systemKey} is-static-only will-load-3d">
+      <div class="preview-body">
+        <span class="preview-head"></span>
+        <span class="preview-torso"></span>
+        <span class="preview-arm preview-arm-left"></span>
+        <span class="preview-arm preview-arm-right"></span>
+        <span class="preview-leg preview-leg-left"></span>
+        <span class="preview-leg preview-leg-right"></span>
+      </div>
+      <div class="preview-system-mark"></div>
+    </div>
+  `;
+}
+
+function startDetailModelViewer(systemKey, openToken, deferModelLoad) {
   requestAnimationFrame(() => {
     if (openToken !== detailOpenToken || detailView.classList.contains("hidden")) return;
+    pendingDetailModelKey = null;
+    detailViewer?.dispose();
+    detailViewer = null;
+    detailStage.innerHTML = "";
     detailViewer = createSystemViewer(detailStage, systemKey, {
+      deferModelLoad,
+      onStartLoad: () => setModelStatus(`Cargando ${systemConfig[systemKey].label.toLowerCase()} en 3D...`, "loading"),
       onLoad: () => setModelStatus("Modelo 3D cargado.", "ready"),
       onFallback: () => setModelStatus("Vista temporal disponible.", "fallback"),
       onError: () =>
@@ -1089,6 +1140,7 @@ function closeSystemDetail() {
   closeDigestiveModal();
   detailViewer?.dispose();
   detailViewer = null;
+  pendingDetailModelKey = null;
   detailView.classList.add("hidden");
   detailView.classList.remove("is-tour-active");
   gallery.classList.remove("hidden");
@@ -1147,6 +1199,7 @@ function finishGuidedTour() {
   detailOpenToken += 1;
   detailViewer?.dispose();
   detailViewer = null;
+  pendingDetailModelKey = null;
   detailView.classList.add("hidden");
   detailView.classList.remove("is-tour-active");
   tourBanner.classList.add("hidden");
@@ -1399,8 +1452,13 @@ function createStaticPreview(container, systemKey) {
     figure.addEventListener("pointerenter", loadPreview, { once: true });
     figure.addEventListener("focusin", loadPreview, { once: true });
     figure.addEventListener("click", loadPreview, { once: true });
-  } else if (previewObserver) previewObserver.observe(figure);
-  else requestAnimationFrame(loadPreview);
+  } else {
+    previewObserver?.observe(figure);
+    requestAnimationFrame(() => {
+      const bounds = figure.getBoundingClientRect();
+      if (bounds.top < window.innerHeight + 80 && bounds.bottom > -80) loadPreview();
+    });
+  }
 
   return {
     resize() {
@@ -1525,30 +1583,40 @@ function createSystemViewer(container, systemKey, options = {}) {
   fitCameraToObject(camera, controls, fallback, systemKey);
   renderScene();
 
-  loadSystemModel(systemKey)
-    .then((model) => {
-      if (state.disposed) return;
-      clearObject(root);
-      cleanupImportedModel(model);
-      normalizeModel(model, systemKey);
-      applySystemMaterial(model, systemKey);
-      root.add(model);
-      fittedObject = model;
-      fitCameraToObject(camera, controls, model, systemKey);
-      requestRender();
-      options.onLoad?.();
-    })
-    .catch(() => {
-      if (state.disposed) return;
-      clearObject(root);
-      const fallbackModel = createFallbackModel(systemKey);
-      root.add(fallbackModel);
-      fittedObject = fallbackModel;
-      fitCameraToObject(camera, controls, root, systemKey);
-      requestRender();
-      if (REAL_MODEL_KEYS.has(systemKey)) options.onError?.();
-      else options.onFallback?.();
-    });
+  let modelLoadStarted = false;
+
+  function loadModel() {
+    if (modelLoadStarted || state.disposed) return;
+    modelLoadStarted = true;
+    options.onStartLoad?.();
+    loadSystemModel(systemKey)
+      .then((model) => {
+        if (state.disposed) return;
+        clearObject(root);
+        cleanupImportedModel(model);
+        normalizeModel(model, systemKey);
+        applySystemMaterial(model, systemKey);
+        root.add(model);
+        fittedObject = model;
+        fitCameraToObject(camera, controls, model, systemKey);
+        requestRender();
+        options.onLoad?.();
+      })
+      .catch(() => {
+        if (state.disposed) return;
+        clearObject(root);
+        const fallbackModel = createFallbackModel(systemKey);
+        root.add(fallbackModel);
+        fittedObject = fallbackModel;
+        fitCameraToObject(camera, controls, root, systemKey);
+        requestRender();
+        if (REAL_MODEL_KEYS.has(systemKey)) options.onError?.();
+        else options.onFallback?.();
+      });
+  }
+
+  if (!options.deferModelLoad || !REAL_MODEL_KEYS.has(systemKey)) loadModel();
+  else options.onFallback?.();
 
   controls.addEventListener("change", requestRender);
 
@@ -1654,7 +1722,7 @@ function createSystemViewer(container, systemKey, options = {}) {
     });
   }
 
-  return { resize, dispose, resetView, setHotspotBindings, setPaused };
+  return { resize, dispose, resetView, setHotspotBindings, setPaused, loadModel };
 }
 
 function renderOrganHotspots(systemKey) {

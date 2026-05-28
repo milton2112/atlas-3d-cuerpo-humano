@@ -13,6 +13,6 @@
 
 Algunos sistemas todavia usan modelos temporales cuando no hay un GLB compatible o cuando conviene evitar una carga pesada. Estan preparados para reemplazarse sin reescribir la app.
 
-## Assets archivados
+## Limpieza de assets
 
-Los experimentos 2D anteriores quedaron en `assets/archive/2d-experiments/` y no forman parte de la experiencia principal actual.
+Los experimentos 2D anteriores y modelos descartados se retiraron del repositorio de trabajo para reducir peso local. La experiencia principal actual usa los modelos activos de `assets/models/` y las imagenes de `assets/digestive/`.

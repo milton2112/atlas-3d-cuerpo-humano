@@ -65,6 +65,17 @@ Tambien sirve Live Server de VS Code o cualquier servidor estatico simple.
 - `styles.css`: estilos visuales y responsive.
 - `data.js`: contenido educativo, organos, pasos y configuracion.
 - `GUIA_USO.md`: guia corta de uso y recorrido sugerido.
+- `PERFORMANCE.md`: criterios de rendimiento, version mobile y auditoria de release.
+
+## Verificacion antes de compartir
+
+```bash
+node --check app.js
+node --check data.js
+node tools/audit_release.mjs
+```
+
+La auditoria avisa si faltan assets o si hay modelos demasiado pesados para publicar sin una version mobile.
 
 ## Modelos y creditos
 
@@ -78,6 +89,7 @@ Tambien sirve Live Server de VS Code o cualquier servidor estatico simple.
 - Oseo / muscular: presentables.
 - Nervioso / circulatorio / otros: funcionales, con partes en revision segun el asset disponible.
 - Algunos sistemas siguen con placeholders o modelos temporales mientras se consiguen versiones mejores.
+- En celular, el menu usa vistas livianas y el modelo 3D se abre bajo demanda para mejorar la carga inicial.
 
 ## Si algo falla
 

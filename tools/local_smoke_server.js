@@ -4,6 +4,7 @@ const path = require("path");
 
 const root = process.cwd();
 const port = Number(process.argv[2] || 8765);
+const cacheableExtensions = new Set([".css", ".js", ".svg", ".glb", ".png", ".jpg", ".jpeg"]);
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -20,14 +21,23 @@ http
   .createServer((request, response) => {
     let pathname = decodeURIComponent(request.url.split("?")[0]);
     if (pathname === "/") pathname = "/index.html";
-    const file = path.join(root, pathname);
+    const file = path.resolve(root, `.${pathname}`);
+    if (!file.startsWith(root)) {
+      response.writeHead(403);
+      response.end("forbidden");
+      return;
+    }
     fs.readFile(file, (error, data) => {
       if (error) {
         response.writeHead(404);
         response.end("missing");
         return;
       }
-      response.writeHead(200, { "Content-Type": mimeTypes[path.extname(file).toLowerCase()] ?? "application/octet-stream" });
+      const extension = path.extname(file).toLowerCase();
+      const headers = { "Content-Type": mimeTypes[extension] ?? "application/octet-stream" };
+      if (cacheableExtensions.has(extension)) headers["Cache-Control"] = "public, max-age=3600";
+      else headers["Cache-Control"] = "no-cache";
+      response.writeHead(200, headers);
       response.end(data);
     });
   })

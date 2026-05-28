@@ -14,14 +14,15 @@ Esta carpeta contiene los `.glb` que carga la app.
 - `muscular.glb`: `MuscularSystem100.fbx`
 - `nervous.glb`: `NervousSystem100.fbx`
 - `circulatory.glb`: `CardioVascular41.fbx`
-- `lymphatic.glb`: `LymphoidOrgans100.fbx`
 - `integumentary.glb`: `Regions of human body100.fbx`
 - `respiratory.glb`: subset limpio de `VisceralSystem100.fbx`
 - `digestive.glb`: subset limpio de `VisceralSystem100.fbx`
 - `urinary.glb`: subset limpio de `VisceralSystem100.fbx`
 - `endocrine.glb`: subset limpio de `VisceralSystem100.fbx`
 - `reproductive-male.glb`: subset limpio de `VisceralSystem100.fbx`
-- `reproductive-female`: pendiente de modelo fuente real compatible. La app usa una vista temporal generada por codigo.
+- `reproductive-female.glb`: modelo descargado por el usuario, pendiente de confirmar fuente/licencia final.
+
+El sistema linfatico usa una vista temporal generada por codigo hasta conseguir un modelo real compatible.
 
 ## Nota
 

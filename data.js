@@ -320,9 +320,9 @@ export const digestiveLessonSections = [
   {
     id: "intro",
     title: "Introducción: por qué necesitamos digerir",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Digestive%20system%20diagram%20es.svg",
-    creditLabel: "Imagen abierta en español: Digestive system diagram es (Wikimedia Commons)",
-    creditUrl: "https://commons.wikimedia.org/wiki/File:Digestive_system_diagram_es.svg",
+    image: "./assets/digestive/10-introduccion.svg",
+    creditLabel: "Esquema local incorporado para la unidad digestiva",
+    creditUrl: "",
     summary: "El cuerpo necesita transformar los alimentos para obtener energia y materiales.",
     body: "Comer no alcanza por si solo. Los alimentos deben pasar por un recorrido donde se trituran, se mezclan con jugos digestivos y se convierten en nutrientes simples que las celulas pueden usar.",
     bullets: [
@@ -334,9 +334,9 @@ export const digestiveLessonSections = [
   {
     id: "general-process",
     title: "Proceso general: ingestión, digestión, absorción y egestión",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Digestive%20system%20diagram%20es.svg",
-    creditLabel: "Imagen abierta en español: Digestive system diagram es (Wikimedia Commons)",
-    creditUrl: "https://commons.wikimedia.org/wiki/File:Digestive_system_diagram_es.svg",
+    image: "./assets/digestive/11-proceso-general.svg",
+    creditLabel: "Esquema local incorporado para la unidad digestiva",
+    creditUrl: "",
     summary: "El proceso digestivo se puede entender en cuatro momentos principales.",
     body: "Primero el alimento ingresa por la boca. Luego se digiere, es decir, se transforma en sustancias mas simples. Despues se absorben nutrientes y agua. Finalmente se eliminan los restos no digeridos.",
     bullets: [

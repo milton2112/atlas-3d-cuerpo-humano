@@ -27,6 +27,7 @@ Si se usa Live Server de VS Code, tambien sirve.
 2. Elegir un sistema desde el menu o tocar `Empezar recorrido guiado`.
 3. Dentro de cada sistema:
    - rotar el modelo si esta disponible;
+   - en celular, tocar `Abrir modelo 3D` cuando se quiera descargar el modelo completo;
    - cambiar entre vista completa, solo modelo o solo ficha;
    - tocar puntos sobre el visor;
    - tocar tarjetas de organos para leer informacion.
@@ -55,6 +56,7 @@ Si se usa Live Server de VS Code, tambien sirve.
 
 - Recargar con `Ctrl + F5`.
 - Verificar que se este abriendo desde servidor local y no directamente como archivo.
+- En celular, primero aparece una vista liviana para cargar rapido; el modelo 3D se abre con el boton del visor.
 - Si un modelo 3D falla, la app conserva una vista temporal para no cortar el recorrido.
 
 ## Creditos
