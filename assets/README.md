@@ -22,5 +22,5 @@
 2. Guardarlo en `assets/models/`.
 3. Usar el mismo nombre esperado, por ejemplo `skeletal.glb` o `respiratory.glb`.
 4. Opcional: generar un PNG liviano en `assets/thumbnails/`.
-5. Ejecutar `node tools/audit_release.mjs`.
+5. Ejecutar `npm run check`.
 6. Recargar el navegador con `Ctrl + F5`.

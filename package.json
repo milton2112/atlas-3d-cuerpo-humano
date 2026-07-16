@@ -1,0 +1,16 @@
+{
+  "name": "atlas-3d-cuerpo-humano",
+  "version": "2026.7.0",
+  "private": true,
+  "type": "module",
+  "description": "Atlas educativo 3D del cuerpo humano.",
+  "scripts": {
+    "start": "node tools/local_smoke_server.js 8000",
+    "check:syntax": "node --check app.js && node --check data.js && node --check tools/local_smoke_server.js && node --check tools/audit_release.mjs",
+    "audit": "node tools/audit_release.mjs",
+    "check": "npm run check:syntax && npm run audit"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

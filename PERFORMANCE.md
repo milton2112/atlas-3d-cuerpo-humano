@@ -11,10 +11,17 @@
 ## Verificacion rapida
 
 ```bash
-node --check app.js
-node --check data.js
-node tools/audit_release.mjs
+npm run check
 ```
+
+El archivo `tools/model-budgets.json` fija un limite por modelo activo. La auditoria falla si un GLB nuevo supera el peso aceptado, si falta un asset o si aparecen IDs educativos duplicados.
+
+## Automatizaciones
+
+- GitHub Actions valida cada push y pull request.
+- Una ejecucion programada repite la auditoria cada lunes.
+- Dependabot revisa mensualmente las acciones de GitHub.
+- `npm start` abre el servidor local en el puerto 8000.
 
 ## Modelos que mas pesan
 

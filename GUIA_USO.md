@@ -10,7 +10,7 @@ Usar el atlas como un material interactivo para explorar sistemas del cuerpo hum
 2. Iniciar un servidor local:
 
 ```bash
-node tools/local_smoke_server.js 8000
+npm start
 ```
 
 3. Entrar en el navegador a:

@@ -1,5 +1,7 @@
 # Atlas 3D del Cuerpo Humano
 
+[![Validar atlas](https://github.com/milton2112/atlas-3d-cuerpo-humano/actions/workflows/validate.yml/badge.svg)](https://github.com/milton2112/atlas-3d-cuerpo-humano/actions/workflows/validate.yml)
+
 Atlas interactivo para explorar sistemas del cuerpo humano con modelos 3D, fichas breves, hotspots y recorridos guiados. El proyecto esta pensado para compartirse por link y funcionar tanto como apoyo en clase como para exploracion individual.
 
 **Version actual:** Digestivo Aula 2026 (mayo 2026). Esta version prioriza la unidad de sistema digestivo, rendimiento mobile, fichas mas concentradas dentro del proceso y una navegacion mas clara para alumnos.
@@ -25,7 +27,7 @@ Atlas interactivo para explorar sistemas del cuerpo humano con modelos 3D, ficha
 2. Iniciar un servidor local:
 
 ```bash
-node tools/local_smoke_server.js 8000
+npm start
 ```
 
 3. Entrar en el navegador a:
@@ -70,12 +72,12 @@ Tambien sirve Live Server de VS Code o cualquier servidor estatico simple.
 ## Verificacion antes de compartir
 
 ```bash
-node --check app.js
-node --check data.js
-node tools/audit_release.mjs
+npm run check
 ```
 
 La auditoria avisa si faltan assets o si hay modelos demasiado pesados para publicar sin una version mobile.
+
+GitHub Actions ejecuta la misma verificacion en cada push y pull request, ademas de una revision semanal. Dependabot revisa mensualmente las versiones de las acciones usadas por el repositorio.
 
 ## Modelos y creditos
 
