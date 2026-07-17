@@ -14,7 +14,7 @@ Busqueda revisada el 2026-04-24. Lista de reemplazos posibles para sistemas que 
 | Respiratorio | Human Lung 3D, 3D EduTex | CC BY | Alternativa liviana si se prioriza rendimiento sobre detalle completo. | https://sketchfab.com/3d-models/human-lung-3d-cb992e6cacf5411884828142aec8d596 |
 | Digestivo | Digestive-system, jalmer | CC BY | Descargado e integrado como `digestive.glb`; falta revision visual final. | https://sketchfab.com/3d-models/digestive-system-a4df1a9616974eada72013f19551d7e7 |
 | Digestivo | digestive system, 7D production | CC BY | Alternativa liviana y muy descargada. | https://sketchfab.com/3d-models/digestive-system-f78ce703805f49d3b732e37be5b93188 |
-| Urinario | Urinary System Final, Hannah Koffman | CC BY | Descargado e integrado como `urinary.glb`; pesa bastante y requiere revision de rendimiento. | https://sketchfab.com/3d-models/urinary-system-final-4258252eb7c04e748ab7501eb5f1abb1 |
+| Urinario | Urinary System Final, Hannah Koffman | CC BY | Integrado como `urinary.glb`, convertido a PBR y comprimido con Meshopt. | https://sketchfab.com/3d-models/urinary-system-final-4258252eb7c04e748ab7501eb5f1abb1 |
 | Urinario | Urinary system, 10930903MandyHo | CC BY | Alternativa completa de peso medio. | https://sketchfab.com/3d-models/3780929cbff345fc901aa50e4fe58a27 |
 | Endocrino | Endocrine System, brianj.seely | CC BY | Candidato principal para reemplazar el modelo temporal. | https://sketchfab.com/3d-models/endocrine-system-b10f70cacb6946da851e5696291398a5 |
 | Endocrino | Endocrine System, stogoskij | CC BY | Alternativa si el anterior no encuadra bien. | https://sketchfab.com/3d-models/endocrine-system-79e4c5dd1a4c443ab68bbf542a62b96d |
@@ -36,6 +36,8 @@ Busqueda revisada el 2026-04-24. Lista de reemplazos posibles para sistemas que 
 | Oseo | Z-Anatomy presentable | Mantener salvo que aparezca un modelo mas liviano y limpio. |
 | Muscular | Z-Anatomy presentable | Mantener; ajustar solo camara/materiales si hace falta. |
 | Tegumentario | Modelo actual aprobado | Mantener. No buscar reemplazo salvo que el usuario lo pida. |
+| Nervioso | Z-Anatomy con Meshopt | Conserva estructuras finas; revisar solo encuadre y lectura educativa. |
+| Circulatorio | Z-Anatomy con Meshopt | Conserva vasos finos; revisar solo encuadre y lectura educativa. |
 | Digestivo | GLB de jalmer, Sketchfab, CC BY 4.0 | Revisar encuadre/materiales antes de marcar como presentable. |
 | Urinario | GLB de Hannah Koffman, Sketchfab, CC BY 4.0 | PBR y Meshopt aplicados; revisar solo detalle anatomico y encuadre. |
 | Reproductor femenino | GLB de The Period App, Sketchfab, CC BY 4.0 | Revisar encuadre/materiales antes de marcar como presentable. |

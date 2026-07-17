@@ -13,10 +13,10 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260716-pbr-meshopt";
+} from "./data.js?v=20260716-heavy-meshopt";
 
 const APP_VERSION_NAME = "Version Digestivo Aula - Julio 2026";
-const MODEL_VERSION = "20260716-pbr-meshopt";
+const MODEL_VERSION = "20260716-heavy-meshopt";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();

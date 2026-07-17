@@ -12,8 +12,8 @@ Esta carpeta contiene los `.glb` que carga la app.
 
 - `skeletal.glb`: `SkeletalSystem100.fbx`
 - `muscular.glb`: `MuscularSystem100.fbx`
-- `nervous.glb`: `NervousSystem100.fbx`
-- `circulatory.glb`: `CardioVascular41.fbx`
+- `nervous.glb`: `NervousSystem100.fbx`, comprimido con Meshopt sin simplificacion geometrica.
+- `circulatory.glb`: `CardioVascular41.fbx`, comprimido con Meshopt sin simplificacion geometrica.
 - `integumentary.glb`: `Regions of human body100.fbx`
 - `respiratory.glb`: subset limpio de `VisceralSystem100.fbx`
 - `digestive.glb`: modelo Digestive-system de jalmer, Sketchfab, CC BY 4.0.

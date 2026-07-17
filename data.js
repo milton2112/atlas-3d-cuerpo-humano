@@ -47,12 +47,12 @@ export const modelAudit = {
   nervous: {
     status: "review",
     label: "En revision",
-    note: "Modelo real con estructuras finas. Es util, pero puede exigir mas rendimiento en equipos lentos.",
+    note: "Modelo Z-Anatomy comprimido con Meshopt sin simplificar estructuras finas. En celular se carga solo al abrirlo.",
   },
   circulatory: {
     status: "review",
     label: "En revision",
-    note: "Modelo real con vasos finos. Usar solo modelo para proyectarlo con mejor lectura.",
+    note: "Modelo Z-Anatomy comprimido con Meshopt sin simplificar vasos finos. Usar solo modelo para proyectarlo con mejor lectura.",
   },
   respiratory: {
     status: "temporary",

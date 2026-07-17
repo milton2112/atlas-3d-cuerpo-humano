@@ -33,8 +33,8 @@
 | Tegumentario | Usable | Base corporal general. Puede reemplazarse por un modelo tegumentario mas claro. |
 | Oseo | Presentable | Modelo real Z-Anatomy restaurado. |
 | Muscular | Presentable | Modelo real Z-Anatomy restaurado. |
-| Nervioso | Revisar | Modelo real con estructuras finas; puede exigir mas rendimiento. |
-| Circulatorio | Revisar | Modelo real con vasos finos; conviene usar solo modelo al proyectar. |
+| Nervioso | Revisar | Modelo real con estructuras finas, comprimido con Meshopt sin eliminar triangulos. |
+| Circulatorio | Revisar | Modelo real con vasos finos, comprimido con Meshopt; conviene usar solo modelo al proyectar. |
 | Respiratorio | Usable | Subset visceral compatible. |
 | Digestivo | Usable | Modelo Sketchfab CC BY 4.0, fuente y autor confirmados. |
 | Urinario | Usable | Modelo Sketchfab CC BY 4.0, convertido a PBR estandar y comprimido con Meshopt sin eliminar triangulos. |
@@ -49,8 +49,8 @@ Peso actual de los modelos grandes restaurados desde fuentes FBX de Z-Anatomy:
 
 - `skeletal.glb`: 28.2 MB.
 - `muscular.glb`: 26.5 MB.
-- `nervous.glb`: 44.8 MB.
-- `circulatory.glb`: 37.9 MB.
+- `nervous.glb`: 44.77 MB a 7.91 MB con Meshopt; conserva 590 meshes y todos los triangulos.
+- `circulatory.glb`: 37.91 MB a 13.33 MB con Meshopt; conserva 676 meshes y todos los triangulos.
 - `urinary.glb`: 48.3 MB a 10.05 MB con PBR estandar y Meshopt, conservando 17 meshes y todos los triangulos.
 
 Si se vuelven a optimizar, revisar visualmente que no se deformen estructuras finas.
@@ -59,8 +59,6 @@ Si se vuelven a optimizar, revisar visualmente que no se deformen estructuras fi
 
 La auditoria actual marca como pesados:
 
-- `nervous.glb`
-- `circulatory.glb`
 - `skeletal.glb`
 - `muscular.glb`
 

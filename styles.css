@@ -2341,13 +2341,16 @@ body.has-modal-open {
   }
 
   .detail-stage {
-    aspect-ratio: 0.82;
-    min-height: min(54vh, 520px);
+    width: 100%;
+    height: min(54vh, 520px);
+    min-height: 0;
+    aspect-ratio: auto;
     touch-action: none;
   }
 
   .system-detail[data-view-mode="model"] .detail-stage {
-    min-height: min(60vh, 560px);
+    height: min(60vh, 560px);
+    min-height: 0;
   }
 
   .digestive-launch-actions {

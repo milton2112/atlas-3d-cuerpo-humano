@@ -94,6 +94,7 @@ GitHub Actions ejecuta la misma verificacion en cada push y pull request, ademas
 - Algunos sistemas siguen con placeholders o modelos temporales mientras se consiguen versiones mejores.
 - En celular, el menu usa vistas livianas y el modelo 3D se abre bajo demanda para mejorar la carga inicial.
 - El modelo urinario usa materiales PBR estandar y compresion Meshopt; paso de 48,3 MB a 10,05 MB sin eliminar triangulos.
+- Nervioso paso de 44,77 MB a 7,91 MB y circulatorio de 37,91 MB a 13,33 MB con Meshopt, sin eliminar triangulos.
 
 ## Si algo falla
 
