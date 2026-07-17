@@ -36,21 +36,22 @@
 | Nervioso | Revisar | Modelo real con estructuras finas; puede exigir mas rendimiento. |
 | Circulatorio | Revisar | Modelo real con vasos finos; conviene usar solo modelo al proyectar. |
 | Respiratorio | Usable | Subset visceral compatible. |
-| Digestivo | Usable | Subset visceral compatible. |
-| Urinario | Usable | Subset visceral liviano. |
+| Digestivo | Usable | Modelo Sketchfab CC BY 4.0, fuente y autor confirmados. |
+| Urinario | Usable | Modelo Sketchfab CC BY 4.0, convertido a PBR estandar y comprimido con Meshopt sin eliminar triangulos. |
 | Endocrino | Usable | Subset liviano de glandulas. |
 | Linfatico | Revisar | Sirve como organos linfoides, no como red linfatica completa. |
 | Reproductor masculino | Usable | Subset visceral liviano. |
-| Reproductor femenino | Temporal | Falta GLB real compatible. Se mantiene vista temporal para no romper la clase. |
+| Reproductor femenino | Usable | Modelo Sketchfab CC BY 4.0, fuente y autor confirmados. |
 
 ## Optimizacion aplicada
 
-Modelos grandes restaurados desde fuentes FBX de Z-Anatomy:
+Peso actual de los modelos grandes restaurados desde fuentes FBX de Z-Anatomy:
 
-- `skeletal.glb`: 28.2 MB a 20.9 MB.
-- `muscular.glb`: 26.4 MB a 25.3 MB.
-- `nervous.glb`: 44.7 MB a 27.7 MB.
-- `circulatory.glb`: 37.9 MB a 23.8 MB.
+- `skeletal.glb`: 28.2 MB.
+- `muscular.glb`: 26.5 MB.
+- `nervous.glb`: 44.8 MB.
+- `circulatory.glb`: 37.9 MB.
+- `urinary.glb`: 48.3 MB a 10.05 MB con PBR estandar y Meshopt, conservando 17 meshes y todos los triangulos.
 
 Si se vuelven a optimizar, revisar visualmente que no se deformen estructuras finas.
 
@@ -58,7 +59,6 @@ Si se vuelven a optimizar, revisar visualmente que no se deformen estructuras fi
 
 La auditoria actual marca como pesados:
 
-- `urinary.glb`
 - `nervous.glb`
 - `circulatory.glb`
 - `skeletal.glb`
@@ -68,7 +68,7 @@ La mejora recomendada es crear variantes mobile o reexportar con una optimizacio
 
 ## Decisiones tomadas
 
-- Reproductor femenino queda como vista temporal hasta conseguir un modelo real compatible, en pose neutral y licencia clara.
+- Las atribuciones se guardan en `assets/models/attributions.json` y forman parte de la auditoria automatica.
 - Tegumentario queda como usable pero revisable, porque una piel/cuerpo completo educativo suele requerir un asset especifico.
 - Los thumbnails reales se descartaron por ahora: los renders automaticos salian visualmente incorrectos por problemas del asset fuente.
 - La app mantiene vistas temporales consistentes en el menu para no depender de thumbnails malos.
@@ -76,5 +76,6 @@ La mejora recomendada es crear variantes mobile o reexportar con una optimizacio
 ## Licencias
 
 - Fuente principal activa: Z-Anatomy.
-- Licencia indicada por el proyecto fuente: CC BY 4.0.
+- Z-Anatomy: CC BY-SA 4.0.
+- Modelos de Sketchfab activos: CC BY 4.0, con autor y fuente detallados en `CREDITOS.md`.
 - Ver `CREDITOS.md` para creditos y nota de adaptaciones.

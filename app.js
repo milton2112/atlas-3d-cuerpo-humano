@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import {
   digestiveRecapPoints,
   digestiveTransformationRecap,
@@ -12,10 +13,10 @@ import {
   systemConfig,
   systemDetails,
   systemOrder,
-} from "./data.js?v=20260528-performance";
+} from "./data.js?v=20260716-pbr-meshopt";
 
-const APP_VERSION_NAME = "Version Digestivo Aula - Mayo 2026";
-const MODEL_VERSION = "20260528-performance";
+const APP_VERSION_NAME = "Version Digestivo Aula - Julio 2026";
+const MODEL_VERSION = "20260716-pbr-meshopt";
 const MODEL_BASE_PATH = "./assets/models";
 const THUMBNAIL_BASE_PATH = "./assets/thumbnails";
 const THUMBNAIL_KEYS = new Set();
@@ -242,6 +243,7 @@ const centerModelButton = document.querySelector("#center-model");
 const loadModelButton = document.querySelector("#load-model");
 
 const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
 const viewers = new Set();
 const previewObserver =
   "IntersectionObserver" in window

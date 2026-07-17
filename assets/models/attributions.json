@@ -1,0 +1,79 @@
+{
+  "circulatory.glb": {
+    "title": "CardioVascular41",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "digestive.glb": {
+    "title": "Digestive-system",
+    "author": "jalmer",
+    "source": "https://sketchfab.com/3d-models/digestive-system-a4df1a9616974eada72013f19551d7e7",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "endocrine.glb": {
+    "title": "Subset endocrino de VisceralSystem100",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "integumentary.glb": {
+    "title": "Regions of human body100",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "muscular.glb": {
+    "title": "MuscularSystem100",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "nervous.glb": {
+    "title": "NervousSystem100",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "reproductive-female.glb": {
+    "title": "Female Reproductive System",
+    "author": "The Period App",
+    "source": "https://sketchfab.com/3d-models/female-reproductive-system-89fbe9c118404161acb3e9c1b427a2c8",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "reproductive-male.glb": {
+    "title": "Subset reproductor masculino de VisceralSystem100",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "respiratory.glb": {
+    "title": "Subset respiratorio de VisceralSystem100",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "skeletal.glb": {
+    "title": "SkeletalSystem100",
+    "author": "Z-Anatomy / Lluis Vinent Juanico",
+    "source": "https://github.com/LluisV/Z-Anatomy",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "urinary.glb": {
+    "title": "Urinary System Final",
+    "author": "Hannah Koffman",
+    "source": "https://sketchfab.com/3d-models/urinary-system-final-4258252eb7c04e748ab7501eb5f1abb1",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+  }
+}

@@ -61,7 +61,7 @@ Si se usa Live Server de VS Code, tambien sirve.
 
 ## Creditos
 
-Modelos base: Z-Anatomy, licencia CC BY 4.0.
+Modelos base: Z-Anatomy, licencia CC BY-SA 4.0, y modelos atribuidos de Sketchfab bajo CC BY 4.0. Ver `CREDITOS.md`.
 
 ## Nota de mantenimiento
 

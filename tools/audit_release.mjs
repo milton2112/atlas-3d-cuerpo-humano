@@ -6,9 +6,11 @@ const root = process.cwd();
 const appPath = path.join(root, "app.js");
 const dataPath = path.join(root, "data.js");
 const budgetPath = path.join(root, "tools", "model-budgets.json");
+const attributionPath = path.join(root, "assets", "models", "attributions.json");
 const appSource = fs.readFileSync(appPath, "utf8");
 const data = await import(pathToFileURL(dataPath));
 const modelBudgets = JSON.parse(fs.readFileSync(budgetPath, "utf8"));
+const modelAttributions = JSON.parse(fs.readFileSync(attributionPath, "utf8"));
 
 const MB = 1024 * 1024;
 const warnings = [];
@@ -44,6 +46,27 @@ function checkModels() {
     if (!fileName) continue;
     const stat = checkFile(path.join(root, "assets", "models", fileName), `modelo de ${systemKey}`);
     if (!stat) continue;
+    const attribution = modelAttributions[fileName];
+    if (!attribution) errors.push(`${fileName} no tiene atribucion en assets/models/attributions.json.`);
+    else {
+      for (const field of ["title", "author", "source", "license", "licenseUrl"]) {
+        if (!attribution[field]) errors.push(`${fileName} no tiene el campo de atribucion ${field}.`);
+      }
+
+      const buffer = fs.readFileSync(path.join(root, "assets", "models", fileName));
+      const jsonLength = buffer.readUInt32LE(12);
+      const glbJson = JSON.parse(buffer.subarray(20, 20 + jsonLength).toString("utf8").replace(/\0+$/, ""));
+      const embeddedSource = glbJson.asset?.extras?.source;
+      if (embeddedSource && attribution.source !== embeddedSource) {
+        errors.push(`${fileName} no coincide con la fuente embebida en el GLB.`);
+      }
+      if (
+        glbJson.extensionsRequired?.includes("EXT_meshopt_compression") &&
+        !appSource.includes("loader.setMeshoptDecoder(MeshoptDecoder)")
+      ) {
+        errors.push(`${fileName} requiere Meshopt pero app.js no configura MeshoptDecoder.`);
+      }
+    }
     const budget = modelBudgets[fileName];
     if (!budget) warnings.push(`${fileName} no tiene presupuesto de peso en tools/model-budgets.json.`);
     else if (stat.size > budget) {
@@ -57,6 +80,10 @@ function checkModels() {
   const modelDirectory = path.join(root, "assets", "models");
   for (const fileName of fs.readdirSync(modelDirectory).filter((name) => name.endsWith(".glb"))) {
     if (!activeFiles.has(fileName)) warnings.push(`${fileName} existe pero no esta configurado como modelo activo.`);
+  }
+
+  for (const fileName of Object.keys(modelAttributions)) {
+    if (!activeFiles.has(fileName)) warnings.push(`${fileName} tiene atribucion pero no es un modelo activo.`);
   }
 }
 

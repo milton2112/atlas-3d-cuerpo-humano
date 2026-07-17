@@ -36,9 +36,9 @@ Busqueda revisada el 2026-04-24. Lista de reemplazos posibles para sistemas que 
 | Oseo | Z-Anatomy presentable | Mantener salvo que aparezca un modelo mas liviano y limpio. |
 | Muscular | Z-Anatomy presentable | Mantener; ajustar solo camara/materiales si hace falta. |
 | Tegumentario | Modelo actual aprobado | Mantener. No buscar reemplazo salvo que el usuario lo pida. |
-| Digestivo | GLB descargado integrado | Revisar encuadre/materiales/licencia antes de marcar como presentable. |
-| Urinario | GLB descargado integrado | Revisar encuadre/materiales/licencia y optimizar por peso. |
-| Reproductor femenino | GLB descargado integrado | Revisar encuadre/materiales/licencia antes de marcar como presentable. |
+| Digestivo | GLB de jalmer, Sketchfab, CC BY 4.0 | Revisar encuadre/materiales antes de marcar como presentable. |
+| Urinario | GLB de Hannah Koffman, Sketchfab, CC BY 4.0 | PBR y Meshopt aplicados; revisar solo detalle anatomico y encuadre. |
+| Reproductor femenino | GLB de The Period App, Sketchfab, CC BY 4.0 | Revisar encuadre/materiales antes de marcar como presentable. |
 
 ## Regla para integrar
 

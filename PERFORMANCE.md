@@ -5,6 +5,7 @@
 - El menu principal carga previews 3D solo en escritorio.
 - En celular, el menu usa vistas livianas y cada sistema descarga el modelo 3D recien cuando se toca `Abrir modelo 3D`.
 - El visor 3D usa menor resolucion en pantallas chicas para reducir trabajo de GPU.
+- El modelo urinario usa materiales PBR estandar y compresion Meshopt: paso de 48,3 MB a 10,05 MB sin simplificar la anatomia.
 - Las imagenes de la unidad digestiva son locales, asi que no dependen de Wikimedia para abrir la clase.
 - La auditoria local revisa assets faltantes, datos basicos y modelos pesados.
 
@@ -25,7 +26,6 @@ El archivo `tools/model-budgets.json` fija un limite por modelo activo. La audit
 
 ## Modelos que mas pesan
 
-- `urinary.glb`: requiere version mobile.
 - `nervous.glb`: requiere version mobile.
 - `circulatory.glb`: requiere version mobile.
 - `skeletal.glb` y `muscular.glb`: revisar optimizacion antes de publicar.

@@ -4,7 +4,7 @@
 
 Atlas interactivo para explorar sistemas del cuerpo humano con modelos 3D, fichas breves, hotspots y recorridos guiados. El proyecto esta pensado para compartirse por link y funcionar tanto como apoyo en clase como para exploracion individual.
 
-**Version actual:** Digestivo Aula 2026 (mayo 2026). Esta version prioriza la unidad de sistema digestivo, rendimiento mobile, fichas mas concentradas dentro del proceso y una navegacion mas clara para alumnos.
+**Version actual:** Digestivo Aula 2026 (julio 2026). Esta version prioriza la unidad de sistema digestivo, rendimiento mobile, fichas mas concentradas dentro del proceso y una navegacion mas clara para alumnos.
 
 ## Que incluye hoy
 
@@ -81,7 +81,8 @@ GitHub Actions ejecuta la misma verificacion en cada push y pull request, ademas
 
 ## Modelos y creditos
 
-- Base principal de varios modelos: **Z-Anatomy** ([GitHub](https://github.com/LluisV/Z-Anatomy)), licencia **CC BY 4.0**.
+- Base principal de varios modelos: **Z-Anatomy** ([GitHub](https://github.com/LluisV/Z-Anatomy)), licencia **CC BY-SA 4.0**.
+- Digestivo, urinario y reproductor femenino usan modelos de Sketchfab con licencia **CC BY 4.0**; ver `CREDITOS.md`.
 - Algunos sistemas usan modelos temporales o en revision.
 - La app esta preparada para reemplazar assets 3D sin rehacer navegacion, textos ni hotspots.
 
@@ -92,6 +93,7 @@ GitHub Actions ejecuta la misma verificacion en cada push y pull request, ademas
 - Nervioso / circulatorio / otros: funcionales, con partes en revision segun el asset disponible.
 - Algunos sistemas siguen con placeholders o modelos temporales mientras se consiguen versiones mejores.
 - En celular, el menu usa vistas livianas y el modelo 3D se abre bajo demanda para mejorar la carga inicial.
+- El modelo urinario usa materiales PBR estandar y compresion Meshopt; paso de 48,3 MB a 10,05 MB sin eliminar triangulos.
 
 ## Si algo falla
 

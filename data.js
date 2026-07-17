@@ -62,12 +62,12 @@ export const modelAudit = {
   digestive: {
     status: "review",
     label: "En revision",
-    note: "Modelo 3D descargado e integrado. Falta revisar encuadre, materiales y licencia antes de marcarlo como presentable.",
+    note: "Modelo de jalmer en Sketchfab, licencia CC BY 4.0. Falta terminar de pulir encuadre y materiales.",
   },
   urinary: {
     status: "review",
     label: "En revision",
-    note: "Modelo 3D descargado e integrado. Es pesado, asi que conviene optimizarlo si ralentiza equipos lentos.",
+    note: "Modelo de Hannah Koffman en Sketchfab, CC BY 4.0. Convertido a PBR y comprimido con Meshopt para mejorar la carga mobile.",
   },
   endocrine: {
     status: "temporary",
@@ -87,7 +87,7 @@ export const modelAudit = {
   reproductiveFemale: {
     status: "review",
     label: "En revision",
-    note: "Modelo 3D descargado e integrado. Falta revisar encuadre, materiales y licencia antes de marcarlo como presentable.",
+    note: "Modelo de The Period App en Sketchfab, licencia CC BY 4.0. Falta terminar de pulir encuadre y materiales.",
   },
 };
 
